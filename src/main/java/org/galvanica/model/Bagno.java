@@ -1,10 +1,10 @@
 package org.galvanica.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,4 +20,8 @@ public class Bagno {
     private Integer scattiTotali;
     private Integer restoScatti;
     private Integer litri;
+    private LocalDate dataInizio;
+    private LocalDate dataFine;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "bagno")
+    private List<BagnoCaratteristiche> caratteristicheList;
 }

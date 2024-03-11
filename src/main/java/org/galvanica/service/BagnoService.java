@@ -5,6 +5,7 @@ import org.galvanica.model.Bagno;
 import org.galvanica.repository.BagnoRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -37,6 +38,8 @@ public class BagnoService implements ICRUDService<Bagno, BagnoDto> {
                 .litri(elemento.getLitri())
                 .scattiTotali(elemento.getScattiTotali())
                 .restoScatti(elemento.getRestoScatti())
+                .dataInizio(LocalDate.now())
+                .dataFine(null)
                 .build();
         return repository.save(bagno);
     }
