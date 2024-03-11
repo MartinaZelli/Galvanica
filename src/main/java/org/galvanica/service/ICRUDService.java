@@ -7,7 +7,7 @@ public interface ICRUDService<MODEL, DTO> {
 
     Boolean elimina(long id);
 
-    MODEL aggiorna(DTO elemento);
+    MODEL aggiorna(DTO elemento, long id);
 
     Optional<MODEL> ricercaId(long id);
 }

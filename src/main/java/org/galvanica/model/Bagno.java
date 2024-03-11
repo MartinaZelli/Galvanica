@@ -18,6 +18,6 @@ public class Bagno {
     private Long idBagno;
     private String nome;
     private Integer scattiTotali;
-    private Integer scattiParziali;
+    private Integer restoScatti;
     private Integer litri;
 }

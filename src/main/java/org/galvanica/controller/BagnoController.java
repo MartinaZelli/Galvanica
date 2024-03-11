@@ -17,7 +17,13 @@ public class BagnoController {
     @PostMapping
     public BagnoDto inserisciBagno(@RequestBody BagnoDto bagnoDto) {
         Bagno bagno = service.inserisci(bagnoDto);
-        return BagnoDto.builder().idBagno(bagno.getIdBagno()).nome(bagno.getNome()).litri(bagno.getLitri()).scattiTotali(bagno.getScattiTotali()).scattiParziali(bagno.getScattiParziali()).build();
+        return BagnoDto.builder()
+                .idBagno(bagno.getIdBagno())
+                .nome(bagno.getNome())
+                .litri(bagno.getLitri())
+                .scattiTotali(bagno.getScattiTotali())
+                .restoScatti(bagno.getRestoScatti())
+                .build();
     }
 
     @GetMapping("hello")
