@@ -11,7 +11,7 @@ import org.galvanica.model.Bagno;
 public class BagnoCaratteristicaDto {
     private Long idCaratteristica;
     private Bagno bagno;
-    private String Nome;
-    private String misura;
+    private String nome;
+    private String descrizione;
 }
 

@@ -9,12 +9,15 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class BagnoCaratteristica {
+
+public class Prodotto {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idCaratteristica;
+    private Long idProdotto;
     @ManyToOne
-    private Bagno bagno;
+    private Magazzino magazzino;
     private String nome;
     private String descrizione;
+    private Integer ph;
+
 }

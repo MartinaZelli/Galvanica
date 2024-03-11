@@ -22,6 +22,9 @@ public class Bagno {
     private Integer litri;
     private LocalDate dataInizio;
     private LocalDate dataFine;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "bagno")
+    @OneToMany(mappedBy = "bagno")
     private List<BagnoCaratteristica> caratteristicheList;
+    @OneToMany(mappedBy = "bagno")
+    private List<FrequenzaAggiunte> frequenzaAggiunteList;
+
 }

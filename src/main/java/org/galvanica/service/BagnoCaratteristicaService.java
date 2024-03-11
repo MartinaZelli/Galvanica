@@ -27,14 +27,15 @@ public class BagnoCaratteristicaService implements ICRUDService<BagnoCaratterist
             throw new RuntimeException(
                     "L'id è autoincrementale, non inizializzare");
         }
-        if (elemento.getMisura() == null) {
-            elemento.setMisura(null);
+        if (elemento.getDescrizione() == null) {
+            elemento.setDescrizione(null);
         }
-        //todo: cercare se il l'id bagno è presente altrimenti ritornare errore. se è sbagliato legare troppe classi. come fare??
+        /*todo: cercare se il l'id bagno è presente altrimenti ritornare errore.
+           Se è sbagliato legare troppe classi come si fa?? è da verificare dopo o qui?*/
         BagnoCaratteristica bagnoCaratteristica = BagnoCaratteristica.builder()
                 .nome(elemento.getNome())
                 .bagno(elemento.getBagno())
-                .misura(elemento.getMisura())
+                .descrizione(elemento.getDescrizione())
                 .build();
         return repository.save(bagnoCaratteristica);
     }
@@ -57,7 +58,7 @@ public class BagnoCaratteristicaService implements ICRUDService<BagnoCaratterist
         }
         BagnoCaratteristica bagnoCaratteristica = caratteristicaOpt.get();
         bagnoCaratteristica.setBagno(elemento.getBagno());
-        bagnoCaratteristica.setMisura(elemento.getMisura());
+        bagnoCaratteristica.setDescrizione(elemento.getDescrizione());
         bagnoCaratteristica.setNome(elemento.getNome());
         return repository.save(bagnoCaratteristica);
     }
