@@ -20,7 +20,7 @@ public class BagnoService implements ICRUDService<Bagno, BagnoDto> {
     public Bagno inserisci(BagnoDto elemento) {
         if (elemento.getNome() == null) {
             throw new RuntimeException(
-                    "Il nome deve essere valorizzato stronzo porcoddio");
+                    "Il nome deve essere valorizzato");
         }
         if (elemento.getLitri() == null || elemento.getLitri() == 0) {
             throw new RuntimeException("I litri devono essere inizializzati");

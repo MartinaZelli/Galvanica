@@ -23,5 +23,5 @@ public class Bagno {
     private LocalDate dataInizio;
     private LocalDate dataFine;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "bagno")
-    private List<BagnoCaratteristiche> caratteristicheList;
+    private List<BagnoCaratteristica> caratteristicheList;
 }

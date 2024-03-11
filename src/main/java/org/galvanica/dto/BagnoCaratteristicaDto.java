@@ -8,7 +8,7 @@ import org.galvanica.model.Bagno;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BagnoCaratteristicheDto {
+public class BagnoCaratteristicaDto {
     private Long idCaratteristica;
     private Bagno bagno;
     private String Nome;

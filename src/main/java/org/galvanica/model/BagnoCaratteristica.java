@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class BagnoCaratteristiche {
+public class BagnoCaratteristica {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idCaratteristica;
