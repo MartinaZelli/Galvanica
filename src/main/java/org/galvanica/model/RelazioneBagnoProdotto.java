@@ -12,9 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 public class RelazioneBagnoProdotto {
-    /*@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idRelazione;*/
+
     @Id
     @ManyToOne
     private Bagno bagno;

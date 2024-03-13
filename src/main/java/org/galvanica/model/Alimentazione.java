@@ -14,13 +14,13 @@ import java.util.List;
 public class Alimentazione {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idFrequenza;
+    private Long idAlimentazione;
     @ManyToOne
     private Bagno bagno;
     private Integer scatti;
-    //todo: capire che cazzo è TEMPO! time? Date? cazzo è????
-    private Integer tempo;
+    private String tempo;
+    //cercare cron expression generator e dirgli che vuoi..... ???? 0 0 0 ? * MON,WED,FRI *//
     private String descrizione;
-    @OneToMany
+    @OneToMany(mappedBy = "alimentazione")
     private List<DettaglioAlimentazione> dettaglioAlimentazioneList;
 }

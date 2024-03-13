@@ -1,21 +1,27 @@
 package org.galvanica.service;
 
 import org.galvanica.dto.BagnoCaratteristicaDto;
+import org.galvanica.model.Bagno;
 import org.galvanica.model.BagnoCaratteristica;
 import org.galvanica.repository.BagnoCaratteristicaRepository;
+import org.galvanica.repository.BagnoRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class BagnoCaratteristicaService implements ICRUDService<BagnoCaratteristica, BagnoCaratteristicaDto> {
     private final BagnoCaratteristicaRepository repository;
+    private final BagnoRepository repositoryBagno;
 
-    public BagnoCaratteristicaService(BagnoCaratteristicaRepository repository) {
+    public BagnoCaratteristicaService(BagnoCaratteristicaRepository repository, BagnoRepository repositoryBagno) {
         this.repository = repository;
+        this.repositoryBagno = repositoryBagno;
     }
 
     @Override
     public BagnoCaratteristica inserisci(BagnoCaratteristicaDto elemento) {
-        if (elemento.getBagno() == null) {
+        if (elemento.getIdBagno() == null) {
             throw new RuntimeException(
                     "Il Bagno deve essere valorizzato");
         }
@@ -27,14 +33,14 @@ public class BagnoCaratteristicaService implements ICRUDService<BagnoCaratterist
             throw new RuntimeException(
                     "L'id è autoincrementale, non inizializzare");
         }
-        if (elemento.getDescrizione() == null) {
-            elemento.setDescrizione(null);
+        Optional<Bagno> bagnoTrovato = repositoryBagno.findById(elemento.getIdBagno());
+        if (bagnoTrovato.isEmpty()) {
+            throw new RuntimeException(
+                    "L'id del bagno non esiste. correggere.");
         }
-        /*todo: cercare se il l'id bagno è presente altrimenti ritornare errore.
-           Se è sbagliato legare troppe classi come si fa?? è da verificare dopo o qui?*/
         BagnoCaratteristica bagnoCaratteristica = BagnoCaratteristica.builder()
                 .nome(elemento.getNome())
-                .bagno(elemento.getBagno())
+                .bagno(bagnoTrovato.get())
                 .descrizione(elemento.getDescrizione())
                 .build();
         return repository.save(bagnoCaratteristica);
@@ -56,8 +62,13 @@ public class BagnoCaratteristicaService implements ICRUDService<BagnoCaratterist
             throw new RuntimeException(
                     "mettere un id corretto");
         }
+        Optional<Bagno> bagnoTrovato = repositoryBagno.findById(elemento.getIdBagno());
+        if (bagnoTrovato.isEmpty()) {
+            throw new RuntimeException(
+                    "L'id del bagno non esiste. correggere.");
+        }
         BagnoCaratteristica bagnoCaratteristica = caratteristicaOpt.get();
-        bagnoCaratteristica.setBagno(elemento.getBagno());
+        bagnoCaratteristica.setBagno(bagnoTrovato.get());
         bagnoCaratteristica.setDescrizione(elemento.getDescrizione());
         bagnoCaratteristica.setNome(elemento.getNome());
         return repository.save(bagnoCaratteristica);

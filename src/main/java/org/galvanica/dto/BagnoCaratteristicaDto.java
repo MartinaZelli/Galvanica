@@ -1,7 +1,6 @@
 package org.galvanica.dto;
 
 import lombok.*;
-import org.galvanica.model.Bagno;
 
 @Getter
 @Setter
@@ -10,7 +9,7 @@ import org.galvanica.model.Bagno;
 @NoArgsConstructor
 public class BagnoCaratteristicaDto {
     private Long idCaratteristica;
-    private Bagno bagno;
+    private Long idBagno;
     private String nome;
     private String descrizione;
 }
