@@ -25,6 +25,9 @@ public class Bagno {
     @OneToMany(mappedBy = "bagno")
     private List<BagnoCaratteristica> caratteristicheList;
     @OneToMany(mappedBy = "bagno")
-    private List<FrequenzaAggiunte> frequenzaAggiunteList;
+    private List<Alimentazione> alimentazioneList;
+    @OneToMany(mappedBy = "bagno")
+    private List<RelazioneBagnoProdotto> relazioneBagnoProdottoList;
+
 
 }
