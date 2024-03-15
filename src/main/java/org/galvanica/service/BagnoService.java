@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
-public class BagnoService implements ICRUDService<Bagno, BagnoDto> {
+public class BagnoService implements ICRUDService<BagnoDto> {
     private final BagnoRepository repository;
 
     public BagnoService(BagnoRepository repository) {
@@ -17,7 +17,7 @@ public class BagnoService implements ICRUDService<Bagno, BagnoDto> {
     }
 
     @Override
-    public Bagno inserisci(BagnoDto elemento) {
+    public BagnoDto inserisci(BagnoDto elemento) {
         if (elemento.getNome() == null) {
             throw new RuntimeException(
                     "Il nome deve essere valorizzato");
@@ -41,7 +41,14 @@ public class BagnoService implements ICRUDService<Bagno, BagnoDto> {
                 .dataInizio(LocalDate.now())
                 .dataFine(null)
                 .build();
-        return repository.save(bagno);
+        bagno = repository.save(bagno);
+        return BagnoDto.builder()
+                .nome(bagno.getNome())
+                .idBagno(bagno.getIdBagno())
+                .litri(bagno.getLitri())
+                .restoScatti(bagno.getRestoScatti())
+                .scattiTotali(bagno.getScattiTotali())
+                .build();
     }
 
     @Override
