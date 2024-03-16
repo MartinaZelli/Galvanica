@@ -5,9 +5,11 @@ import org.galvanica.model.Alimentazione;
 import org.galvanica.model.Bagno;
 import org.galvanica.repository.AlimentazioneRepository;
 import org.galvanica.repository.BagnoRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class AlimentazioneService implements ICRUDService<AlimentazioneDto> {
 
     private final AlimentazioneRepository alimentazioneRepository;

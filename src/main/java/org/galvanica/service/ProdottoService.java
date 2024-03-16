@@ -5,9 +5,11 @@ import org.galvanica.model.Magazzino;
 import org.galvanica.model.Prodotto;
 import org.galvanica.repository.MagazzinoRepository;
 import org.galvanica.repository.ProdottoRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class ProdottoService implements ICRUDService<ProdottoDto> {
 
     private final ProdottoRepository prodottoRepository;
