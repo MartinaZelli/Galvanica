@@ -3,10 +3,9 @@ package org.galvanica.controller;
 import org.galvanica.dto.CaratteristicaBagnoDto;
 import org.galvanica.service.BagnoService;
 import org.galvanica.service.CaratteristicaBagnoService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/caratteristicaBagno")
@@ -22,5 +21,20 @@ public class CaratteristicaBagnoController {
     @PostMapping
     public CaratteristicaBagnoDto inserisciCaratteristicaBagno(@RequestBody CaratteristicaBagnoDto caratteristicaBagnoDto) {
         return caratteristicaBagnoService.inserisci(caratteristicaBagnoDto);
+    }
+
+    @PutMapping("{id}")
+    public CaratteristicaBagnoDto aggiornaCaratteristicaBagno(@RequestBody CaratteristicaBagnoDto caratteristicaBagnoDto, @PathVariable Long id) {
+        return caratteristicaBagnoService.aggiorna(caratteristicaBagnoDto, id);
+    }
+
+    @GetMapping("{id}")
+    public Optional<CaratteristicaBagnoDto> ricercaCaratteristicaPerId(@PathVariable Long id) {
+        return caratteristicaBagnoService.ricercaId(id);
+    }
+
+    @DeleteMapping("{id}")
+    public void eliminaCaratteristicaBagno(@PathVariable Long id) {
+        caratteristicaBagnoService.elimina(id);
     }
 }

@@ -4,17 +4,17 @@ import org.galvanica.dto.CaratteristicaBagnoDto;
 import org.galvanica.model.Bagno;
 import org.galvanica.model.CaratteristicaBagno;
 import org.galvanica.repository.BagnoRepository;
-import org.galvanica.repository.caratteristicaBagnoRepository;
+import org.galvanica.repository.CaratteristicaBagnoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 public class CaratteristicaBagnoService implements ICRUDService<CaratteristicaBagnoDto> {
-    private final caratteristicaBagnoRepository repository;
+    private final CaratteristicaBagnoRepository repository;
     private final BagnoRepository repositoryBagno;
 
-    public CaratteristicaBagnoService(caratteristicaBagnoRepository repository, BagnoRepository repositoryBagno) {
+    public CaratteristicaBagnoService(CaratteristicaBagnoRepository repository, BagnoRepository repositoryBagno) {
         this.repository = repository;
         this.repositoryBagno = repositoryBagno;
     }
@@ -65,10 +65,15 @@ public class CaratteristicaBagnoService implements ICRUDService<CaratteristicaBa
 
     @Override
     public CaratteristicaBagnoDto aggiorna(CaratteristicaBagnoDto elemento, long id) {
+
         Optional<CaratteristicaBagno> caratteristicaOpt = repository.findById(id);
         if (caratteristicaOpt.isEmpty()) {
             throw new RuntimeException(
                     "mettere un id corretto");
+        }
+        if (elemento.getIdBagno() == null) {
+            throw new RuntimeException(
+                    "il bagno non può essere null");
         }
         Optional<Bagno> bagnoTrovato = repositoryBagno.findById(elemento.getIdBagno());
         if (bagnoTrovato.isEmpty()) {
