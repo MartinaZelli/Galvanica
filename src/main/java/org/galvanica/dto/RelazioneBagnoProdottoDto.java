@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RelazioneBagnoProdottoDto {
+    private Long idRelazione;
     private Long idBagno;
     private Long idProdotto;
     private String note;

@@ -1,8 +1,6 @@
 package org.galvanica.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
@@ -14,9 +12,10 @@ import lombok.*;
 public class RelazioneBagnoProdotto {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long idRelazione;
     @ManyToOne
     private Bagno bagno;
-    @Id
     @ManyToOne
     private Prodotto prodotto;
     private String note;
