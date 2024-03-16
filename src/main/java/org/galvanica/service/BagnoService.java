@@ -61,23 +61,60 @@ public class BagnoService implements ICRUDService<BagnoDto> {
     }
 
     @Override
-    public Bagno aggiorna(BagnoDto elemento, long id) {
-        Optional<Bagno> bagno = repository.findById(id);
-        if (bagno.isEmpty()) {
+    public BagnoDto aggiorna(BagnoDto elemento, long id) {
+        Optional<Bagno> bagnoTrovato = repository.findById(id);
+        if (bagnoTrovato.isEmpty()) {
             throw new RuntimeException(
                     "metti un id corretto che questo non c'è, bischero.");
         }
-        Bagno b = bagno.get();
-        b.setNome(elemento.getNome());
-        b.setRestoScatti(elemento.getRestoScatti());
-        b.setScattiTotali(elemento.getScattiTotali());
-        b.setLitri(elemento.getLitri());
-
-        return repository.save(b);
+        Bagno bagno = bagnoTrovato.get();
+        bagno.setNome(elemento.getNome());
+        bagno.setRestoScatti(elemento.getRestoScatti());
+        bagno.setScattiTotali(elemento.getScattiTotali());
+        bagno.setLitri(elemento.getLitri());
+        bagno = repository.save(bagno);
+        return BagnoDto.builder()
+                .nome(bagno.getNome())
+                .idBagno(bagno.getIdBagno())
+                .litri(bagno.getLitri())
+                .restoScatti(bagno.getRestoScatti())
+                .scattiTotali(bagno.getScattiTotali())
+                .build();
     }
 
-    @Override
-    public Optional<Bagno> ricercaId(long id) {
-        return repository.findById(id);
+    public Optional<BagnoDto> ricercaId(long id) {
+        Optional<Bagno> bagnoTrovato = repository.findById(id);
+        return bagnoTrovato.map(bagno -> BagnoDto.builder()
+                .nome(bagno.getNome())
+                .idBagno(bagno.getIdBagno())
+                .litri(bagno.getLitri())
+                .restoScatti(bagno.getRestoScatti())
+                .scattiTotali(bagno.getScattiTotali())
+                .build());
     }
+    //TODO: mettere Optional BagnoDto oppure senza Optional? decidere quale è il migliore.
+   /* @Override
+    public BagnoDto ricercaId(long id) {
+        Optional<Bagno> bagnoTrovato = repository.findById(id);
+        return bagnoTrovato.map(bagno -> BagnoDto.builder()
+                .nome(bagno.getNome())
+                .idBagno(bagno.getIdBagno())
+                .litri(bagno.getLitri())
+                .restoScatti(bagno.getRestoScatti())
+                .scattiTotali(bagno.getScattiTotali())
+                .build()).orElse(null);
+    }*/
+
 }
+
+
+
+
+
+
+
+
+
+
+
+

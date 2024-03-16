@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BagnoCaratteristicaDto {
+public class CaratteristicaBagnoDto {
     private Long idCaratteristica;
     private Long idBagno;
     private String nome;
