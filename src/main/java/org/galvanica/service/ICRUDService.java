@@ -10,4 +10,5 @@ public interface ICRUDService<DTO> {
     DTO aggiorna(DTO elemento, long id);
 
     Optional<DTO> ricercaId(long id);
+
 }

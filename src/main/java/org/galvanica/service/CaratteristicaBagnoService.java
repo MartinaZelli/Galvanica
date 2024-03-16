@@ -19,6 +19,8 @@ public class CaratteristicaBagnoService implements ICRUDService<CaratteristicaBa
         this.repositoryBagno = repositoryBagno;
     }
 
+    //TODO? ripulire il codice con:
+    // private CaratteristicaBagnoDto CaratteristicaBagnoBuilder() (Oprtional<CaratteristicaBagno>){}
     @Override
     public CaratteristicaBagnoDto inserisci(CaratteristicaBagnoDto elemento) {
         if (elemento.getIdBagno() == null) {

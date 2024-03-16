@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+
 public class Bagno {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,11 +23,11 @@ public class Bagno {
     private Integer litri;
     private LocalDate dataInizio;
     private LocalDate dataFine;
-    @OneToMany(mappedBy = "bagno")
+    @OneToMany(mappedBy = "bagno", cascade = CascadeType.ALL)
     private List<CaratteristicaBagno> caratteristicheList;
-    @OneToMany(mappedBy = "bagno")
+    @OneToMany(mappedBy = "bagno", cascade = CascadeType.ALL)
     private List<Alimentazione> alimentazioneList;
-    @OneToMany(mappedBy = "bagno")
+    @OneToMany(mappedBy = "bagno", cascade = CascadeType.ALL)
     private List<RelazioneBagnoProdotto> relazioneBagnoProdottoList;
 
 
