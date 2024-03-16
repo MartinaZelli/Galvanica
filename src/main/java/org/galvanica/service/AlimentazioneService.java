@@ -15,10 +15,12 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto> {
     private final AlimentazioneRepository alimentazioneRepository;
     private final BagnoRepository bagnoRepository;
 
-    public AlimentazioneService(AlimentazioneRepository alimentazioneRepository, BagnoRepository bagnoRepository) {
+    public AlimentazioneService(AlimentazioneRepository alimentazioneRepository,
+                                BagnoRepository bagnoRepository) {
         this.alimentazioneRepository = alimentazioneRepository;
         this.bagnoRepository = bagnoRepository;
     }
+
 
     @Override
     public AlimentazioneDto inserisci(AlimentazioneDto elemento) {
