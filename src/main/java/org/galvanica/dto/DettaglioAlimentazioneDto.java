@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DettaglioAlimentazione {
+public class DettaglioAlimentazioneDto {
     private Long idDettaglio;
     private String note;
     private Integer quantitaProdotto;
