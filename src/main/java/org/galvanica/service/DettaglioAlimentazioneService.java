@@ -18,7 +18,10 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
     private final ProdottoRepository prodottoRepository;
     private final AlimentazioneRepository alimentazioneRepository;
 
-    public DettaglioAlimentazioneService(DettaglioAlimentazioneRepository dettaglioAlimentazioneRepository, ProdottoRepository prodottoRepository, AlimentazioneRepository alimentazioneRepository) {
+    public DettaglioAlimentazioneService(
+            DettaglioAlimentazioneRepository dettaglioAlimentazioneRepository,
+            ProdottoRepository prodottoRepository,
+            AlimentazioneRepository alimentazioneRepository) {
         this.dettaglioAlimentazioneRepository = dettaglioAlimentazioneRepository;
         this.prodottoRepository = prodottoRepository;
         this.alimentazioneRepository = alimentazioneRepository;
@@ -63,7 +66,7 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
         dettaglioAlimentazione = dettaglioAlimentazioneRepository.save(
                 dettaglioAlimentazione);
         return DettaglioAlimentazioneDto.builder()
-                .idAlimentazione(dettaglioAlimentazione.getIdDettaglio())
+                .idDettaglio(dettaglioAlimentazione.getIdDettaglio())
                 .note(dettaglioAlimentazione.getNote())
                 .quantitaProdotto(dettaglioAlimentazione.getQuantitaProdotto())
                 .unitaDiMisura(dettaglioAlimentazione.getUnitaDiMisura())
@@ -83,7 +86,8 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
     }
 
     @Override
-    public DettaglioAlimentazioneDto aggiorna(DettaglioAlimentazioneDto elemento, long id) {
+    public DettaglioAlimentazioneDto aggiorna(DettaglioAlimentazioneDto elemento,
+                                              long id) {
         Optional<DettaglioAlimentazione> dettaglioAlimentazioneOptional = dettaglioAlimentazioneRepository.findById(
                 id);
         if (dettaglioAlimentazioneOptional.isEmpty()) {
@@ -123,7 +127,7 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
                 dettaglioAlimentazione);
 
         return DettaglioAlimentazioneDto.builder()
-                .idAlimentazione(dettaglioAlimentazione.getIdDettaglio())
+                .idDettaglio(dettaglioAlimentazione.getIdDettaglio())
                 .note(dettaglioAlimentazione.getNote())
                 .quantitaProdotto(dettaglioAlimentazione.getQuantitaProdotto())
                 .unitaDiMisura(dettaglioAlimentazione.getUnitaDiMisura())
@@ -139,7 +143,7 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
                 dettaglioAlimentazioneRepository.findById(id);
         return dettaglioAlimentazioneOptional
                 .map(dettaglioAlimentazione -> DettaglioAlimentazioneDto.builder()
-                        .idAlimentazione(dettaglioAlimentazione.getIdDettaglio())
+                        .idDettaglio(dettaglioAlimentazione.getIdDettaglio())
                         .note(dettaglioAlimentazione.getNote())
                         .quantitaProdotto(dettaglioAlimentazione.getQuantitaProdotto())
                         .unitaDiMisura(dettaglioAlimentazione.getUnitaDiMisura())

@@ -14,7 +14,7 @@ public class DettaglioAlimentazione {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idDettaglio;
     private String note;
-    private Integer quantitaProdotto;
+    private Double quantitaProdotto;
     private String unitaDiMisura;
     @ManyToOne
     private Prodotto prodotto;

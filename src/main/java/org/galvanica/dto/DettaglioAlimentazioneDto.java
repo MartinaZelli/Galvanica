@@ -10,7 +10,7 @@ import lombok.*;
 public class DettaglioAlimentazioneDto {
     private Long idDettaglio;
     private String note;
-    private Integer quantitaProdotto;
+    private Double quantitaProdotto;
     private String unitaDiMisura;
     private Long idProdotto;
     private Long idAlimentazione;
