@@ -1,4 +1,4 @@
-package org.galvanica.Math;
+package org.galvanica.math;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,13 +1,19 @@
 package org.galvanica.service;
 
 import org.galvanica.dto.AlimentazioneScattiRisposta;
+import org.galvanica.math.MetodiArrotondamenti;
+import org.galvanica.math.ScattiMath;
 import org.galvanica.model.Alimentazione;
 import org.galvanica.model.Bagno;
+import org.galvanica.model.DettaglioAlimentazione;
+import org.galvanica.model.Prodotto;
 import org.galvanica.repository.AlimentazioneRepository;
 import org.galvanica.repository.BagnoRepository;
 import org.galvanica.repository.DettaglioAlimentazioneRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -52,6 +58,19 @@ public class OperazioniBagnoService {
             return null;
         }
         //todo alimentazione
+        ScattiMath alimentazioneApprossimata = MetodiArrotondamenti.alimentazioneScattiApprossimata(
+                scattiAttuali,
+                alimentazione.get().getScatti());
+        Map<Prodotto, Double> mappaAggiunta = new HashMap<>();
+        //todo unità di misura alimentazione non considerate!!!
+        for (DettaglioAlimentazione dettaglio : alimentazione.get()
+                .getDettaglioAlimentazioneList()) {
+            double quantitaProdottoAggiunta = dettaglio.getQuantitaProdotto() *
+                    alimentazioneApprossimata.getMoltiplicatoreAlimentazione();
+            quantitaProdottoAggiunta = MetodiArrotondamenti.approssimazioneAggiunta(
+                    quantitaProdottoAggiunta);
+            mappaAggiunta.put(dettaglio.getProdotto(), quantitaProdottoAggiunta);
+        }
         return null;
     }
 

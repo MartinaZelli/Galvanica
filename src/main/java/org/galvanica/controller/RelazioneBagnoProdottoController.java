@@ -1,7 +1,7 @@
 package org.galvanica.controller;
 
 import org.galvanica.dto.RelazioneBagnoProdottoDto;
-import org.galvanica.service.RelazioneBagnoProdottoService;
+import org.galvanica.service.CRUD.RelazioneBagnoProdottoService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package org.galvanica.service;
+package org.galvanica.service.CRUD;
 
 import org.galvanica.dto.BagnoDto;
 import org.galvanica.model.Bagno;

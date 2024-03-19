@@ -1,4 +1,4 @@
-package org.galvanica.service;
+package org.galvanica.service.CRUD;
 
 import org.galvanica.dto.CaratteristicaBagnoDto;
 import org.galvanica.model.Bagno;
@@ -14,7 +14,8 @@ public class CaratteristicaBagnoService implements ICRUDService<CaratteristicaBa
     private final CaratteristicaBagnoRepository repository;
     private final BagnoRepository repositoryBagno;
 
-    public CaratteristicaBagnoService(CaratteristicaBagnoRepository repository, BagnoRepository repositoryBagno) {
+    public CaratteristicaBagnoService(CaratteristicaBagnoRepository repository,
+                                      BagnoRepository repositoryBagno) {
         this.repository = repository;
         this.repositoryBagno = repositoryBagno;
     }
@@ -64,7 +65,8 @@ public class CaratteristicaBagnoService implements ICRUDService<CaratteristicaBa
     }
 
     @Override
-    public CaratteristicaBagnoDto aggiorna(CaratteristicaBagnoDto elemento, long id) {
+    public CaratteristicaBagnoDto aggiorna(CaratteristicaBagnoDto elemento,
+                                           long id) {
 
         Optional<CaratteristicaBagno> caratteristicaOpt = repository.findById(id);
         if (caratteristicaOpt.isEmpty()) {

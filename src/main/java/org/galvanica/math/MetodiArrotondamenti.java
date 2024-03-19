@@ -1,4 +1,4 @@
-package org.galvanica.Math;
+package org.galvanica.math;
 
 public class MetodiArrotondamenti {
     public static ScattiMath alimentazioneScattiApprossimata(int scattiAttuali,
@@ -30,7 +30,7 @@ public class MetodiArrotondamenti {
         return 0;
     }
 
-    public double approssimazioneAggiunta(double aggiunta) {
+    public static double approssimazioneAggiunta(double aggiunta) {
         if (aggiunta < 100) {
             double resto = aggiunta % 5;
             return aggiunta - resto;

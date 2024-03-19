@@ -2,7 +2,7 @@ package org.galvanica.controller;
 
 import org.galvanica.dto.AlimentazioneScattiRisposta;
 import org.galvanica.dto.BagnoDto;
-import org.galvanica.service.BagnoService;
+import org.galvanica.service.CRUD.BagnoService;
 import org.galvanica.service.OperazioniBagnoService;
 import org.springframework.web.bind.annotation.*;
 

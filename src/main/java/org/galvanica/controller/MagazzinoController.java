@@ -1,7 +1,7 @@
 package org.galvanica.controller;
 
 import org.galvanica.dto.MagazzinoDto;
-import org.galvanica.service.MagazzinoService;
+import org.galvanica.service.CRUD.MagazzinoService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -17,7 +17,8 @@ public class MagazzinoController {
     }
 
     @PostMapping
-    public MagazzinoDto aggiungiMagazzinoDto(@RequestBody MagazzinoDto magazzinoDto) {
+    public MagazzinoDto aggiungiMagazzinoDto(
+            @RequestBody MagazzinoDto magazzinoDto) {
         return magazzinoService.inserisci(magazzinoDto);
     }
 
@@ -32,7 +33,8 @@ public class MagazzinoController {
     }
 
     @PutMapping("{id}")
-    public MagazzinoDto aggiornaMagazzino(@RequestBody MagazzinoDto magazzinoDto, @PathVariable Long id) {
+    public MagazzinoDto aggiornaMagazzino(@RequestBody MagazzinoDto magazzinoDto,
+                                          @PathVariable Long id) {
         return magazzinoService.aggiorna(magazzinoDto, id);
     }
 }

@@ -1,4 +1,4 @@
-package org.galvanica.service;
+package org.galvanica.service.CRUD;
 
 import org.galvanica.dto.RelazioneBagnoProdottoDto;
 import org.galvanica.model.Bagno;
@@ -18,7 +18,9 @@ public class RelazioneBagnoProdottoService implements ICRUDService<RelazioneBagn
     private final BagnoRepository bagnoRepository;
     private final ProdottoRepository prodottoRepository;
 
-    public RelazioneBagnoProdottoService(RelazioneBagnoProdottoRepository relazioneBagnoProdottoRepository, BagnoRepository bagnoRepository, ProdottoRepository prodottoRepository) {
+    public RelazioneBagnoProdottoService(
+            RelazioneBagnoProdottoRepository relazioneBagnoProdottoRepository,
+            BagnoRepository bagnoRepository, ProdottoRepository prodottoRepository) {
         this.relazioneBagnoProdottoRepository = relazioneBagnoProdottoRepository;
         this.bagnoRepository = bagnoRepository;
         this.prodottoRepository = prodottoRepository;
@@ -73,7 +75,8 @@ public class RelazioneBagnoProdottoService implements ICRUDService<RelazioneBagn
     }
 
     @Override
-    public RelazioneBagnoProdottoDto aggiorna(RelazioneBagnoProdottoDto elemento, long id) {
+    public RelazioneBagnoProdottoDto aggiorna(RelazioneBagnoProdottoDto elemento,
+                                              long id) {
         Optional<RelazioneBagnoProdotto> relazioneBagnoProdottoOptional = relazioneBagnoProdottoRepository.findById(
                 id);
         if (relazioneBagnoProdottoOptional.isEmpty()) {

@@ -1,4 +1,4 @@
-package org.galvanica.service;
+package org.galvanica.service.CRUD;
 
 import org.galvanica.dto.ProdottoDto;
 import org.galvanica.model.Magazzino;
@@ -15,7 +15,8 @@ public class ProdottoService implements ICRUDService<ProdottoDto> {
     private final ProdottoRepository prodottoRepository;
     private final MagazzinoRepository magazzinoRepository;
 
-    public ProdottoService(ProdottoRepository prodottoRepository, MagazzinoRepository magazzinoRepository) {
+    public ProdottoService(ProdottoRepository prodottoRepository,
+                           MagazzinoRepository magazzinoRepository) {
         this.prodottoRepository = prodottoRepository;
         this.magazzinoRepository = magazzinoRepository;
     }
