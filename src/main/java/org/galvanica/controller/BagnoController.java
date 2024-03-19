@@ -1,7 +1,9 @@
 package org.galvanica.controller;
 
+import org.galvanica.dto.AlimentazioneScattiRisposta;
 import org.galvanica.dto.BagnoDto;
 import org.galvanica.service.BagnoService;
+import org.galvanica.service.OperazioniBagnoService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -10,9 +12,12 @@ import java.util.Optional;
 @RequestMapping("/bagno")
 public class BagnoController {
     private final BagnoService service;
+    private final OperazioniBagnoService operazioniBagnoService;
 
-    public BagnoController(BagnoService service) {
+    public BagnoController(BagnoService service,
+                           OperazioniBagnoService operazioniBagnoService) {
         this.service = service;
+        this.operazioniBagnoService = operazioniBagnoService;
     }
 
     @PostMapping
@@ -21,7 +26,8 @@ public class BagnoController {
     }
 
     @PutMapping("{id}")
-    public BagnoDto aggiornaBagno(@RequestBody BagnoDto bagnoDto, @PathVariable Long id) {
+    public BagnoDto aggiornaBagno(@RequestBody BagnoDto bagnoDto,
+                                  @PathVariable Long id) {
         return service.aggiorna(bagnoDto, id);
     }
 
@@ -35,10 +41,13 @@ public class BagnoController {
         service.elimina(id);
     }
 
-    @GetMapping("hello")
-    public String hello() {
-        System.out.println("hello!");
-        return "ciao, stronzo";
+    @PutMapping("{id}/alimentazioneScatti/{scattiParziali}")
+    public AlimentazioneScattiRisposta alimentazioneScatti(@PathVariable Long id,
+                                                           @PathVariable Integer scattiParziali) {
+        System.out.println("alimentazioneScatti()");
+        System.out.println(operazioniBagnoService.faiAlimentazioneScatti(id,
+                scattiParziali));
+        return null;
     }
 
 

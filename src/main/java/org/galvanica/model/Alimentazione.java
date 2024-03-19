@@ -7,6 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,4 +25,6 @@ public class Alimentazione {
     private String descrizione;
     @OneToMany(mappedBy = "alimentazione")
     private List<DettaglioAlimentazione> dettaglioAlimentazioneList;
+
+
 }
