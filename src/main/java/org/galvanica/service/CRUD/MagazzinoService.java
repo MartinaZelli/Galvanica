@@ -1,6 +1,6 @@
 package org.galvanica.service.CRUD;
 
-import org.galvanica.dto.MagazzinoDto;
+import org.galvanica.dto.dtoConModel.MagazzinoDto;
 import org.galvanica.model.Magazzino;
 import org.galvanica.repository.MagazzinoRepository;
 import org.springframework.stereotype.Service;

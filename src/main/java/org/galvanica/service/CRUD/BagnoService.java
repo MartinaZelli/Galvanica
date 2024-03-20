@@ -1,6 +1,6 @@
 package org.galvanica.service.CRUD;
 
-import org.galvanica.dto.BagnoDto;
+import org.galvanica.dto.dtoConModel.BagnoDto;
 import org.galvanica.model.Bagno;
 import org.galvanica.repository.BagnoRepository;
 import org.springframework.stereotype.Service;

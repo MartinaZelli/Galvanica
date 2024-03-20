@@ -1,7 +1,7 @@
 package org.galvanica.controller;
 
 import org.galvanica.dto.AlimentazioneScattiRisposta;
-import org.galvanica.dto.BagnoDto;
+import org.galvanica.dto.dtoConModel.BagnoDto;
 import org.galvanica.service.CRUD.BagnoService;
 import org.galvanica.service.OperazioniBagnoService;
 import org.springframework.web.bind.annotation.*;
@@ -45,9 +45,11 @@ public class BagnoController {
     public AlimentazioneScattiRisposta alimentazioneScatti(@PathVariable Long id,
                                                            @PathVariable Integer scattiParziali) {
         System.out.println("alimentazioneScatti()");
-        System.out.println(operazioniBagnoService.faiAlimentazioneScatti(id,
+        System.out.println(operazioniBagnoService.faiAlimentazioneScattiApprossimata(
+                id,
                 scattiParziali));
-        return null;
+        return operazioniBagnoService.faiAlimentazioneScattiApprossimata(id,
+                scattiParziali);
     }
 
 

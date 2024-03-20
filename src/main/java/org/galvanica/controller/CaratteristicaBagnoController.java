@@ -1,6 +1,6 @@
 package org.galvanica.controller;
 
-import org.galvanica.dto.CaratteristicaBagnoDto;
+import org.galvanica.dto.dtoConModel.CaratteristicaBagnoDto;
 import org.galvanica.service.CRUD.BagnoService;
 import org.galvanica.service.CRUD.CaratteristicaBagnoService;
 import org.springframework.web.bind.annotation.*;

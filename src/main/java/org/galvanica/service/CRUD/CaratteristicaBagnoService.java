@@ -1,6 +1,6 @@
 package org.galvanica.service.CRUD;
 
-import org.galvanica.dto.CaratteristicaBagnoDto;
+import org.galvanica.dto.dtoConModel.CaratteristicaBagnoDto;
 import org.galvanica.model.Bagno;
 import org.galvanica.model.CaratteristicaBagno;
 import org.galvanica.repository.BagnoRepository;

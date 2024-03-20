@@ -1,4 +1,4 @@
-package org.galvanica.dto;
+package org.galvanica.dto.dtoConModel;
 
 import lombok.*;
 

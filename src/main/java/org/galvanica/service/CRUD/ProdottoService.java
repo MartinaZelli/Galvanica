@@ -1,6 +1,6 @@
 package org.galvanica.service.CRUD;
 
-import org.galvanica.dto.ProdottoDto;
+import org.galvanica.dto.dtoConModel.ProdottoDto;
 import org.galvanica.model.Magazzino;
 import org.galvanica.model.Prodotto;
 import org.galvanica.repository.MagazzinoRepository;

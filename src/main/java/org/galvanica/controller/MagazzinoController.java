@@ -1,6 +1,6 @@
 package org.galvanica.controller;
 
-import org.galvanica.dto.MagazzinoDto;
+import org.galvanica.dto.dtoConModel.MagazzinoDto;
 import org.galvanica.service.CRUD.MagazzinoService;
 import org.springframework.web.bind.annotation.*;
 

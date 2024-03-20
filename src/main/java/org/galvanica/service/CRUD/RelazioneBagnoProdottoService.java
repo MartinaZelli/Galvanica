@@ -1,6 +1,6 @@
 package org.galvanica.service.CRUD;
 
-import org.galvanica.dto.RelazioneBagnoProdottoDto;
+import org.galvanica.dto.dtoConModel.RelazioneBagnoProdottoDto;
 import org.galvanica.model.Bagno;
 import org.galvanica.model.Prodotto;
 import org.galvanica.model.RelazioneBagnoProdotto;

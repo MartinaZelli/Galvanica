@@ -1,6 +1,6 @@
 package org.galvanica.controller;
 
-import org.galvanica.dto.ProdottoDto;
+import org.galvanica.dto.dtoConModel.ProdottoDto;
 import org.galvanica.service.CRUD.ProdottoService;
 import org.springframework.web.bind.annotation.*;
 

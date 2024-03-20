@@ -1,6 +1,6 @@
 package org.galvanica.controller;
 
-import org.galvanica.dto.DettaglioAlimentazioneDto;
+import org.galvanica.dto.dtoConModel.DettaglioAlimentazioneDto;
 import org.galvanica.service.CRUD.DettaglioAlimentazioneService;
 import org.springframework.web.bind.annotation.*;
 

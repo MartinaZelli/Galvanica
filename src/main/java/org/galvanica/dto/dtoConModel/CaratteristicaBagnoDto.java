@@ -1,4 +1,4 @@
-package org.galvanica.dto;
+package org.galvanica.dto.dtoConModel;
 
 import lombok.*;
 
@@ -7,10 +7,10 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProdottoDto {
-    private Long idProdotto;
-    private Long idMagazzino;
+public class CaratteristicaBagnoDto {
+    private Long idCaratteristica;
+    private Long idBagno;
     private String nome;
     private String descrizione;
-    private Integer ph;
 }
+

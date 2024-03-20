@@ -1,6 +1,6 @@
 package org.galvanica.service.CRUD;
 
-import org.galvanica.dto.AlimentazioneDto;
+import org.galvanica.dto.dtoConModel.AlimentazioneDto;
 import org.galvanica.model.Alimentazione;
 import org.galvanica.model.Bagno;
 import org.galvanica.repository.AlimentazioneRepository;
