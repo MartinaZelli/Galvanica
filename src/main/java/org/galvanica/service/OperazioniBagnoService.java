@@ -6,7 +6,6 @@ import org.galvanica.math.ScattiMath;
 import org.galvanica.model.Alimentazione;
 import org.galvanica.model.Bagno;
 import org.galvanica.model.DettaglioAlimentazione;
-import org.galvanica.model.Prodotto;
 import org.galvanica.repository.BagnoRepository;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +54,7 @@ public class OperazioniBagnoService {
         ScattiMath alimentazioneApprossimata = MetodiArrotondamenti.alimentazioneScattiApprossimata(
                 scattiAttuali,
                 alimentazione.get().getScatti());
-        Map<Prodotto, Double> mappaAggiunta = new HashMap<>();
+        Map<String, Double> mappaAggiunta = new HashMap<>();
         //todo unità di misura alimentazione non considerate!!!
         for (DettaglioAlimentazione dettaglio : alimentazione.get()
                 .getDettaglioAlimentazioneList()) {
@@ -63,7 +62,8 @@ public class OperazioniBagnoService {
                     alimentazioneApprossimata.getMoltiplicatoreAlimentazione();
             quantitaProdottoAggiunta = MetodiArrotondamenti.approssimazioneAggiunta(
                     quantitaProdottoAggiunta);
-            mappaAggiunta.put(dettaglio.getProdotto(), quantitaProdottoAggiunta);
+            mappaAggiunta.put(dettaglio.getProdotto().getNome(),
+                    quantitaProdottoAggiunta);
         }
 
         return AlimentazioneScattiRisposta.builder()

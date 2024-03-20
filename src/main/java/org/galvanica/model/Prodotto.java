@@ -9,7 +9,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"nome"})})
 public class Prodotto {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

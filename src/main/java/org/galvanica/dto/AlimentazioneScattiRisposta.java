@@ -3,7 +3,6 @@ package org.galvanica.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.galvanica.model.Prodotto;
 
 import java.util.Map;
 
@@ -14,7 +13,7 @@ import java.util.Map;
 public class AlimentazioneScattiRisposta {
 
     private Long idBagno;
-    private Map<Prodotto, Double> mappaAlimentazione;
+    private Map<String, Double> mappaAlimentazione;
     private Double moltiplicatoreAlimentazione;
     private Integer restoScatti;
 
