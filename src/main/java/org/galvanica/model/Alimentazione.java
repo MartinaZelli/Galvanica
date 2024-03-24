@@ -23,7 +23,7 @@ public class Alimentazione {
     private String tempo;
     //cercare cron expression generator e dirgli che vuoi..... ???? 0 0 0 ? * MON,WED,FRI *//
     private String descrizione;
-    @OneToMany(mappedBy = "alimentazione")
+    @OneToMany(mappedBy = "alimentazione", cascade = CascadeType.REMOVE)
     private List<DettaglioAlimentazione> dettaglioAlimentazioneList;
 
 

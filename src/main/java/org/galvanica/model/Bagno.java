@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"nome"})})
 public class Bagno {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,11 +23,11 @@ public class Bagno {
     private Integer litri;
     private LocalDate dataInizio;
     private LocalDate dataFine;
-    @OneToMany(mappedBy = "bagno", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "bagno")
     private List<CaratteristicaBagno> caratteristicheList;
-    @OneToMany(mappedBy = "bagno", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "bagno", cascade = CascadeType.REMOVE)
     private List<Alimentazione> alimentazioneList;
-    @OneToMany(mappedBy = "bagno", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "bagno")
     private List<RelazioneBagnoProdotto> relazioneBagnoProdottoList;
 
 
