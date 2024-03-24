@@ -1,6 +1,7 @@
 package org.galvanica.dto.dtoConModel;
 
 import lombok.*;
+import org.galvanica.math.UnitaDiMisura;
 
 @Getter
 @Setter
@@ -11,7 +12,7 @@ public class DettaglioAlimentazioneDto {
     private Long idDettaglio;
     private String note;
     private Double quantitaProdotto;
-    private String unitaDiMisura;
+    private UnitaDiMisura unitaDiMisura;
     private Long idProdotto;
     private Long idAlimentazione;
 }

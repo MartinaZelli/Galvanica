@@ -13,8 +13,10 @@ import org.galvanica.math.UnitaDiMisura;
 public class StoricoDettaglio {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idStoricoDettaglio;
-    private Boolean eseguito;
+    private Boolean eseguito = false;
+    private Boolean escluso = false;
     @ManyToOne
     private Prodotto prodotto;
     @ManyToOne

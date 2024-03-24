@@ -20,6 +20,7 @@ public class Alimentazione {
     @ManyToOne
     private Bagno bagno;
     private Integer scatti;
+    private Boolean arrotondaValori = false;
     private String tempo;
     //cercare cron expression generator e dirgli che vuoi..... ???? 0 0 0 ? * MON,WED,FRI *//
     private String descrizione;

@@ -1,9 +1,6 @@
 package org.galvanica.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -18,6 +15,7 @@ import java.util.List;
 public class StoricoGenerale {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idStorico;
     @ManyToOne
     private Bagno bagno;
@@ -27,8 +25,8 @@ public class StoricoGenerale {
     private Alimentazione alimentazione;
     private LocalDateTime dataCreazione;
     private LocalDateTime dataFine;
-    private Boolean concluso;
-    @OneToMany
+    private Boolean concluso = false;
+    @OneToMany(mappedBy = "storicoGenerale")
     private List<StoricoDettaglio> storicoDettaglio;
     private Double moltiplicatoreAlimentazione;
 

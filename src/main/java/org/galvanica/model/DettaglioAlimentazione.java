@@ -2,6 +2,7 @@ package org.galvanica.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.galvanica.math.UnitaDiMisura;
 
 @Getter
 @Setter
@@ -15,7 +16,8 @@ public class DettaglioAlimentazione {
     private Long idDettaglio;
     private String note;
     private Double quantitaProdotto;
-    private String unitaDiMisura;
+    @Enumerated(EnumType.STRING)
+    private UnitaDiMisura unitaDiMisura;
     @ManyToOne
     private Prodotto prodotto;
     @ManyToOne
