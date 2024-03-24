@@ -23,7 +23,7 @@ public class StoricoGenerale {
     private Integer restoScatti;
     @ManyToOne
     private Alimentazione alimentazione;
-    private LocalDateTime dataCreazione;
+    private LocalDateTime dataCreazione = LocalDateTime.now();
     private LocalDateTime dataFine;
     private Boolean concluso = false;
     @OneToMany(mappedBy = "storicoGenerale")

@@ -45,10 +45,10 @@ public class BagnoController {
     public AlimentazioneScattiRisposta alimentazioneScatti(@PathVariable Long id,
                                                            @PathVariable Integer scattiParziali) {
         System.out.println("alimentazioneScatti()");
-        System.out.println(operazioniBagnoService.faiAlimentazioneScattiApprossimata(
+        System.out.println(operazioniBagnoService.faiAlimentazioneScatti(
                 id,
                 scattiParziali));
-        return operazioniBagnoService.faiAlimentazioneScattiApprossimata(id,
+        return operazioniBagnoService.faiAlimentazioneScatti(id,
                 scattiParziali);
     }
 

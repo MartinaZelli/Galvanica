@@ -1,17 +1,41 @@
 package org.galvanica.math;
 
 public class MetodiArrotondamenti {
-    public static ScattiMath alimentazioneScattiApprossimata(int scattiAttuali,
-                                                             int scattiAlimentazione) {
+    public static ScattiMath alimentazioneScattiMath(int scattiAttuali,
+                                                     int scattiAlimentazione,
+                                                     boolean arrotondaValori,
+                                                     Double primoValoreVolumetrico) {
         ScattiMath risposta = new ScattiMath();
         double moltiplicatoreReale = (double) scattiAttuali / scattiAlimentazione;
-        double moltiplicatoreFloor = Math.floor(moltiplicatoreReale);
-        double moltiplicatoreApprossimato = moltiplicatoreApprossimato(
-                moltiplicatoreReale,
-                moltiplicatoreFloor);
-        risposta.setRestoScatti((int) ((moltiplicatoreReale - moltiplicatoreApprossimato) * scattiAlimentazione));
-        risposta.setMoltiplicatoreAlimentazione(moltiplicatoreApprossimato);
 
+        if (moltiplicatoreReale < 0.9) {
+            risposta.setRestoScatti(scattiAttuali);
+            risposta.setMoltiplicatoreAlimentazione(0D);
+            return risposta;
+        }
+        if (arrotondaValori) {
+            double moltiplicatoreFloor = Math.floor(moltiplicatoreReale);
+            double moltiplicatoreApprossimato = moltiplicatoreApprossimato(
+                    moltiplicatoreReale,
+                    moltiplicatoreFloor);
+            double restoScatti = ((moltiplicatoreReale - moltiplicatoreApprossimato) * scattiAlimentazione);
+            risposta.setRestoScatti(Math.round(restoScatti));
+            risposta.setMoltiplicatoreAlimentazione(moltiplicatoreApprossimato);
+
+            return risposta;
+        }
+        if (primoValoreVolumetrico == null) {
+            risposta.setMoltiplicatoreAlimentazione(moltiplicatoreReale);
+            risposta.setRestoScatti(0);
+            return risposta;
+        }
+        double aggiunta = moltiplicatoreReale * primoValoreVolumetrico;
+        double aggiuntaApprossimata = approssimazioneAggiunta(aggiunta);
+
+        double moltiplicatoreApprossimato = aggiuntaApprossimata / primoValoreVolumetrico * 1;
+        double scattiAggiunti = moltiplicatoreApprossimato * scattiAlimentazione;
+        risposta.setRestoScatti(Math.round(scattiAttuali - scattiAggiunti));
+        risposta.setMoltiplicatoreAlimentazione(moltiplicatoreApprossimato);
         return risposta;
     }
 
@@ -46,4 +70,5 @@ public class MetodiArrotondamenti {
         double resto = aggiunta % 250;
         return aggiunta - resto;
     }
+
 }

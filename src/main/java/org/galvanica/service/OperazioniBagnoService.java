@@ -3,10 +3,10 @@ package org.galvanica.service;
 import org.galvanica.dto.AlimentazioneScattiRisposta;
 import org.galvanica.math.MetodiArrotondamenti;
 import org.galvanica.math.ScattiMath;
-import org.galvanica.model.Alimentazione;
-import org.galvanica.model.Bagno;
-import org.galvanica.model.DettaglioAlimentazione;
+import org.galvanica.model.*;
 import org.galvanica.repository.BagnoRepository;
+import org.galvanica.repository.StoricoDettaglioRepository;
+import org.galvanica.repository.StoricoGeneraleRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -17,14 +17,25 @@ import java.util.Optional;
 public class OperazioniBagnoService {
 
     private final BagnoRepository bagnoRepository;
+    private final StoricoGeneraleRepository storicoGeneraleRepository;
+    private final StoricoDettaglioRepository storicoDettaglioRepository;
 
 
-    public OperazioniBagnoService(BagnoRepository bagnoRepository) {
+    public OperazioniBagnoService(BagnoRepository bagnoRepository,
+                                  StoricoGeneraleRepository storicoGeneraleRepository,
+                                  StoricoDettaglioRepository storicoDettaglioRepository) {
         this.bagnoRepository = bagnoRepository;
+        this.storicoGeneraleRepository = storicoGeneraleRepository;
+        this.storicoDettaglioRepository = storicoDettaglioRepository;
     }
 
-    public AlimentazioneScattiRisposta faiAlimentazioneScattiApprossimata(Long id,
-                                                                          Integer scattiParziali) {
+    /*alimentazione a scatti prende bagno e scatti parziali, legge se tutto ha un valore per non dare eccezione,
+    dopodichè verifica se l'aggiunta è da fare o meno e SE NON c'è da fare aggiunta a scatti salva il bagno con i nuovi parametri;
+    se invece c'è da fare l'aggiunta a scatti crea uno storico che poi andrà confermato per aggiornare il bagno.
+   TODO: fare il metodo conferma storico.
+     */
+    public AlimentazioneScattiRisposta faiAlimentazioneScatti(Long id,
+                                                              Integer scattiParziali) {
         Optional<Bagno> bagnoTrovato = bagnoRepository.findById(id);
         if (bagnoTrovato.isEmpty()) {
             throw new RuntimeException(
@@ -39,40 +50,69 @@ public class OperazioniBagnoService {
             throw new RuntimeException(
                     "se il bagno non ha alimentazione a scatti di sto numero mi ci gratto");
         }
-        bagno.setScattiTotali(bagno.getScattiTotali() + scattiParziali);
         int scattiAttuali = bagno.getRestoScatti() + scattiParziali;
-        if (((double) scattiAttuali / alimentazione.get().getScatti()) < 0.9) {
+        Double primoValoreVolumetrico = alimentazione.get()
+                .getDettaglioAlimentazioneList()
+                .stream()
+                .filter(dettaglioAlimentazione -> dettaglioAlimentazione.getUnitaDiMisura()
+                        .isSonoVolume())
+                .findFirst()
+                .map(DettaglioAlimentazione::getQuantitaProdotto)
+                .orElse(null);
+        ScattiMath scattiMath = MetodiArrotondamenti.alimentazioneScattiMath(
+                scattiAttuali,
+                alimentazione.get().getScatti(),
+                alimentazione.get().getArrotondaValori(), primoValoreVolumetrico);
+        if (scattiMath.getMoltiplicatoreAlimentazione() == 0) {
             System.out.println(
-                    "il bagno non richiede aggiunte per ora. nuovo resto scatti : " + bagno.getRestoScatti());
+                    "il bagno non richiede aggiunte per ora. nuovo resto scatti : " + scattiAttuali);
+            bagno.setScattiTotali(bagno.getScattiTotali() + scattiParziali);
+            bagno.setRestoScatti(scattiAttuali);
             bagnoRepository.save(bagno);
             return AlimentazioneScattiRisposta.builder()
                     .idBagno(id)
                     .restoScatti(scattiAttuali)
+                    .messaggio(
+                            "gli scatti sono inferiori al 90% dell'alimentazione, " +
+                                    "le aggiunte non verranno eseguite ma messe in conto per la prossima chiamata.")
+                    .moltiplicatoreAlimentazione(0D)
                     .build();
         }
-        //todo alimentazione
-        ScattiMath alimentazioneApprossimata = MetodiArrotondamenti.alimentazioneScattiApprossimata(
-                scattiAttuali,
-                alimentazione.get().getScatti());
-        Map<String, Double> mappaAggiunta = new HashMap<>();
-        //todo unità di misura alimentazione non considerate!!!
+        StoricoGenerale storicoGenerale = storicoGeneraleRepository.save(
+                StoricoGenerale.builder()
+                        .alimentazione(alimentazione.get())
+                        .bagno(bagno)
+                        .scattiTotali(bagno.getScattiTotali() + scattiParziali)
+                        .restoScatti((int) scattiMath.getRestoScatti())
+                        .moltiplicatoreAlimentazione(scattiMath.getMoltiplicatoreAlimentazione())
+                        .build());
+        Map<String, String> mappaAggiunta = new HashMap<>();
         for (DettaglioAlimentazione dettaglio : alimentazione.get()
                 .getDettaglioAlimentazioneList()) {
             double quantitaProdottoAggiunta = dettaglio.getQuantitaProdotto() *
-                    alimentazioneApprossimata.getMoltiplicatoreAlimentazione();
-            quantitaProdottoAggiunta = MetodiArrotondamenti.approssimazioneAggiunta(
-                    quantitaProdottoAggiunta);
+                    scattiMath.getMoltiplicatoreAlimentazione();
+            if (dettaglio.getUnitaDiMisura().isSonoVolume()) {
+                quantitaProdottoAggiunta = MetodiArrotondamenti.approssimazioneAggiunta(
+                        quantitaProdottoAggiunta);
+            }
+            storicoDettaglioRepository.save(StoricoDettaglio.builder()
+                    .prodotto(dettaglio.getProdotto())
+                    .storicoGenerale(storicoGenerale)
+                    .quantita(quantitaProdottoAggiunta)
+                    .unitaDiMisura(dettaglio.getUnitaDiMisura())
+                    .build());
+
             mappaAggiunta.put(dettaglio.getProdotto().getNome(),
-                    quantitaProdottoAggiunta);
+                    quantitaProdottoAggiunta + " " + dettaglio.getUnitaDiMisura()
+                            .name());
         }
 
         return AlimentazioneScattiRisposta.builder()
                 .idBagno(id)
                 .mappaAlimentazione(mappaAggiunta)
-                .restoScatti(alimentazioneApprossimata.getRestoScatti())
-                .moltiplicatoreAlimentazione(alimentazioneApprossimata.getMoltiplicatoreAlimentazione())
+                .restoScatti((int) scattiMath.getRestoScatti())
+                .moltiplicatoreAlimentazione(scattiMath.getMoltiplicatoreAlimentazione())
                 .build();
     }
-
 
 }

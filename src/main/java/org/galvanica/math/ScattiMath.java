@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 
 public class ScattiMath {
-    private int restoScatti;
+    private long restoScatti;
     private double moltiplicatoreAlimentazione;
 
 }

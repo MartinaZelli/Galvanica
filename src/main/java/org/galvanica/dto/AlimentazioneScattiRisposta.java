@@ -13,9 +13,10 @@ import java.util.Map;
 public class AlimentazioneScattiRisposta {
 
     private Long idBagno;
-    private Map<String, Double> mappaAlimentazione;
+    private Map<String, String> mappaAlimentazione;
     private Double moltiplicatoreAlimentazione;
     private Integer restoScatti;
+    private String messaggio;
 
 
 }
