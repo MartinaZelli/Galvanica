@@ -42,10 +42,12 @@ public class OperazioniBagnoService {
                     "metti un id corretto che questo non c'è, bischero.");
         }
         Bagno bagno = bagnoTrovato.get();
+
         Optional<Alimentazione> alimentazione = bagno.getAlimentazioneList()
                 .stream()
                 .filter(alimentazioneFilter -> alimentazioneFilter.getScatti() != null)
                 .findFirst();
+
         if (alimentazione.isEmpty()) {
             throw new RuntimeException(
                     "se il bagno non ha alimentazione a scatti di sto numero mi ci gratto");

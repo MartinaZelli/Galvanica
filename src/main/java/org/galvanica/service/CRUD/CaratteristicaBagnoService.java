@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class CaratteristicaBagnoService implements ICRUDService<CaratteristicaBagnoDto> {
+public class CaratteristicaBagnoService implements ICRUDService<CaratteristicaBagnoDto, CaratteristicaBagno> {
     private final CaratteristicaBagnoRepository repository;
     private final BagnoRepository repositoryBagno;
 
@@ -20,8 +20,6 @@ public class CaratteristicaBagnoService implements ICRUDService<CaratteristicaBa
         this.repositoryBagno = repositoryBagno;
     }
 
-    //TODO? ripulire il codice con:
-    // private CaratteristicaBagnoDto CaratteristicaBagnoBuilder() (Oprtional<CaratteristicaBagno>){}
     @Override
     public CaratteristicaBagnoDto inserisci(CaratteristicaBagnoDto elemento) {
         if (elemento.getIdBagno() == null) {
@@ -47,12 +45,7 @@ public class CaratteristicaBagnoService implements ICRUDService<CaratteristicaBa
                 .descrizione(elemento.getDescrizione())
                 .build();
         caratteristicaBagno = repository.save(caratteristicaBagno);
-        return CaratteristicaBagnoDto.builder()
-                .idBagno(caratteristicaBagno.getBagno().getIdBagno())
-                .idCaratteristica(caratteristicaBagno.getIdCaratteristica())
-                .nome(caratteristicaBagno.getNome())
-                .descrizione(caratteristicaBagno.getDescrizione())
-                .build();
+        return fromModelToDto(caratteristicaBagno);
     }
 
     @Override
@@ -87,12 +80,7 @@ public class CaratteristicaBagnoService implements ICRUDService<CaratteristicaBa
         caratteristicaBagno.setDescrizione(elemento.getDescrizione());
         caratteristicaBagno.setNome(elemento.getNome());
         caratteristicaBagno = repository.save(caratteristicaBagno);
-        return CaratteristicaBagnoDto.builder()
-                .idBagno(caratteristicaBagno.getBagno().getIdBagno())
-                .idCaratteristica(caratteristicaBagno.getIdCaratteristica())
-                .nome(caratteristicaBagno.getNome())
-                .descrizione(caratteristicaBagno.getDescrizione())
-                .build();
+        return fromModelToDto(caratteristicaBagno);
     }
 
     @Override
@@ -100,12 +88,20 @@ public class CaratteristicaBagnoService implements ICRUDService<CaratteristicaBa
         Optional<CaratteristicaBagno> caratteristicaBagnoTrovato =
                 repository.findById(id);
         return caratteristicaBagnoTrovato
-                .map(caratteristicaBagno -> CaratteristicaBagnoDto.builder()
-                        .idBagno(caratteristicaBagno.getBagno().getIdBagno())
-                        .idCaratteristica(caratteristicaBagno.getIdCaratteristica())
-                        .nome(caratteristicaBagno.getNome())
-                        .descrizione(caratteristicaBagno.getDescrizione())
-                        .build());
+                .map(this::fromModelToDto);
+    }
+
+
+    @Override
+    public CaratteristicaBagnoDto fromModelToDto(
+            CaratteristicaBagno oggettoDaTrasformare) {
+
+        return CaratteristicaBagnoDto.builder()
+                .idCaratteristica(oggettoDaTrasformare.getIdCaratteristica())
+                .idBagno(oggettoDaTrasformare.getBagno().getIdBagno())
+                .nome(oggettoDaTrasformare.getNome())
+                .descrizione(oggettoDaTrasformare.getDescrizione())
+                .build();
     }
 }
 

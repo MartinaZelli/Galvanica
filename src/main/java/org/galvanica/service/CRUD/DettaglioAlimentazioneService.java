@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlimentazioneDto> {
+public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlimentazioneDto, DettaglioAlimentazione> {
 
     private final DettaglioAlimentazioneRepository dettaglioAlimentazioneRepository;
     private final ProdottoRepository prodottoRepository;
@@ -65,15 +65,7 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
                 .build();
         dettaglioAlimentazione = dettaglioAlimentazioneRepository.save(
                 dettaglioAlimentazione);
-        return DettaglioAlimentazioneDto.builder()
-                .idDettaglio(dettaglioAlimentazione.getIdDettaglio())
-                .note(dettaglioAlimentazione.getNote())
-                .quantitaProdotto(dettaglioAlimentazione.getQuantitaProdotto())
-                .unitaDiMisura(dettaglioAlimentazione.getUnitaDiMisura())
-                .idProdotto(dettaglioAlimentazione.getProdotto().getIdProdotto())
-                .idAlimentazione(dettaglioAlimentazione.getAlimentazione()
-                        .getIdAlimentazione())
-                .build();
+        return fromModelToDto(dettaglioAlimentazione);
     }
 
     @Override
@@ -126,15 +118,7 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
         dettaglioAlimentazione = dettaglioAlimentazioneRepository.save(
                 dettaglioAlimentazione);
 
-        return DettaglioAlimentazioneDto.builder()
-                .idDettaglio(dettaglioAlimentazione.getIdDettaglio())
-                .note(dettaglioAlimentazione.getNote())
-                .quantitaProdotto(dettaglioAlimentazione.getQuantitaProdotto())
-                .unitaDiMisura(dettaglioAlimentazione.getUnitaDiMisura())
-                .idProdotto(dettaglioAlimentazione.getProdotto().getIdProdotto())
-                .idAlimentazione(dettaglioAlimentazione.getAlimentazione()
-                        .getIdAlimentazione())
-                .build();
+        return fromModelToDto(dettaglioAlimentazione);
     }
 
     @Override
@@ -142,15 +126,20 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
         Optional<DettaglioAlimentazione> dettaglioAlimentazioneOptional =
                 dettaglioAlimentazioneRepository.findById(id);
         return dettaglioAlimentazioneOptional
-                .map(dettaglioAlimentazione -> DettaglioAlimentazioneDto.builder()
-                        .idDettaglio(dettaglioAlimentazione.getIdDettaglio())
-                        .note(dettaglioAlimentazione.getNote())
-                        .quantitaProdotto(dettaglioAlimentazione.getQuantitaProdotto())
-                        .unitaDiMisura(dettaglioAlimentazione.getUnitaDiMisura())
-                        .idProdotto(dettaglioAlimentazione.getProdotto()
-                                .getIdProdotto())
-                        .idAlimentazione(dettaglioAlimentazione.getAlimentazione()
-                                .getIdAlimentazione())
-                        .build());
+                .map(this::fromModelToDto);
+    }
+
+    @Override
+    public DettaglioAlimentazioneDto fromModelToDto(
+            DettaglioAlimentazione oggettoDaTrasformare) {
+        return DettaglioAlimentazioneDto.builder()
+                .idDettaglio(oggettoDaTrasformare.getIdDettaglio())
+                .note(oggettoDaTrasformare.getNote())
+                .quantitaProdotto(oggettoDaTrasformare.getQuantitaProdotto())
+                .unitaDiMisura(oggettoDaTrasformare.getUnitaDiMisura())
+                .idProdotto(oggettoDaTrasformare.getProdotto().getIdProdotto())
+                .idAlimentazione(oggettoDaTrasformare.getAlimentazione()
+                        .getIdAlimentazione())
+                .build();
     }
 }

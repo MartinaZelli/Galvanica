@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 public class AlimentazioneDto {
     private Long idAlimentazione;
-    private Long IdBagno;
+    private Long idBagno;
     private Integer scatti;
     private String tempo;
     private String descrizione;

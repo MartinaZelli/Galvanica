@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class RelazioneBagnoProdottoService implements ICRUDService<RelazioneBagnoProdottoDto> {
+public class RelazioneBagnoProdottoService implements ICRUDService<RelazioneBagnoProdottoDto, RelazioneBagnoProdotto> {
 
     private final RelazioneBagnoProdottoRepository relazioneBagnoProdottoRepository;
     private final BagnoRepository bagnoRepository;
@@ -57,12 +57,7 @@ public class RelazioneBagnoProdottoService implements ICRUDService<RelazioneBagn
                 .build();
         relazioneBagnoProdotto = relazioneBagnoProdottoRepository.save(
                 relazioneBagnoProdotto);
-        return RelazioneBagnoProdottoDto.builder()
-                .idRelazione(relazioneBagnoProdotto.getIdRelazione())
-                .idBagno(relazioneBagnoProdotto.getBagno().getIdBagno())
-                .idProdotto(relazioneBagnoProdotto.getProdotto().getIdProdotto())
-                .note(relazioneBagnoProdotto.getNote())
-                .build();
+        return fromModelToDto(relazioneBagnoProdotto);
     }
 
     @Override
@@ -107,12 +102,7 @@ public class RelazioneBagnoProdottoService implements ICRUDService<RelazioneBagn
         relazioneBagnoProdotto.setProdotto(prodottoOptional.get());
         relazioneBagnoProdotto = relazioneBagnoProdottoRepository.save(
                 relazioneBagnoProdotto);
-        return RelazioneBagnoProdottoDto.builder()
-                .idRelazione(relazioneBagnoProdotto.getIdRelazione())
-                .idBagno(relazioneBagnoProdotto.getBagno().getIdBagno())
-                .idProdotto(relazioneBagnoProdotto.getProdotto().getIdProdotto())
-                .note(relazioneBagnoProdotto.getNote())
-                .build();
+        return fromModelToDto(relazioneBagnoProdotto);
     }
 
     @Override
@@ -121,12 +111,18 @@ public class RelazioneBagnoProdottoService implements ICRUDService<RelazioneBagn
                 relazioneBagnoProdottoRepository.findById(id);
 
         return relazioneBagnoProdottoOptional
-                .map(relazioneBagnoProdotto -> RelazioneBagnoProdottoDto.builder()
-                        .idRelazione(relazioneBagnoProdotto.getIdRelazione())
-                        .idBagno(relazioneBagnoProdotto.getBagno().getIdBagno())
-                        .idProdotto(relazioneBagnoProdotto.getProdotto()
-                                .getIdProdotto())
-                        .note(relazioneBagnoProdotto.getNote())
-                        .build());
+                .map(this::fromModelToDto);
+    }
+
+    @Override
+    public RelazioneBagnoProdottoDto fromModelToDto(
+            RelazioneBagnoProdotto oggettoDaTrasformare) {
+
+        return RelazioneBagnoProdottoDto.builder()
+                .idRelazione(oggettoDaTrasformare.getIdRelazione())
+                .idBagno(oggettoDaTrasformare.getBagno().getIdBagno())
+                .idProdotto(oggettoDaTrasformare.getProdotto().getIdProdotto())
+                .note(oggettoDaTrasformare.getNote())
+                .build();
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class AlimentazioneService implements ICRUDService<AlimentazioneDto> {
+public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alimentazione> {
 
     private final AlimentazioneRepository alimentazioneRepository;
     private final BagnoRepository bagnoRepository;
@@ -48,13 +48,7 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto> {
                 .descrizione(elemento.getDescrizione())
                 .build();
         alimentazione = alimentazioneRepository.save(alimentazione);
-        return AlimentazioneDto.builder()
-                .idAlimentazione(alimentazione.getIdAlimentazione())
-                .IdBagno(alimentazione.getBagno().getIdBagno())
-                .scatti(alimentazione.getScatti())
-                .tempo(alimentazione.getTempo())
-                .descrizione(alimentazione.getDescrizione())
-                .build();
+        return fromModelToDto(alimentazione);
     }
 
     @Override
@@ -94,13 +88,7 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto> {
         alimentazione.setBagno(bagnoOptional.get());
         alimentazione = alimentazioneRepository.save(alimentazione);
 
-        return AlimentazioneDto.builder()
-                .idAlimentazione(alimentazione.getIdAlimentazione())
-                .descrizione(alimentazione.getDescrizione())
-                .tempo(alimentazione.getTempo())
-                .IdBagno(alimentazione.getBagno().getIdBagno())
-                .scatti(alimentazione.getScatti())
-                .build();
+        return fromModelToDto(alimentazione);
     }
 
     @Override
@@ -108,12 +96,17 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto> {
         Optional<Alimentazione> alimentazioneOptional =
                 alimentazioneRepository.findById(id);
         return alimentazioneOptional
-                .map(alimentazione -> AlimentazioneDto.builder()
-                        .idAlimentazione(alimentazione.getIdAlimentazione())
-                        .descrizione(alimentazione.getDescrizione())
-                        .tempo(alimentazione.getTempo())
-                        .IdBagno(alimentazione.getBagno().getIdBagno())
-                        .scatti(alimentazione.getScatti())
-                        .build());
+                .map(this::fromModelToDto);
+    }
+    
+    @Override
+    public AlimentazioneDto fromModelToDto(Alimentazione oggettoDaTrasformare) {
+        return AlimentazioneDto.builder()
+                .idAlimentazione(oggettoDaTrasformare.getIdAlimentazione())
+                .idBagno(oggettoDaTrasformare.getBagno().getIdBagno())
+                .scatti(oggettoDaTrasformare.getScatti())
+                .tempo(oggettoDaTrasformare.getTempo())
+                .descrizione(oggettoDaTrasformare.getDescrizione())
+                .build();
     }
 }

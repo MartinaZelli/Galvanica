@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
-public class BagnoService implements ICRUDService<BagnoDto> {
+public class BagnoService implements ICRUDService<BagnoDto, Bagno> {
     private final BagnoRepository repository;
 
     public BagnoService(BagnoRepository repository) {
@@ -42,13 +42,9 @@ public class BagnoService implements ICRUDService<BagnoDto> {
                 .dataFine(null)
                 .build();
         bagno = repository.save(bagno);
-        return BagnoDto.builder()
-                .nome(bagno.getNome())
-                .idBagno(bagno.getIdBagno())
-                .litri(bagno.getLitri())
-                .restoScatti(bagno.getRestoScatti())
-                .scattiTotali(bagno.getScattiTotali())
-                .build();
+
+        return fromModelToDto(bagno);
+
     }
 
     @Override
@@ -73,24 +69,28 @@ public class BagnoService implements ICRUDService<BagnoDto> {
         bagno.setScattiTotali(elemento.getScattiTotali());
         bagno.setLitri(elemento.getLitri());
         bagno = repository.save(bagno);
-        return BagnoDto.builder()
-                .nome(bagno.getNome())
-                .idBagno(bagno.getIdBagno())
-                .litri(bagno.getLitri())
-                .restoScatti(bagno.getRestoScatti())
-                .scattiTotali(bagno.getScattiTotali())
-                .build();
+        return fromModelToDto(bagno);
+
     }
 
     public Optional<BagnoDto> ricercaId(long id) {
         Optional<Bagno> bagnoTrovato = repository.findById(id);
-        return bagnoTrovato.map(bagno -> BagnoDto.builder()
-                .nome(bagno.getNome())
-                .idBagno(bagno.getIdBagno())
-                .litri(bagno.getLitri())
-                .restoScatti(bagno.getRestoScatti())
-                .scattiTotali(bagno.getScattiTotali())
-                .build());
+        if (bagnoTrovato.isEmpty()) {
+            throw new RuntimeException(
+                    "non esiste bagno con questo ID");
+        }
+        return bagnoTrovato.map(this::fromModelToDto);
+    }
+
+    @Override
+    public BagnoDto fromModelToDto(Bagno oggettoDaTrasformare) {
+        return BagnoDto.builder()
+                .idBagno(oggettoDaTrasformare.getIdBagno())
+                .nome(oggettoDaTrasformare.getNome())
+                .scattiTotali(oggettoDaTrasformare.getScattiTotali())
+                .restoScatti(oggettoDaTrasformare.getRestoScatti())
+                .litri(oggettoDaTrasformare.getLitri())
+                .build();
     }
     //TODO: mettere Optional BagnoDto oppure senza Optional? decidere quale è il migliore.
    /* @Override

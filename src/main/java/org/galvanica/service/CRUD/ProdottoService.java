@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class ProdottoService implements ICRUDService<ProdottoDto> {
+public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
 
     private final ProdottoRepository prodottoRepository;
     private final MagazzinoRepository magazzinoRepository;
@@ -43,13 +43,7 @@ public class ProdottoService implements ICRUDService<ProdottoDto> {
                 .ph(elemento.getPh())
                 .build();
         prodotto = prodottoRepository.save(prodotto);
-        return ProdottoDto.builder()
-                .idProdotto(prodotto.getIdProdotto())
-                .idMagazzino(prodotto.getMagazzino().getIdMagazzino())
-                .nome(prodotto.getNome())
-                .descrizione(prodotto.getDescrizione())
-                .ph(prodotto.getPh())
-                .build();
+        return fromModelToDto(prodotto);
     }
 
     @Override
@@ -84,12 +78,7 @@ public class ProdottoService implements ICRUDService<ProdottoDto> {
         prodotto.setPh(elemento.getPh());
         prodotto = prodottoRepository.save(prodotto);
 
-        return ProdottoDto.builder().idProdotto(prodotto.getIdProdotto())
-                .idMagazzino(prodotto.getMagazzino().getIdMagazzino())
-                .nome(prodotto.getNome())
-                .descrizione(prodotto.getDescrizione())
-                .ph(prodotto.getPh())
-                .build();
+        return fromModelToDto(prodotto);
 
     }
 
@@ -97,12 +86,17 @@ public class ProdottoService implements ICRUDService<ProdottoDto> {
     public Optional<ProdottoDto> ricercaId(long id) {
         Optional<Prodotto> prodottoOptional = prodottoRepository.findById(id);
         return prodottoOptional
-                .map(prodotto -> ProdottoDto.builder()
-                        .idProdotto(prodotto.getIdProdotto())
-                        .idMagazzino(prodotto.getMagazzino().getIdMagazzino())
-                        .nome(prodotto.getNome())
-                        .descrizione(prodotto.getDescrizione())
-                        .ph(prodotto.getPh())
-                        .build());
+                .map(this::fromModelToDto);
+    }
+
+    @Override
+    public ProdottoDto fromModelToDto(Prodotto oggettoDaTrasformare) {
+        return ProdottoDto.builder()
+                .idProdotto(oggettoDaTrasformare.getIdProdotto())
+                .idMagazzino(oggettoDaTrasformare.getMagazzino().getIdMagazzino())
+                .nome(oggettoDaTrasformare.getNome())
+                .descrizione(oggettoDaTrasformare.getDescrizione())
+                .ph(oggettoDaTrasformare.getPh())
+                .build();
     }
 }

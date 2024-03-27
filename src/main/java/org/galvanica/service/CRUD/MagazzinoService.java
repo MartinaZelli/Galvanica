@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class MagazzinoService implements ICRUDService<MagazzinoDto> {
+public class MagazzinoService implements ICRUDService<MagazzinoDto, Magazzino> {
 
     private final MagazzinoRepository magazzinoRepository;
 
@@ -25,10 +25,7 @@ public class MagazzinoService implements ICRUDService<MagazzinoDto> {
                 .descrizione(elemento.getDescrizione())
                 .build();
         magazzino = magazzinoRepository.save(magazzino);
-        return MagazzinoDto.builder()
-                .idMagazzino(magazzino.getIdMagazzino())
-                .descrizione(magazzino.getDescrizione())
-                .build();
+        return fromModelToDto(magazzino);
     }
 
     @Override
@@ -51,19 +48,21 @@ public class MagazzinoService implements ICRUDService<MagazzinoDto> {
         magazzino.setDescrizione(elemento.getDescrizione());
         magazzino = magazzinoRepository.save(magazzino);
 
-        return MagazzinoDto.builder()
-                .idMagazzino(magazzino.getIdMagazzino())
-                .descrizione(magazzino.getDescrizione())
-                .build();
+        return fromModelToDto(magazzino);
     }
 
     @Override
     public Optional<MagazzinoDto> ricercaId(long id) {
         Optional<Magazzino> magazzinoTrovato = magazzinoRepository.findById(id);
         return magazzinoTrovato
-                .map(magazzino -> MagazzinoDto.builder()
-                        .descrizione(magazzino.getDescrizione())
-                        .idMagazzino(magazzino.getIdMagazzino())
-                        .build());
+                .map(this::fromModelToDto);
+    }
+
+    @Override
+    public MagazzinoDto fromModelToDto(Magazzino oggettoDaTrasformare) {
+        return MagazzinoDto.builder()
+                .idMagazzino(oggettoDaTrasformare.getIdMagazzino())
+                .descrizione(oggettoDaTrasformare.getDescrizione())
+                .build();
     }
 }
