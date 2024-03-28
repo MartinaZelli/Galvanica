@@ -102,13 +102,6 @@ public class OperazioniBagnoService {
                 .build();
     }
 
-    private Boolean presenteStoricoDettaglioDaGestire(
-            StoricoGenerale storicoGenerale) {
-        return storicoGenerale.getStoricoDettaglioList()
-                .stream()
-                .anyMatch(filter -> !filter.getEscluso() && !filter.getEseguito());
-//è true se c'è almeno una aggiuntadettaglio da eseguire o escludere, altrimenti sarà false.
-    }
 
     private Map<String, String> conteggiProdottiScatti(Alimentazione alimentazione,
                                                        ScattiMath scattiMath,
