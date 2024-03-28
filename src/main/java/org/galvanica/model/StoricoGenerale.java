@@ -27,7 +27,7 @@ public class StoricoGenerale {
     private LocalDateTime dataFine;
     private Boolean concluso = false;
     @OneToMany(mappedBy = "storicoGenerale")
-    private List<StoricoDettaglio> storicoDettaglio;
+    private List<StoricoDettaglio> storicoDettaglioList;
     private Double moltiplicatoreAlimentazione;
 
 }
