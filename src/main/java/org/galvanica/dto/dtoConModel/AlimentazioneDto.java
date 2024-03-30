@@ -13,4 +13,5 @@ public class AlimentazioneDto {
     private Integer scatti;
     private String tempo;
     private String descrizione;
+    private Boolean arrotondaValori = false;
 }

@@ -28,7 +28,7 @@ public class StoricoGenerale {
     private LocalDateTime dataFine;
     @Builder.Default
     private Boolean concluso = false;
-    @OneToMany(mappedBy = "storicoGenerale")
+    @OneToMany(mappedBy = "storicoGenerale", cascade = CascadeType.REMOVE)
     private List<StoricoDettaglio> storicoDettaglioList;
     private Double moltiplicatoreAlimentazione;
 

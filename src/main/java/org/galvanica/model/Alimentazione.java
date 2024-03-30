@@ -27,6 +27,7 @@ public class Alimentazione {
     private String descrizione;
     @OneToMany(mappedBy = "alimentazione", cascade = CascadeType.REMOVE)
     private List<DettaglioAlimentazione> dettaglioAlimentazioneList;
-
+    @OneToMany(mappedBy = "alimentazione", cascade = CascadeType.REMOVE)
+    private List<StoricoGenerale> storicoGeneraleList;
 
 }

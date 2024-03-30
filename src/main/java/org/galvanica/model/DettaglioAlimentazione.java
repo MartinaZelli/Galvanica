@@ -11,6 +11,7 @@ import org.galvanica.math.UnitaDiMisura;
 @NoArgsConstructor
 @Entity
 public class DettaglioAlimentazione {
+    //todo; impostare chiave unica dettaglio alimentazione/prodotto
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idDettaglio;
@@ -20,7 +21,7 @@ public class DettaglioAlimentazione {
     private UnitaDiMisura unitaDiMisura;
     @ManyToOne
     private Prodotto prodotto;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private Alimentazione alimentazione;
 
 }

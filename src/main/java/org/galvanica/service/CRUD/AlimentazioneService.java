@@ -46,6 +46,7 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
                 .tempo(elemento.getTempo())
                 .scatti(elemento.getScatti())
                 .descrizione(elemento.getDescrizione())
+                .arrotondaValori(elemento.getArrotondaValori())
                 .build();
         alimentazione = alimentazioneRepository.save(alimentazione);
         return fromModelToDto(alimentazione);
@@ -98,7 +99,7 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
         return alimentazioneOptional
                 .map(this::fromModelToDto);
     }
-    
+
     @Override
     public AlimentazioneDto fromModelToDto(Alimentazione oggettoDaTrasformare) {
         return AlimentazioneDto.builder()
@@ -107,6 +108,7 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
                 .scatti(oggettoDaTrasformare.getScatti())
                 .tempo(oggettoDaTrasformare.getTempo())
                 .descrizione(oggettoDaTrasformare.getDescrizione())
+                .arrotondaValori(oggettoDaTrasformare.getArrotondaValori())
                 .build();
     }
 }
