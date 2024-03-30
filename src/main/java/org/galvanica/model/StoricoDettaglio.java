@@ -15,7 +15,9 @@ public class StoricoDettaglio {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idStoricoDettaglio;
+    @Builder.Default
     private Boolean eseguito = false;
+    @Builder.Default
     private Boolean escluso = false;
     @ManyToOne
     private Prodotto prodotto;

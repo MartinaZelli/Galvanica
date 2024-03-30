@@ -39,11 +39,12 @@ public class OperazioniBagnoService {
         eseguiStoricoDettaglio(storicoDettaglio);
         if (!veroSeListaStoricoDettaglioCompletata(storicoDettaglio.getStoricoGenerale())) {
             return;
+            //todo: non so se conviene fare uscire qualcosa dal metodo per capire se anche lo storicoGenerale è aggiornato oppure no.
         }
         aggiornaBagnoEStoricoGenerale(storicoDettaglio.getStoricoGenerale());
     }
 
-    public void confermaInteraEsecuzione(Long idStoricoGenerale) {
+    public void confermaInteraAlimentazione(Long idStoricoGenerale) {
         StoricoGenerale storicoGenerale = trovaStoricoGenerale(idStoricoGenerale);
         if (!storicoGenerale.getStoricoDettaglioList().isEmpty()) {
             for (StoricoDettaglio storicoDettaglio : storicoGenerale.getStoricoDettaglioList()) {
@@ -152,7 +153,7 @@ public class OperazioniBagnoService {
         storicoDettaglioRepository.save(storicoDettaglio);
     }
 
-
+    //todo: tutti i metodi trova"oggetto" possono essere semplificati?
     private StoricoDettaglio trovaStoricoDettaglio(Long id) {
         Optional<StoricoDettaglio> storicoDettaglioTrovato = storicoDettaglioRepository.findById(
                 id);

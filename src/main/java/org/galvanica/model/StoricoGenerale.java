@@ -23,8 +23,10 @@ public class StoricoGenerale {
     private Integer restoScatti;
     @ManyToOne
     private Alimentazione alimentazione;
+    @Builder.Default
     private LocalDateTime dataCreazione = LocalDateTime.now();
     private LocalDateTime dataFine;
+    @Builder.Default
     private Boolean concluso = false;
     @OneToMany(mappedBy = "storicoGenerale")
     private List<StoricoDettaglio> storicoDettaglioList;

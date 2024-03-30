@@ -52,5 +52,17 @@ public class BagnoController {
                 scattiParziali);
     }
 
+    @PutMapping("eseguiSingolaAggiunta/{idStoricoDettaglio}")
+    public void eseguiSingolaAggiunta(@PathVariable Long idStoricoDettaglio) {
+        System.out.println("dentro eseguiSingolaAggiunta");
+        operazioniBagnoService.eseguiSingolaAggiunta(idStoricoDettaglio);
+    }
+
+    @PutMapping("confermaInteraAlimentazione/{idStoricoGenerale}")
+    public void confermaInteraAlimentazione(@PathVariable Long idStoricoGenerale) {
+        System.out.println("dentro confermaInteraAlimentazione");
+        operazioniBagnoService.confermaInteraAlimentazione(idStoricoGenerale);
+    }
+
 
 }
