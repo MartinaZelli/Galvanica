@@ -44,10 +44,6 @@ public class BagnoController {
     @PutMapping("{id}/alimentazioneScatti/{scattiParziali}")
     public AlimentazioneScattiRisposta alimentazioneScatti(@PathVariable Long id,
                                                            @PathVariable Integer scattiParziali) {
-        System.out.println("alimentazioneScatti()");
-        System.out.println(operazioniBagnoService.calcolaAlimentazioneScatti(
-                id,
-                scattiParziali));
         return operazioniBagnoService.calcolaAlimentazioneScatti(id,
                 scattiParziali);
     }

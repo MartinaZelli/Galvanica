@@ -108,6 +108,7 @@ public class OperazioniBagnoService {
                                                        ScattiMath scattiMath,
                                                        StoricoGenerale storicoGenerale) {
         Map<String, String> mappaAggiunta = new HashMap<>();
+        StoricoGenerale storico = trovaStoricoGenerale(storicoGenerale.getIdStorico());
         for (DettaglioAlimentazione dettaglio : alimentazione.getDettaglioAlimentazioneList()) {
             double quantitaProdottoAggiunta = dettaglio.getQuantitaProdotto() * scattiMath.getMoltiplicatoreAlimentazione();
             if (dettaglio.getUnitaDiMisura().isSonoVolume()) {
@@ -116,7 +117,7 @@ public class OperazioniBagnoService {
             }
             storicoDettaglioRepository.save(StoricoDettaglio.builder()
                     .prodotto(dettaglio.getProdotto())
-                    .storicoGenerale(storicoGenerale)
+                    .storicoGenerale(storico)
                     .quantita(quantitaProdottoAggiunta)
                     .unitaDiMisura(dettaglio.getUnitaDiMisura())
                     .build());
