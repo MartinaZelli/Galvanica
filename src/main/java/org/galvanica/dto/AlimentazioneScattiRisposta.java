@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Map;
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,7 +13,7 @@ import java.util.Map;
 public class AlimentazioneScattiRisposta {
 
     private Long idBagno;
-    private Map<String, String> mappaAlimentazione;
+    private List<OggettoAggiunta> oggettoAggiuntaList;
     private Double moltiplicatoreAlimentazione;
     private Integer restoScatti;
     private String messaggio;

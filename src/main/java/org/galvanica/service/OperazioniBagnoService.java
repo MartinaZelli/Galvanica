@@ -1,6 +1,7 @@
 package org.galvanica.service;
 
 import org.galvanica.dto.AlimentazioneScattiRisposta;
+import org.galvanica.dto.OggettoAggiunta;
 import org.galvanica.math.MetodiArrotondamenti;
 import org.galvanica.math.ScattiMath;
 import org.galvanica.model.*;
@@ -10,9 +11,7 @@ import org.galvanica.repository.StoricoGeneraleRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class OperazioniBagnoService {
@@ -21,6 +20,7 @@ public class OperazioniBagnoService {
     private final StoricoGeneraleRepository storicoGeneraleRepository;
     private final StoricoDettaglioRepository storicoDettaglioRepository;
 
+    //todo: attenzione, quando si confermano le aggiunte storico precedenti vanno approvate in ordine crescente di data, mai al contrario o non tornano gli scatti totali e parziali
 
     public OperazioniBagnoService(BagnoRepository bagnoRepository,
                                   StoricoGeneraleRepository storicoGeneraleRepository,
@@ -30,6 +30,7 @@ public class OperazioniBagnoService {
         this.storicoDettaglioRepository = storicoDettaglioRepository;
     }
 
+    //todo: attenzione! gestire aggiornaBagnoEstoricoGenerale su singolaAggiunta affinche non aggiorni male restoScatti e Scatti totali dare errore se si cerca di concludere non l-ultitma
     public void eseguiSingolaAggiunta(Long idStoricoDettaglio) {
         StoricoDettaglio storicoDettaglio = trovaStoricoDettaglio(idStoricoDettaglio);
         if (storicoDettaglio.getEscluso()) {
@@ -40,6 +41,7 @@ public class OperazioniBagnoService {
         if (!veroSeListaStoricoDettaglioCompletata(storicoDettaglio.getStoricoGenerale())) {
             return;
             //todo: non so se conviene fare uscire qualcosa dal metodo per capire se anche lo storicoGenerale è aggiornato oppure no.
+            //aggiornare gli scatti solo se l-aggiunta che sto confermando e la piu vecchia aggiunta da eseguire nel bagno
         }
         aggiornaBagnoEStoricoGenerale(storicoDettaglio.getStoricoGenerale());
     }
@@ -58,9 +60,17 @@ public class OperazioniBagnoService {
                                                                   Integer scattiParziali) {
         Bagno bagno = trovaBagno(id);
         Alimentazione alimentazione = trovaAlimentazioneScatti(bagno);
-
-        int scattiAttuali = bagno.getRestoScatti() + scattiParziali;
-
+        List<StoricoGenerale> storicoGeneraleListDaEseguire = storicoGeneraleRepository.storicoGeneraleDescList(false, id);
+        int scattiAttuali = scattiParziali;
+        int scattiTotali;
+        boolean risposta = !storicoGeneraleListDaEseguire.isEmpty();
+        if (risposta) {
+            scattiAttuali = storicoGeneraleListDaEseguire.getFirst().getRestoScatti() + scattiAttuali;
+            scattiTotali = storicoGeneraleListDaEseguire.getFirst().getScattiTotali() + scattiParziali;
+        } else {
+            scattiAttuali = bagno.getRestoScatti() + scattiAttuali;
+            scattiTotali = bagno.getScattiTotali() + scattiParziali;
+        }
         Double primoValoreVolumetrico = trovaPrimoValoreVolumetrico(alimentazione);
 
         ScattiMath scattiMath = MetodiArrotondamenti.alimentazioneScattiMath(
@@ -72,9 +82,16 @@ public class OperazioniBagnoService {
         if (scattiMath.getMoltiplicatoreAlimentazione() == 0) {
             System.out.println(
                     "il bagno non richiede aggiunte per ora. nuovo resto scatti : " + scattiAttuali);
-            bagno.setScattiTotali(bagno.getScattiTotali() + scattiParziali);
-            bagno.setRestoScatti(scattiAttuali);
-            bagnoRepository.save(bagno);
+            if (risposta) {
+                storicoGeneraleListDaEseguire.getFirst().setScattiTotali(scattiTotali);
+                storicoGeneraleListDaEseguire.getFirst().setRestoScatti(scattiAttuali);
+                storicoGeneraleRepository.save(storicoGeneraleListDaEseguire.getLast());
+            } else {
+                bagno.setScattiTotali(scattiTotali);
+                bagno.setRestoScatti(scattiAttuali);
+                bagnoRepository.save(bagno);
+            }
+
             return AlimentazioneScattiRisposta.builder()
                     .idBagno(id)
                     .restoScatti(scattiAttuali)
@@ -83,50 +100,80 @@ public class OperazioniBagnoService {
                     .moltiplicatoreAlimentazione(0D)
                     .build();
         }
+
         StoricoGenerale storicoGenerale = storicoGeneraleRepository.save(
                 StoricoGenerale.builder()
                         .alimentazione(alimentazione)
                         .bagno(bagno)
-                        .scattiTotali(bagno.getScattiTotali() + scattiParziali)
+                        .scattiTotali(scattiTotali)
                         .restoScatti((int) scattiMath.getRestoScatti())
                         .moltiplicatoreAlimentazione(scattiMath.getMoltiplicatoreAlimentazione())
                         .build());
-        Map<String, String> mappaAggiunta = conteggiProdottiScatti(alimentazione,
+
+
+        List<OggettoAggiunta> oggettoAggiuntaList = conteggiProdottiScatti(alimentazione,
                 scattiMath,
-                storicoGenerale);
+                storicoGenerale,
+                storicoGeneraleListDaEseguire);
 
         return AlimentazioneScattiRisposta.builder()
                 .idBagno(id)
-                .mappaAlimentazione(mappaAggiunta)
+                .oggettoAggiuntaList(oggettoAggiuntaList)
                 .restoScatti((int) scattiMath.getRestoScatti())
                 .moltiplicatoreAlimentazione(scattiMath.getMoltiplicatoreAlimentazione())
                 .build();
     }
 
 
-    private Map<String, String> conteggiProdottiScatti(Alimentazione alimentazione,
-                                                       ScattiMath scattiMath,
-                                                       StoricoGenerale storicoGenerale) {
-        Map<String, String> mappaAggiunta = new HashMap<>();
+    private List<OggettoAggiunta> conteggiProdottiScatti(Alimentazione alimentazione,
+                                                         ScattiMath scattiMath,
+                                                         StoricoGenerale storicoGenerale,
+                                                         List<StoricoGenerale> storicoGeneraleNonEseguitiList) {
+        List<OggettoAggiunta> oggettoAggiuntaList = new ArrayList<>();
         StoricoGenerale storico = trovaStoricoGenerale(storicoGenerale.getIdStorico());
         for (DettaglioAlimentazione dettaglio : alimentazione.getDettaglioAlimentazioneList()) {
             double quantitaProdottoAggiunta = dettaglio.getQuantitaProdotto() * scattiMath.getMoltiplicatoreAlimentazione();
             if (dettaglio.getUnitaDiMisura().isSonoVolume()) {
-                quantitaProdottoAggiunta = MetodiArrotondamenti.approssimazioneAggiunta(
-                        quantitaProdottoAggiunta);
+                quantitaProdottoAggiunta = MetodiArrotondamenti.approssimazioneAggiunta(quantitaProdottoAggiunta);
             }
-            storicoDettaglioRepository.save(StoricoDettaglio.builder()
+            StoricoDettaglio storicoDettaglio = storicoDettaglioRepository.save(StoricoDettaglio.builder()
                     .prodotto(dettaglio.getProdotto())
                     .storicoGenerale(storico)
                     .quantita(quantitaProdottoAggiunta)
                     .unitaDiMisura(dettaglio.getUnitaDiMisura())
                     .build());
 
-            mappaAggiunta.put(dettaglio.getProdotto().getNome(),
-                    quantitaProdottoAggiunta + " " + dettaglio.getUnitaDiMisura()
-                            .name());
+            oggettoAggiuntaList.add(oggettoAggiuntaTrasformer(storicoDettaglio));
         }
-        return mappaAggiunta;
+        return aggiuntaDaStoriciPassatiList(storicoGeneraleNonEseguitiList, oggettoAggiuntaList);
+
+    }
+
+    private List<OggettoAggiunta> aggiuntaDaStoriciPassatiList(
+            List<StoricoGenerale> storicoGeneraleListDaEseguire, List<OggettoAggiunta> oggettoAggiuntaList) {
+        Map<Long, OggettoAggiunta> oggettoAggiuntaMap = new HashMap<>();
+        for (OggettoAggiunta oggettoAggiunta : oggettoAggiuntaList) {
+            oggettoAggiuntaMap.put(oggettoAggiunta.getIdProdotto(), oggettoAggiunta);
+        }
+
+        List<StoricoDettaglio> storicoDettaglioList = storicoGeneraleListDaEseguire.stream()
+                .flatMap(storicoGenerale -> storicoGenerale.getStoricoDettaglioList().stream())
+                .filter(storicoDettaglio -> !storicoDettaglio.getEseguito() && !storicoDettaglio.getEscluso())
+                .toList();
+
+        for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
+            if (oggettoAggiuntaMap.containsKey(storicoDettaglio.getProdotto().getIdProdotto())) {
+                Double quantitaProdotto = oggettoAggiuntaMap.get(storicoDettaglio.getProdotto().getIdProdotto()).getQuantitaProdotto()
+                        + storicoDettaglio.getQuantita();
+                oggettoAggiuntaMap.get(storicoDettaglio.getProdotto().getIdProdotto()).setQuantitaProdotto(quantitaProdotto);
+            }
+
+            if (!oggettoAggiuntaMap.containsKey(storicoDettaglio.getProdotto().getIdProdotto())) {
+                oggettoAggiuntaMap.put(storicoDettaglio.getProdotto().getIdProdotto(), oggettoAggiuntaTrasformer(storicoDettaglio));
+            }
+
+        }
+        return new ArrayList<>(oggettoAggiuntaMap.values());
     }
 
     private void aggiornaBagnoEStoricoGenerale(StoricoGenerale storicoGenerale) {
@@ -152,6 +199,14 @@ public class OperazioniBagnoService {
         }
         storicoDettaglio.setEseguito(true);
         storicoDettaglioRepository.save(storicoDettaglio);
+    }
+
+    private OggettoAggiunta oggettoAggiuntaTrasformer(StoricoDettaglio dettaglio) {
+        return OggettoAggiunta.builder()
+                .unitaDiMisura(dettaglio.getUnitaDiMisura())
+                .quantitaProdotto(dettaglio.getQuantita())
+                .idProdotto(dettaglio.getProdotto().getIdProdotto())
+                .build();
     }
 
     //todo: tutti i metodi trova"oggetto" possono essere semplificati?
