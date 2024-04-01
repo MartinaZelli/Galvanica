@@ -2,6 +2,7 @@ package org.galvanica.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.galvanica.math.DayOfWeekConverter;
 
 import java.util.List;
 
@@ -22,8 +23,8 @@ public class Alimentazione {
     private Integer scatti;
     @Builder.Default
     private Boolean arrotondaValori = false;
-    private String tempo;
-    //cercare cron expression generator e dirgli che vuoi..... ???? 0 0 0 ? * MON,WED,FRI *//
+    @Convert(converter = DayOfWeekConverter.class)
+    private List<String> tempo;
     private String descrizione;
     @OneToMany(mappedBy = "alimentazione", cascade = CascadeType.REMOVE)
     private List<DettaglioAlimentazione> dettaglioAlimentazioneList;
