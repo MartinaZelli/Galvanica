@@ -2,6 +2,8 @@ package org.galvanica.dto.dtoConModel;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -11,7 +13,7 @@ public class AlimentazioneDto {
     private Long idAlimentazione;
     private Long idBagno;
     private Integer scatti;
-    private String tempo;
+    private List<String> tempo;
     private String descrizione;
     private Boolean arrotondaValori = false;
 }

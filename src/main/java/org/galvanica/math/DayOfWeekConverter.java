@@ -1,16 +1,38 @@
 package org.galvanica.math;
 
-import org.springframework.core.convert.converter.Converter;
+import jakarta.persistence.AttributeConverter;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
-public class DayOfWeekConverter implements Converter<String, List<String>> {
+enum GiorniDellaSettimana {
+    LUNEDI,
+    MARREDI,
+    MERCOLEDI,
+    GIOVEDI,
+    VENERDI,
+    SABATO,
+    DOMENICA
+}
+
+@Component
+public class DayOfWeekConverter implements AttributeConverter<List<GiorniDellaSettimana>, String> {
 
     @Override
-    public List<String> convert(String source) {
-        return Arrays.asList(source.split(","));
+    public String convertToDatabaseColumn(List<GiorniDellaSettimana> giorniDellaSettimana) {
+        return giorniDellaSettimana.stream()
+                .map(Enum::name)
+                .collect(Collectors.joining(","));
+    }
+
+    @Override
+    public List<GiorniDellaSettimana> convertToEntityAttribute(String source) {
+        return Arrays.stream(source.split(","))
+                .map(GiorniDellaSettimana::valueOf)
+                .collect(Collectors.toList());
     }
 
     /*

@@ -6,7 +6,10 @@ import org.galvanica.repository.BagnoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class BagnoService implements ICRUDService<BagnoDto, Bagno> {
@@ -92,6 +95,14 @@ public class BagnoService implements ICRUDService<BagnoDto, Bagno> {
                 .litri(oggettoDaTrasformare.getLitri())
                 .build();
     }
+
+    public List<BagnoDto> getAllBagno() {
+        return StreamSupport.stream(repository.findAll().spliterator(), false)
+                .map(this::fromModelToDto)
+                .collect(Collectors.toList());
+    }
+
+
     //TODO: mettere Optional BagnoDto oppure senza Optional? decidere quale è il migliore.
    /* @Override
     public BagnoDto ricercaId(long id) {
