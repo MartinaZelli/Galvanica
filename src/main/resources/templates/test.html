@@ -24,9 +24,24 @@
                     </h5>
                     <div>Scatti Totali: <span th:text="${bagno.getScattiTotali()}"/></div>
                     <div>Resto Scatti: <span th:text="${bagno.getRestoScatti()}"/></div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <button class="btn btn-outline-primary"><i class="bi bi-heart"></i> Like</button>
+                        <button class="btn btn-outline-secondary"><i class="bi bi-chat"></i> Comment</button>
+                        <button class="btn btn-outline-danger"><i class="bi bi-trash"></i> Delete</button>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="card" id="replaceMe">
+        <button
+                hx-get="/elenco-bagni"
+                hx-target="#replaceMe"
+                hx-swap="outerHTML"
+                class="btn btn-outline-primary">Load More...
+            <img class="htmx-indicator" src="/spinner.gif" alt="Cacca"/>
+        </button>
     </div>
 </div>
 </body>
