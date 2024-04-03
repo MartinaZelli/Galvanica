@@ -17,7 +17,7 @@
 <div class="container">
     <h1>Elenco Bagni</h1>
     <div class="card" th:each="bagno: ${bagni}">
-        <div th:replace="bagnoCard :: showCard" th:with="bagno=${bagno}"></div>
+        <div th:replace="~{bagnoCard :: showCard}" th:with="bagno=${bagno}"></div>
     </div>
 </div>
 </body>
