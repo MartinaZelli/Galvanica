@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>bagnoCard</title>
+</head>
+<body>
+<div th:fragment="showCard" class="card-body" hx-target="this" hx-swap="outerHTML">
+    <div class="d-flex">
+        <div>
+            <h5 class="card-title mb-0">
+                <span th:text="${bagno.getIdBagno()}"/>
+                <span th:text="${bagno.getNome()}"/>
+            </h5>
+            <div>Litri: <span th:text="${bagno.getLitri()}"/></div>
+            <div>Scatti Totali: <span th:text="${bagno.getScattiTotali()}"/></div>
+            <div>Resto Scatti: <span th:text="${bagno.getRestoScatti()}"/></div>
+
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <button th:attr="hx-get=@{'/bagnoFe/edit/' + ${bagno.getIdBagno()}}" class="btn btn-outline-primary">
+                    <i class="fa-solid fa-pen-to-square"></i> Modifica
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<form th:attr="hx-put=@{'/bagnoFe/' + ${bagno.getIdBagno()}}, hx-indicator=@{'#spinner_' + ${bagno.getIdBagno()}}"
+      th:fragment="editCard"
+      hx-ext="json-enc"
+      hx-target="this"
+      hx-swap="outerHTML">
+    <div class="card-body">
+        <div class="d-flex">
+            <div>
+                <h5 class="card-title mb-0">
+                    <span th:text="${bagno.getIdBagno()}"/>
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" name="nome" th:value="${bagno.getNome()}"/>
+                </h5>
+                <div>
+                    <label for="litri">Litri:</label>
+                    <input type="text" id="litri" name="litri" th:value="${bagno.getLitri()}"/>
+                </div>
+                <div>
+                    <label for="scattiTotali">Scatti Totali:</label>
+                    <input type="text" id="scattiTotali" name="scattiTotali" th:value="${bagno.getScattiTotali()}"/>
+                </div>
+                <div>
+                    <label for="restoScatti">Scatti Totali:</label>
+                    <input type="text" id="restoScatti" name="restoScatti" th:value="${bagno.getRestoScatti()}"/>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <button class="btn btn-outline-primary"
+                            type="submit"
+                            th:attr="hx-indicator=@{'#spinner_' + ${bagno.getIdBagno()}}">
+                        <i class="fa-solid fa-floppy-disk"></i> Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!--<div class="card" id="replaceMe">
+    <button
+            hx-get="/elenco-bagni"
+            hx-target="#replaceMe"
+            hx-swap="outerHTML"
+            class="btn btn-outline-primary">Load More...
+        <img class="htmx-indicator" src="/spinner.gif" alt="Cacca"/>
+    </button>
+</div>-->
+
+
+</body>
+</html>

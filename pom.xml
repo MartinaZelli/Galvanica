@@ -33,29 +33,35 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
-        <!--Da decommentare dalla Marty -->
-        <!--<dependency>
+
+        <!--Inizio Da decommentare dalla Marty -->
+        <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
-        </dependency>-->
+        </dependency>
+        <!--Fine Da decommentare dalla Marty -->
 
-        <!--Da decommentare da Lucio -->
-        <dependency>
+        <!--Inizio Da decommentare da Lucio -->
+        <!--<dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
             <version>1.5.7</version>
-        </dependency>
+        </dependency>-->
+        <!--Fine Da decommentare da Lucio -->
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
