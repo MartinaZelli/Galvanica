@@ -14,7 +14,8 @@ public class BagnoController {
     private final BagnoService service;
     private final OperazioniBagnoService operazioniBagnoService;
 
-    public BagnoController(BagnoService service, OperazioniBagnoService operazioniBagnoService) {
+    public BagnoController(BagnoService service,
+                           OperazioniBagnoService operazioniBagnoService) {
         this.service = service;
         this.operazioniBagnoService = operazioniBagnoService;
     }
@@ -25,7 +26,8 @@ public class BagnoController {
     }
 
     @PutMapping("{id}")
-    public BagnoDto aggiornaBagno(@RequestBody BagnoDto bagnoDto, @PathVariable Long id) {
+    public BagnoDto aggiornaBagno(@RequestBody BagnoDto bagnoDto,
+                                  @PathVariable Long id) {
         return service.aggiorna(bagnoDto, id);
     }
 
@@ -40,7 +42,8 @@ public class BagnoController {
     }
 
     @PutMapping("{id}/alimentazioneScatti/{scattiParziali}")
-    public AlimentazioneScattiRisposta alimentazioneScatti(@PathVariable Long id, @PathVariable Integer scattiParziali) {
+    public AlimentazioneScattiRisposta alimentazioneScatti(@PathVariable Long id,
+                                                           @PathVariable Integer scattiParziali) {
         return operazioniBagnoService.calcolaAlimentazioneScatti(id,
                 scattiParziali);
     }
@@ -48,7 +51,7 @@ public class BagnoController {
     @PutMapping("eseguiSingolaAggiunta/{idStoricoDettaglio}")
     public void eseguiSingolaAggiunta(@PathVariable Long idStoricoDettaglio) {
         System.out.println("dentro eseguiSingolaAggiunta");
-        operazioniBagnoService.eseguiSingolaAggiunta(idStoricoDettaglio);
+        operazioniBagnoService.eseguiSingolaAggiuntaScatti(idStoricoDettaglio);
     }
 
     @PutMapping("confermaInteraAlimentazione/{idStoricoGenerale}")

@@ -1,15 +1,18 @@
 package org.galvanica.service;
 
 import org.galvanica.dto.AlimentazioneScattiRisposta;
+import org.galvanica.dto.AlimentazioneTempoRisposta;
 import org.galvanica.dto.OggettoAggiunta;
 import org.galvanica.math.MetodiArrotondamenti;
 import org.galvanica.math.ScattiMath;
 import org.galvanica.model.*;
+import org.galvanica.repository.AlimentazioneRepository;
 import org.galvanica.repository.BagnoRepository;
 import org.galvanica.repository.StoricoDettaglioRepository;
 import org.galvanica.repository.StoricoGeneraleRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -19,19 +22,21 @@ public class OperazioniBagnoService {
     private final BagnoRepository bagnoRepository;
     private final StoricoGeneraleRepository storicoGeneraleRepository;
     private final StoricoDettaglioRepository storicoDettaglioRepository;
+    private final AlimentazioneRepository alimentazioneRepository;
 
     //todo: attenzione, quando si confermano le aggiunte storico precedenti vanno approvate in ordine crescente di data, mai al contrario o non tornano gli scatti totali e parziali
 //todo: attenzione! in questo momentoo viene ricercato su StoricoGenerale tutte gli storici (sia con il parametro scatti che con il parametro tempo), da implementare controllo!
     public OperazioniBagnoService(BagnoRepository bagnoRepository,
                                   StoricoGeneraleRepository storicoGeneraleRepository,
-                                  StoricoDettaglioRepository storicoDettaglioRepository) {
+                                  StoricoDettaglioRepository storicoDettaglioRepository,
+                                  AlimentazioneRepository alimentazioneRepository) {
         this.bagnoRepository = bagnoRepository;
         this.storicoGeneraleRepository = storicoGeneraleRepository;
         this.storicoDettaglioRepository = storicoDettaglioRepository;
+        this.alimentazioneRepository = alimentazioneRepository;
     }
 
-    //todo: attenzione! gestire aggiornaBagnoEstoricoGenerale su singolaAggiunta affinche non aggiorni male restoScatti e Scatti totali dare errore se si cerca di concludere non l-ultitma
-    public void eseguiSingolaAggiunta(Long idStoricoDettaglio) {
+    public void eseguiSingolaAggiuntaScatti(Long idStoricoDettaglio) {
         StoricoDettaglio storicoDettaglio = trovaStoricoDettaglio(idStoricoDettaglio);
         if (storicoDettaglio.getEscluso()) {
             throw new RuntimeException(
@@ -43,7 +48,7 @@ public class OperazioniBagnoService {
             //todo: non so se conviene fare uscire qualcosa dal metodo per capire se anche lo storicoGenerale è aggiornato oppure no.
             //aggiornare gli scatti solo se l-aggiunta che sto confermando e la piu vecchia aggiunta da eseguire nel bagno
         }
-        aggiornaBagnoEStoricoGenerale(storicoDettaglio.getStoricoGenerale());
+        aggiornaBagnoEStoricoGeneraleScatti(storicoDettaglio.getStoricoGenerale());
     }
 
     public void confermaInteraAlimentazione(Long idStoricoGenerale) {
@@ -53,23 +58,22 @@ public class OperazioniBagnoService {
                 eseguiStoricoDettaglio(storicoDettaglio);
             }
         }
-        aggiornaBagnoEStoricoGenerale(storicoGenerale);
+        aggiornaBagnoEStoricoGeneraleScatti(storicoGenerale);
     }
 
     public AlimentazioneScattiRisposta calcolaAlimentazioneScatti(Long id,
                                                                   Integer scattiParziali) {
         Bagno bagno = trovaBagno(id);
         Alimentazione alimentazione = trovaAlimentazioneScatti(bagno);
-        List<StoricoGenerale> storicoGeneraleListDaEseguire = storicoGeneraleRepository.storicoGeneraleDescList(
-                false,
-                id);
+        List<StoricoGenerale> storicoGeneraleListDaEseguireScatti = storicoGeneraleRepository.storicoGeneraleScattiDescList(
+                false, id);
         int scattiAttuali = scattiParziali;
         int scattiTotali;
-        boolean risposta = !storicoGeneraleListDaEseguire.isEmpty();
+        boolean risposta = !storicoGeneraleListDaEseguireScatti.isEmpty();
         if (risposta) {
-            scattiAttuali = storicoGeneraleListDaEseguire.getFirst()
+            scattiAttuali = storicoGeneraleListDaEseguireScatti.getFirst()
                     .getRestoScatti() + scattiAttuali;
-            scattiTotali = storicoGeneraleListDaEseguire.getFirst()
+            scattiTotali = storicoGeneraleListDaEseguireScatti.getFirst()
                     .getScattiTotali() + scattiParziali;
         } else {
             scattiAttuali = bagno.getRestoScatti() + scattiAttuali;
@@ -87,11 +91,11 @@ public class OperazioniBagnoService {
             System.out.println(
                     "il bagno non richiede aggiunte per ora. nuovo resto scatti : " + scattiAttuali);
             if (risposta) {
-                storicoGeneraleListDaEseguire.getFirst()
+                storicoGeneraleListDaEseguireScatti.getFirst()
                         .setScattiTotali(scattiTotali);
-                storicoGeneraleListDaEseguire.getFirst()
+                storicoGeneraleListDaEseguireScatti.getFirst()
                         .setRestoScatti(scattiAttuali);
-                storicoGeneraleRepository.save(storicoGeneraleListDaEseguire.getLast());
+                storicoGeneraleRepository.save(storicoGeneraleListDaEseguireScatti.getLast());
             } else {
                 bagno.setScattiTotali(scattiTotali);
                 bagno.setRestoScatti(scattiAttuali);
@@ -121,7 +125,7 @@ public class OperazioniBagnoService {
                 alimentazione,
                 scattiMath,
                 storicoGenerale,
-                storicoGeneraleListDaEseguire);
+                storicoGeneraleListDaEseguireScatti);
 
         return AlimentazioneScattiRisposta.builder()
                 .idBagno(id)
@@ -129,6 +133,68 @@ public class OperazioniBagnoService {
                 .restoScatti((int) scattiMath.getRestoScatti())
                 .moltiplicatoreAlimentazione(scattiMath.getMoltiplicatoreAlimentazione())
                 .build();
+    }
+
+    private void creaStoricoGeneraleEDettaglioTempo(Alimentazione alimentazione,
+                                                    LocalDate dataControllo) {
+        StoricoGenerale storico = storicoGeneraleRepository.save(StoricoGenerale.builder()
+                .alimentazione(alimentazione)
+                .bagno(alimentazione.getBagno())
+                .sonoScatti(false)
+                .dataControlloTempo(dataControllo)
+                .build());
+
+        for (DettaglioAlimentazione dettaglio : alimentazione.getDettaglioAlimentazioneList()) {
+
+            storicoDettaglioRepository.save(
+                    StoricoDettaglio.builder()
+                            .prodotto(dettaglio.getProdotto())
+                            .storicoGenerale(storico)
+                            .quantita(dettaglio.getQuantitaProdotto())
+                            .unitaDiMisura(dettaglio.getUnitaDiMisura())
+                            .build());
+
+        }
+    }
+
+
+    private AlimentazioneTempoRisposta controllaAlimentazioneTempo(
+            LocalDate dataControllo, Long idBagno) {
+        StoricoGenerale storicoGeneraletempoLast = storicoGeneraleRepository.storicoGeneraleTempoLast(
+                idBagno);
+        List<Alimentazione> alimentazioneList = alimentazioneRepository.findByTempo(
+                dataControllo.getDayOfWeek().name());
+
+        if (storicoGeneraletempoLast == null || dataControllo.isAfter(
+                storicoGeneraletempoLast.getDataControlloTempo().plusDays(10))) {
+            //controllo da oggi se non è mai stato generato storico tempo o se l'ultimo storico è di più di 10 giorni fa
+            if (alimentazioneList.isEmpty()) {
+                return null;
+                //todo: inserire messaggio
+                //todo: AlimentazioneTempoRisposta????
+            }
+            for (Alimentazione alimentazione : alimentazioneList) {
+                creaStoricoGeneraleEDettaglioTempo(alimentazione, dataControllo);
+                //todo: MetodoDaStorico a AlimentazioneTempoRisposta????
+            }
+            return null;
+        }
+        if (!dataControllo.isAfter(storicoGeneraletempoLast.getDataControlloTempo())) {
+            ////todo: MetodoDaStorico a AlimentazioneTempoRisposta????
+            return null;
+        }
+
+        for (LocalDate data = storicoGeneraletempoLast.getDataControlloTempo()
+                .plusDays(1);
+             !data.isAfter(dataControllo); data = data.plusDays(1)) {
+            for (Alimentazione alimentazione : alimentazioneList) {
+                if (alimentazione.getTempo().contains(data.getDayOfWeek().name())) {
+                    creaStoricoGeneraleEDettaglioTempo(alimentazione, dataControllo);
+                }
+            }
+        }
+        ////todo: MetodoDaStorico a AlimentazioneTempoRisposta????
+        return null;
     }
 
 
@@ -194,7 +260,16 @@ public class OperazioniBagnoService {
         return new ArrayList<>(oggettoAggiuntaMap.values());
     }
 
-    private void aggiornaBagnoEStoricoGenerale(StoricoGenerale storicoGenerale) {
+    private void aggiornaBagnoEStoricoGeneraleScatti(
+            StoricoGenerale storicoGenerale) {
+        List<StoricoGenerale> storicoGeneraleListDaEseguireScatti = storicoGeneraleRepository
+                .storicoGeneraleScattiDescList(false,
+                        storicoGenerale.getBagno().getIdBagno());
+        if (!Objects.equals(storicoGeneraleListDaEseguireScatti.getLast()
+                .getIdStorico(), storicoGenerale.getIdStorico())) {
+            throw new RuntimeException(
+                    "vanno aggiornati gli storici dal più vecchio al più nuovo");
+        }
         storicoGenerale.setConcluso(true);
         storicoGenerale.setDataFine(LocalDateTime.now());
         storicoGeneraleRepository.save(storicoGenerale);
@@ -267,4 +342,5 @@ public class OperazioniBagnoService {
                 .map(DettaglioAlimentazione::getQuantitaProdotto)
                 .orElse(null);
     }
+
 }

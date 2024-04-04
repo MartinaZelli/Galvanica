@@ -32,3 +32,4 @@ public class Alimentazione {
     private List<StoricoGenerale> storicoGeneraleList;
 
 }
+

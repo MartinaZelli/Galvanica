@@ -3,6 +3,7 @@ package org.galvanica.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,8 +27,10 @@ public class StoricoGenerale {
     @Builder.Default
     private LocalDateTime dataCreazione = LocalDateTime.now();
     private LocalDateTime dataFine;
+    private LocalDate dataControlloTempo;
     @Builder.Default
     private Boolean concluso = false;
+    private Boolean sonoScatti;
     @OneToMany(mappedBy = "storicoGenerale", cascade = CascadeType.REMOVE)
     private List<StoricoDettaglio> storicoDettaglioList;
     private Double moltiplicatoreAlimentazione;

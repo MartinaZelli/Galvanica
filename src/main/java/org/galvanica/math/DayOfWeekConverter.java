@@ -3,35 +3,26 @@ package org.galvanica.math;
 import jakarta.persistence.AttributeConverter;
 import org.springframework.stereotype.Component;
 
+import java.time.DayOfWeek;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
-enum GiorniDellaSettimana {
-    LUNEDI,
-    MARREDI,
-    MERCOLEDI,
-    GIOVEDI,
-    VENERDI,
-    SABATO,
-    DOMENICA
-}
-
 @Component
-public class DayOfWeekConverter implements AttributeConverter<List<GiorniDellaSettimana>, String> {
+public class DayOfWeekConverter implements AttributeConverter<List<DayOfWeek>, String> {
 
     @Override
-    public String convertToDatabaseColumn(List<GiorniDellaSettimana> giorniDellaSettimana) {
+    public String convertToDatabaseColumn(List<DayOfWeek> giorniDellaSettimana) {
         return giorniDellaSettimana.stream()
                 .map(Enum::name)
                 .collect(Collectors.joining(","));
     }
 
     @Override
-    public List<GiorniDellaSettimana> convertToEntityAttribute(String source) {
+    public List<DayOfWeek> convertToEntityAttribute(String source) {
         return Arrays.stream(source.split(","))
-                .map(GiorniDellaSettimana::valueOf)
+                .map(DayOfWeek::valueOf)
                 .collect(Collectors.toList());
     }
 
