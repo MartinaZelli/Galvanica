@@ -1,9 +1,9 @@
 package org.galvanica.controller;
 
-import org.galvanica.dto.AlimentazioneScattiRisposta;
+import org.galvanica.dto.AlimentazioneRisposta;
 import org.galvanica.dto.dtoConModel.BagnoDto;
 import org.galvanica.service.CRUD.BagnoService;
-import org.galvanica.service.OperazioniBagnoService;
+import org.galvanica.service.OperazioniBagno.OperazioniScattiService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -12,12 +12,12 @@ import java.util.Optional;
 @RequestMapping("/bagno")
 public class BagnoController {
     private final BagnoService service;
-    private final OperazioniBagnoService operazioniBagnoService;
+    private final OperazioniScattiService operazioniScattiService;
 
     public BagnoController(BagnoService service,
-                           OperazioniBagnoService operazioniBagnoService) {
+                           OperazioniScattiService operazioniScattiService) {
         this.service = service;
-        this.operazioniBagnoService = operazioniBagnoService;
+        this.operazioniScattiService = operazioniScattiService;
     }
 
     @PostMapping
@@ -42,22 +42,22 @@ public class BagnoController {
     }
 
     @PutMapping("{id}/alimentazioneScatti/{scattiParziali}")
-    public AlimentazioneScattiRisposta alimentazioneScatti(@PathVariable Long id,
-                                                           @PathVariable Integer scattiParziali) {
-        return operazioniBagnoService.calcolaAlimentazioneScatti(id,
+    public AlimentazioneRisposta alimentazioneScatti(@PathVariable Long id,
+                                                     @PathVariable Integer scattiParziali) {
+        return operazioniScattiService.calcolaAlimentazioneScatti(id,
                 scattiParziali);
     }
 
     @PutMapping("eseguiSingolaAggiunta/{idStoricoDettaglio}")
     public void eseguiSingolaAggiunta(@PathVariable Long idStoricoDettaglio) {
         System.out.println("dentro eseguiSingolaAggiunta");
-        operazioniBagnoService.eseguiSingolaAggiuntaScatti(idStoricoDettaglio);
+        operazioniScattiService.eseguiSingolaAggiuntaScatti(idStoricoDettaglio);
     }
 
     @PutMapping("confermaInteraAlimentazione/{idStoricoGenerale}")
     public void confermaInteraAlimentazione(@PathVariable Long idStoricoGenerale) {
         System.out.println("dentro confermaInteraAlimentazione");
-        operazioniBagnoService.confermaInteraAlimentazione(idStoricoGenerale);
+        operazioniScattiService.confermaInteraAlimentazione(idStoricoGenerale);
     }
 
 

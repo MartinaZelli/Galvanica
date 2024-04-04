@@ -1,7 +1,6 @@
-package org.galvanica.service;
+package org.galvanica.service.OperazioniBagno;
 
-import org.galvanica.dto.AlimentazioneScattiRisposta;
-import org.galvanica.dto.AlimentazioneTempoRisposta;
+import org.galvanica.dto.AlimentazioneRisposta;
 import org.galvanica.dto.OggettoAggiunta;
 import org.galvanica.math.MetodiArrotondamenti;
 import org.galvanica.math.ScattiMath;
@@ -12,12 +11,11 @@ import org.galvanica.repository.StoricoDettaglioRepository;
 import org.galvanica.repository.StoricoGeneraleRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-public class OperazioniBagnoService {
+public class OperazioniScattiService {
 
     private final BagnoRepository bagnoRepository;
     private final StoricoGeneraleRepository storicoGeneraleRepository;
@@ -26,10 +24,10 @@ public class OperazioniBagnoService {
 
     //todo: attenzione, quando si confermano le aggiunte storico precedenti vanno approvate in ordine crescente di data, mai al contrario o non tornano gli scatti totali e parziali
 //todo: attenzione! in questo momentoo viene ricercato su StoricoGenerale tutte gli storici (sia con il parametro scatti che con il parametro tempo), da implementare controllo!
-    public OperazioniBagnoService(BagnoRepository bagnoRepository,
-                                  StoricoGeneraleRepository storicoGeneraleRepository,
-                                  StoricoDettaglioRepository storicoDettaglioRepository,
-                                  AlimentazioneRepository alimentazioneRepository) {
+    public OperazioniScattiService(BagnoRepository bagnoRepository,
+                                   StoricoGeneraleRepository storicoGeneraleRepository,
+                                   StoricoDettaglioRepository storicoDettaglioRepository,
+                                   AlimentazioneRepository alimentazioneRepository) {
         this.bagnoRepository = bagnoRepository;
         this.storicoGeneraleRepository = storicoGeneraleRepository;
         this.storicoDettaglioRepository = storicoDettaglioRepository;
@@ -61,8 +59,8 @@ public class OperazioniBagnoService {
         aggiornaBagnoEStoricoGeneraleScatti(storicoGenerale);
     }
 
-    public AlimentazioneScattiRisposta calcolaAlimentazioneScatti(Long id,
-                                                                  Integer scattiParziali) {
+    public AlimentazioneRisposta calcolaAlimentazioneScatti(Long id,
+                                                            Integer scattiParziali) {
         Bagno bagno = trovaBagno(id);
         Alimentazione alimentazione = trovaAlimentazioneScatti(bagno);
         List<StoricoGenerale> storicoGeneraleListDaEseguireScatti = storicoGeneraleRepository.storicoGeneraleScattiDescList(
@@ -102,7 +100,7 @@ public class OperazioniBagnoService {
                 bagnoRepository.save(bagno);
             }
 
-            return AlimentazioneScattiRisposta.builder()
+            return AlimentazioneRisposta.builder()
                     .idBagno(id)
                     .restoScatti(scattiAttuali)
                     .messaggio("gli scatti sono inferiori al 90% dell'alimentazione,"
@@ -127,74 +125,12 @@ public class OperazioniBagnoService {
                 storicoGenerale,
                 storicoGeneraleListDaEseguireScatti);
 
-        return AlimentazioneScattiRisposta.builder()
+        return AlimentazioneRisposta.builder()
                 .idBagno(id)
                 .oggettoAggiuntaList(oggettoAggiuntaList)
                 .restoScatti((int) scattiMath.getRestoScatti())
                 .moltiplicatoreAlimentazione(scattiMath.getMoltiplicatoreAlimentazione())
                 .build();
-    }
-
-    private void creaStoricoGeneraleEDettaglioTempo(Alimentazione alimentazione,
-                                                    LocalDate dataControllo) {
-        StoricoGenerale storico = storicoGeneraleRepository.save(StoricoGenerale.builder()
-                .alimentazione(alimentazione)
-                .bagno(alimentazione.getBagno())
-                .sonoScatti(false)
-                .dataControlloTempo(dataControllo)
-                .build());
-
-        for (DettaglioAlimentazione dettaglio : alimentazione.getDettaglioAlimentazioneList()) {
-
-            storicoDettaglioRepository.save(
-                    StoricoDettaglio.builder()
-                            .prodotto(dettaglio.getProdotto())
-                            .storicoGenerale(storico)
-                            .quantita(dettaglio.getQuantitaProdotto())
-                            .unitaDiMisura(dettaglio.getUnitaDiMisura())
-                            .build());
-
-        }
-    }
-
-
-    private AlimentazioneTempoRisposta controllaAlimentazioneTempo(
-            LocalDate dataControllo, Long idBagno) {
-        StoricoGenerale storicoGeneraletempoLast = storicoGeneraleRepository.storicoGeneraleTempoLast(
-                idBagno);
-        List<Alimentazione> alimentazioneList = alimentazioneRepository.findByTempo(
-                dataControllo.getDayOfWeek().name());
-
-        if (storicoGeneraletempoLast == null || dataControllo.isAfter(
-                storicoGeneraletempoLast.getDataControlloTempo().plusDays(10))) {
-            //controllo da oggi se non è mai stato generato storico tempo o se l'ultimo storico è di più di 10 giorni fa
-            if (alimentazioneList.isEmpty()) {
-                return null;
-                //todo: inserire messaggio
-                //todo: AlimentazioneTempoRisposta????
-            }
-            for (Alimentazione alimentazione : alimentazioneList) {
-                creaStoricoGeneraleEDettaglioTempo(alimentazione, dataControllo);
-                //todo: MetodoDaStorico a AlimentazioneTempoRisposta????
-            }
-            return null;
-        }
-        if (!dataControllo.isAfter(storicoGeneraletempoLast.getDataControlloTempo())) {
-            ////todo: MetodoDaStorico a AlimentazioneTempoRisposta????
-            return null;
-        }
-
-        for (LocalDate data = storicoGeneraletempoLast.getDataControlloTempo()
-                .plusDays(1);
-             !data.isAfter(dataControllo); data = data.plusDays(1)) {
-            for (Alimentazione alimentazione : alimentazioneList) {
-                if (alimentazione.getTempo().contains(data.getDayOfWeek().name())) {
-                    creaStoricoGeneraleEDettaglioTempo(alimentazione, dataControllo);
-                }
-            }
-        }
-        ////todo: MetodoDaStorico a AlimentazioneTempoRisposta????
-        return null;
     }
 
 

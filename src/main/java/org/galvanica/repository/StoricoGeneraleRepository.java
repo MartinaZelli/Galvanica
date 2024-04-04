@@ -18,4 +18,8 @@ public interface StoricoGeneraleRepository extends CrudRepository<StoricoGeneral
             "ORDER BY data_creazione DESC" +
             "LIMIT 1", nativeQuery = true)
     StoricoGenerale storicoGeneraleTempoLast(Long idBagno);
+
+    @Query(value = "SELECT * FROM storico_generale " +
+            "WHERE concluso = ?1 AND bagno_id_bagno = ?2 AND sono_scatti = false ", nativeQuery = true)
+    List<StoricoGenerale> storicoGeneraleTempoList(boolean concluso, Long idBagno);
 }

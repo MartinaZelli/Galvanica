@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @Builder
 
-public class AlimentazioneScattiRisposta {
+public class AlimentazioneRisposta {
 
     private Long idBagno;
     private List<OggettoAggiunta> oggettoAggiuntaList;
