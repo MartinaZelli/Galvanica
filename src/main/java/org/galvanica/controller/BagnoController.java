@@ -3,21 +3,26 @@ package org.galvanica.controller;
 import org.galvanica.dto.AlimentazioneRisposta;
 import org.galvanica.dto.dtoConModel.BagnoDto;
 import org.galvanica.service.CRUD.BagnoService;
-import org.galvanica.service.OperazioniBagno.OperazioniScattiService;
+import org.galvanica.service.OperazioniBagno.OperazioniAddStorico;
+import org.galvanica.service.OperazioniBagno.OperazioniInStorico;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/bagno")
 public class BagnoController {
     private final BagnoService service;
-    private final OperazioniScattiService operazioniScattiService;
+    private final OperazioniAddStorico operazioniAddStorico;
+    private final OperazioniInStorico operazioniInStorico;
 
     public BagnoController(BagnoService service,
-                           OperazioniScattiService operazioniScattiService) {
+                           OperazioniAddStorico operazioniAddStorico,
+                           OperazioniInStorico operazioniInStorico) {
         this.service = service;
-        this.operazioniScattiService = operazioniScattiService;
+        this.operazioniAddStorico = operazioniAddStorico;
+        this.operazioniInStorico = operazioniInStorico;
     }
 
     @PostMapping
@@ -44,20 +49,26 @@ public class BagnoController {
     @PutMapping("{id}/alimentazioneScatti/{scattiParziali}")
     public AlimentazioneRisposta alimentazioneScatti(@PathVariable Long id,
                                                      @PathVariable Integer scattiParziali) {
-        return operazioniScattiService.calcolaAlimentazioneScatti(id,
+        return operazioniAddStorico.scattiCalcolaAlimentazione(id,
                 scattiParziali);
+    }
+
+    @PutMapping("{id}/alimentazioneTempo/{dataControllo}")
+    public AlimentazioneRisposta alimentazioneTempo(@PathVariable Long id,
+                                                    @PathVariable LocalDate dataControllo) {
+        return operazioniAddStorico.tempoCalcolaAlimentazione(id, dataControllo);
     }
 
     @PutMapping("eseguiSingolaAggiunta/{idStoricoDettaglio}")
     public void eseguiSingolaAggiunta(@PathVariable Long idStoricoDettaglio) {
         System.out.println("dentro eseguiSingolaAggiunta");
-        operazioniScattiService.eseguiSingolaAggiuntaScatti(idStoricoDettaglio);
+        operazioniInStorico.eseguiSingolaAggiunta(idStoricoDettaglio);
     }
 
     @PutMapping("confermaInteraAlimentazione/{idStoricoGenerale}")
     public void confermaInteraAlimentazione(@PathVariable Long idStoricoGenerale) {
         System.out.println("dentro confermaInteraAlimentazione");
-        operazioniScattiService.confermaInteraAlimentazione(idStoricoGenerale);
+        operazioniInStorico.confermaInteraAlimentazione(idStoricoGenerale);
     }
 
 
