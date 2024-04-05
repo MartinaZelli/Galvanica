@@ -9,8 +9,8 @@ import java.util.List;
 public interface AlimentazioneRepository extends CrudRepository<Alimentazione, Long> {
 
     @Query(value = "SELECT * FROM alimentazione " +
-            "WHERE tempo LIKE concat('%', ?1, '%')", nativeQuery = true)
-    List<Alimentazione> findByTempo(String dayOfWeek);
+            "WHERE bagno_id_bagno = ?1 AND tempo LIKE concat('%', ?2, '%')", nativeQuery = true)
+    List<Alimentazione> findByTempo(Long id, String dayOfWeek);
 
 
 }

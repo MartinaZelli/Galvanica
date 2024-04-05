@@ -115,6 +115,7 @@ public class OperazioniAddStorico {
                 idBagno);
         String findByTempo = dataControllo.getDayOfWeek().name();
         List<Alimentazione> alimentazioneList = alimentazioneRepository.findByTempo(
+                idBagno,
                 findByTempo);
         AlimentazioneRisposta alimentazioneRisposta = AlimentazioneRisposta.builder()
                 .idBagno(idBagno)
@@ -143,13 +144,14 @@ public class OperazioniAddStorico {
             alimentazioneRisposta.setMessaggio(rispostaPrimaPt + " queste sono le aggiunte da eseguire di oggi.");
             return alimentazioneRisposta;
         }
-        if (!dataControllo.isAfter(storicoGeneraletempoLast.getDataControlloTempo()) || !dataControllo.isAfter(
+        if (!dataControllo.isAfter(storicoGeneraletempoLast.getDataControlloTempo()) || dataControllo.isAfter(
                 LocalDate.now().plusDays(7))) {
             alimentazioneRisposta.setMessaggio(
                     "la data inserta è precedente l'ultima aggiunta fatta il  "
                             + storicoGeneraletempoLast.getDataControlloTempo() +
-                            " Oppure la data di controllo inserita (" + dataControllo + ") è più di 10 giorni avanti alla data di oggi "
+                            " Oppure la data di controllo inserita (" + dataControllo + ") è più di 7 giorni avanti alla data di oggi "
                             + LocalDate.now() + ". Non verranno fatte aggiunte");
+
             return alimentazioneRisposta;
         }
         for (LocalDate data = storicoGeneraletempoLast.getDataControlloTempo()
