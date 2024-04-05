@@ -9,7 +9,7 @@ import java.util.List;
 public interface AlimentazioneRepository extends CrudRepository<Alimentazione, Long> {
 
     @Query(value = "SELECT * FROM alimentazione " +
-            "WHERE tempo LIKE '%?1%'", nativeQuery = true)
+            "WHERE tempo LIKE concat('%', ?1, '%')", nativeQuery = true)
     List<Alimentazione> findByTempo(String dayOfWeek);
 
 
