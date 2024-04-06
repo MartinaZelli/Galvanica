@@ -259,6 +259,7 @@ public class OperazioniAddStorico {
                             false);
                 })
                 .flatMap(Collection::parallelStream)
+                .filter(storicoDettaglio -> !storicoDettaglio.getEseguito() && !storicoDettaglio.getEscluso())
                 .toList();
 
         /*List<StoricoDettaglio> storicoDettaglioList = new ArrayList<>();
