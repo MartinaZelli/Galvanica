@@ -1,5 +1,6 @@
 package org.galvanica.service.OperazioniBagno;
 
+import jakarta.persistence.EntityManager;
 import org.galvanica.dto.AlimentazioneRisposta;
 import org.galvanica.dto.OggettoAggiunta;
 import org.galvanica.math.MetodiArrotondamenti;
@@ -22,16 +23,20 @@ public class OperazioniAddStorico {
     private final StoricoDettaglioRepository storicoDettaglioRepository;
     private final AlimentazioneRepository alimentazioneRepository;
 
+    private final EntityManager entityManager;
+
     //todo: attenzione, quando si confermano le aggiunte storico precedenti vanno approvate in ordine crescente di data, mai al contrario o non tornano gli scatti totali e parziali
 //todo: attenzione! in questo momentoo viene ricercato su StoricoGenerale tutte gli storici (sia con il parametro scatti che con il parametro tempo), da implementare controllo!
     public OperazioniAddStorico(BagnoRepository bagnoRepository,
                                 StoricoGeneraleRepository storicoGeneraleRepository,
                                 StoricoDettaglioRepository storicoDettaglioRepository,
-                                AlimentazioneRepository alimentazioneRepository) {
+                                AlimentazioneRepository alimentazioneRepository,
+                                EntityManager entityManager) {
         this.bagnoRepository = bagnoRepository;
         this.storicoGeneraleRepository = storicoGeneraleRepository;
         this.storicoDettaglioRepository = storicoDettaglioRepository;
         this.alimentazioneRepository = alimentazioneRepository;
+        this.entityManager = entityManager;
     }
 
     public AlimentazioneRisposta scattiCalcolaAlimentazione(Long id,
@@ -90,6 +95,7 @@ public class OperazioniAddStorico {
                         .bagno(bagno)
                         .scattiTotali(scattiTotali)
                         .restoScatti((int) scattiMath.getRestoScatti())
+                        .sonoScatti(true)
                         .moltiplicatoreAlimentazione(scattiMath.getMoltiplicatoreAlimentazione())
                         .build());
 
@@ -98,7 +104,8 @@ public class OperazioniAddStorico {
                 alimentazione,
                 scattiMath,
                 storicoGenerale);
-
+        storicoGeneraleListDaEseguire = storicoGeneraleRepository.storicoGeneraleDescList(
+                false, id, true);
 
         return AlimentazioneRisposta.builder()
                 .idBagno(id)
@@ -134,13 +141,14 @@ public class OperazioniAddStorico {
                 return alimentazioneRisposta;
             }
             for (Alimentazione alimentazione : alimentazioneList) {
-                tempoCreaStoricoDettaglio(tempoCreaStoricoGenerale(alimentazione,
-                        dataControllo));
+                tempoCreaStorico(alimentazione, dataControllo);
             }
             List<StoricoGenerale> storicoGeneraleDaEsegureList = storicoGeneraleRepository.storicoGeneraleDescList(
                     false, idBagno, false);
-            alimentazioneRisposta.setOggettoAggiuntaList(
-                    aggiuntaDaStoriciPassatiList(storicoGeneraleDaEsegureList));
+            System.out.println(storicoGeneraleDaEsegureList.getFirst()
+                    .getStoricoDettaglioList());
+            alimentazioneRisposta.setOggettoAggiuntaList(aggiuntaDaStoriciPassatiList(
+                    storicoGeneraleDaEsegureList));
             alimentazioneRisposta.setMessaggio(rispostaPrimaPt + " queste sono le aggiunte da eseguire di oggi.");
             return alimentazioneRisposta;
         }
@@ -159,15 +167,14 @@ public class OperazioniAddStorico {
              !data.isAfter(dataControllo); data = data.plusDays(1)) {
             for (Alimentazione alimentazione : alimentazioneList) {
                 if (alimentazione.getTempo().contains(data.getDayOfWeek().name())) {
-                    tempoCreaStoricoDettaglio(tempoCreaStoricoGenerale(alimentazione,
-                            dataControllo));
+                    tempoCreaStorico(alimentazione, dataControllo);
                 }
             }
         }
         List<StoricoGenerale> storicoGeneraleDaEsegureList = storicoGeneraleRepository.storicoGeneraleDescList(
                 false, idBagno, false);
-        alimentazioneRisposta.setOggettoAggiuntaList(
-                aggiuntaDaStoriciPassatiList(storicoGeneraleDaEsegureList));
+        alimentazioneRisposta.setOggettoAggiuntaList(aggiuntaDaStoriciPassatiList(
+                storicoGeneraleDaEsegureList));
         alimentazioneRisposta.setMessaggio(
                 "Queste sono le aggiunte non ancora eseguite da " + storicoGeneraletempoLast.getDataControlloTempo() + " a " + dataControllo);
         return alimentazioneRisposta;
@@ -210,21 +217,18 @@ public class OperazioniAddStorico {
     }
 
 
-    private StoricoGenerale tempoCreaStoricoGenerale(Alimentazione alimentazione,
-                                                     LocalDate dataControllo) {
+    private List<StoricoDettaglio> tempoCreaStorico(Alimentazione alimentazione,
+                                                    LocalDate dataControllo) {
 
-        return storicoGeneraleRepository.save(StoricoGenerale.builder()
-                .alimentazione(alimentazione)
-                .bagno(alimentazione.getBagno())
-                .sonoScatti(false)
-                .dataControlloTempo(dataControllo)
-                .build());
-    }
-
-    private List<StoricoDettaglio> tempoCreaStoricoDettaglio(
-            StoricoGenerale storicoGenerale) {
+        StoricoGenerale storicoGenerale = storicoGeneraleRepository.save(
+                StoricoGenerale.builder()
+                        .alimentazione(alimentazione)
+                        .bagno(alimentazione.getBagno())
+                        .sonoScatti(false)
+                        .dataControlloTempo(dataControllo)
+                        .build());
         List<StoricoDettaglio> storicoDettaglioList = new ArrayList<>();
-        for (DettaglioAlimentazione dettaglio : storicoGenerale.getAlimentazione()
+        for (DettaglioAlimentazione dettaglio : alimentazione
                 .getDettaglioAlimentazioneList()) {
 
             storicoDettaglioList.add(storicoDettaglioRepository.save(
@@ -236,18 +240,34 @@ public class OperazioniAddStorico {
                             .build()));
         }
         return storicoDettaglioList;
+
     }
 
 
     private List<OggettoAggiunta> aggiuntaDaStoriciPassatiList(
             List<StoricoGenerale> storicoGeneraleListDaEseguire) {
         Map<Long, OggettoAggiunta> oggettoAggiuntaMap = new HashMap<>();
+
         List<StoricoDettaglio> storicoDettaglioList = storicoGeneraleListDaEseguire.stream()
-                .flatMap(storicoGenerale -> storicoGenerale.getStoricoDettaglioList()
-                        .stream())
-                .filter(storicoDettaglio -> !storicoDettaglio.getEseguito() && !storicoDettaglio.getEscluso())
+                .map(s -> {
+                    if (s.getStoricoDettaglioList() != null) {
+                        return s.getStoricoDettaglioList();
+                    }
+                    return storicoDettaglioRepository.storicoDettaglioList(
+                            s.getIdStorico(),
+                            false,
+                            false);
+                })
+                .flatMap(Collection::parallelStream)
                 .toList();
 
+        /*List<StoricoDettaglio> storicoDettaglioList = new ArrayList<>();
+        for (StoricoGenerale storicoGenerale : storicoGeneraleListDaEseguire) {
+            storicoDettaglioList.addAll(storicoDettaglioRepository.storicoDettaglioList(
+                    storicoGenerale.getIdStorico(),
+                    false,
+                    false));
+        }*/
         for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
             if (oggettoAggiuntaMap.containsKey(storicoDettaglio.getProdotto()
                     .getIdProdotto())) {

@@ -55,9 +55,10 @@ public class OperazioniInStorico {
         aggiornaBagnoEStoricoGenerale(storicoGenerale);
     }
 
+    ///todo: gestisci null su sonoScatti
     private void aggiornaBagnoEStoricoGenerale(
             StoricoGenerale storicoGenerale) {
-        boolean sonoScatti = storicoGenerale.getSonoScatti();
+        Boolean sonoScatti = storicoGenerale.getSonoScatti();
         List<StoricoGenerale> storicoGeneraleListDaEseguire = storicoGeneraleRepository
                 .storicoGeneraleDescList(false,
                         storicoGenerale.getBagno().getIdBagno(),

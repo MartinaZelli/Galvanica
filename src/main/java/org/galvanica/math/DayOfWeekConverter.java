@@ -14,6 +14,7 @@ public class DayOfWeekConverter implements AttributeConverter<List<DayOfWeek>, S
 
     @Override
     public String convertToDatabaseColumn(List<DayOfWeek> giorniDellaSettimana) {
+        if (giorniDellaSettimana == null) return null;
         return giorniDellaSettimana.stream()
                 .map(Enum::name)
                 .collect(Collectors.joining(","));
@@ -21,6 +22,7 @@ public class DayOfWeekConverter implements AttributeConverter<List<DayOfWeek>, S
 
     @Override
     public List<DayOfWeek> convertToEntityAttribute(String source) {
+        if (source == null) return null;
         return Arrays.stream(source.split(","))
                 .map(DayOfWeek::valueOf)
                 .collect(Collectors.toList());
