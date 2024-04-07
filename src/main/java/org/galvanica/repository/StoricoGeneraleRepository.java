@@ -20,4 +20,11 @@ public interface StoricoGeneraleRepository extends CrudRepository<StoricoGeneral
             "LIMIT 1", nativeQuery = true)
     StoricoGenerale storicoGeneraleTempoLast(Long idBagno);
 
+
+    @Query(value = "SELECT * FROM storico_generale " +
+            "WHERE bagno_id_bagno = ?1 " +
+            "ORDER BY data_creazione DESC, concluso " +
+            "LIMIT ?2 ", nativeQuery = true)
+    List<StoricoGenerale> storicoGeneraleListByBagno(Long idBagno, Long limite);
+
 }

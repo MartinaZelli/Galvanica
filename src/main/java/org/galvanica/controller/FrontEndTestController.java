@@ -24,19 +24,21 @@ public class FrontEndTestController {
     @GetMapping("bagnoFe/elenco")
     public String listaBagni(Model model) {
         List<BagnoDto> bagni = bagnoService.getAllBagno();
-        model.addAttribute("bagni", bagni);
+        model.addAttribute("bagnoList", bagni);
         return "bagnoList";
     }
 
     @GetMapping("bagnoFe/edit/{id}")
     public String listaBagni(@PathVariable Long id, Model model) {
-        BagnoDto bagno = bagnoService.ricercaId(id).orElseThrow(RuntimeException::new);
+        BagnoDto bagno = bagnoService.ricercaId(id)
+                .orElseThrow(RuntimeException::new);
         model.addAttribute("bagno", bagno);
         return "bagnoCard :: editCard";
     }
 
     @PutMapping(value = "bagnoFe/{id}")
-    public String aggiornaBagno(@RequestBody BagnoDto bagnoDto, @PathVariable Long id, Model model) {
+    public String aggiornaBagno(@RequestBody BagnoDto bagnoDto,
+                                @PathVariable Long id, Model model) {
         BagnoDto bagno = bagnoService.aggiorna(bagnoDto, id);
         model.addAttribute("bagno", bagno);
         return "bagnoCard :: showCard";

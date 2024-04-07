@@ -7,6 +7,8 @@ import org.galvanica.repository.AlimentazioneRepository;
 import org.galvanica.repository.BagnoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -110,5 +112,15 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
                 .descrizione(oggettoDaTrasformare.getDescrizione())
                 .arrotondaValori(oggettoDaTrasformare.getArrotondaValori())
                 .build();
+    }
+
+    public List<AlimentazioneDto> ricercaAlimentazioneByBagno(Long idBagno) {
+        List<Alimentazione> alimentazioneList = alimentazioneRepository.findByIdBagnoOrderScatti(
+                idBagno);
+        List<AlimentazioneDto> alimentazioneDtoList = new ArrayList<>();
+        for (Alimentazione alimentazione : alimentazioneList) {
+            alimentazioneDtoList.add(fromModelToDto(alimentazione));
+        }
+        return alimentazioneDtoList;
     }
 }

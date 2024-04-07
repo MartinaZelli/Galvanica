@@ -2,7 +2,9 @@ package org.galvanica.service.CRUD;
 
 import org.galvanica.dto.dtoConModel.BagnoDto;
 import org.galvanica.model.Bagno;
+import org.galvanica.model.StoricoGenerale;
 import org.galvanica.repository.BagnoRepository;
+import org.galvanica.repository.StoricoGeneraleRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -14,9 +16,12 @@ import java.util.stream.StreamSupport;
 @Service
 public class BagnoService implements ICRUDService<BagnoDto, Bagno> {
     private final BagnoRepository repository;
+    private final StoricoGeneraleRepository storicoGeneraleRepository;
 
-    public BagnoService(BagnoRepository repository) {
+    public BagnoService(BagnoRepository repository,
+                        StoricoGeneraleRepository storicoGeneraleRepository) {
         this.repository = repository;
+        this.storicoGeneraleRepository = storicoGeneraleRepository;
     }
 
     @Override
@@ -102,6 +107,19 @@ public class BagnoService implements ICRUDService<BagnoDto, Bagno> {
                 .collect(Collectors.toList());
     }
 
+    public Bagno modelRicercaId(long id) {
+        Optional<Bagno> bagnoTrovato = repository.findById(id);
+        if (bagnoTrovato.isEmpty()) {
+            throw new RuntimeException(
+                    "non esiste bagno con questo ID");
+        }
+        return bagnoTrovato.get();
+    }
+
+    public List<StoricoGenerale> storicoGeneraleListByBagno(Long idBagno,
+                                                            Long limite) {
+        return storicoGeneraleRepository.storicoGeneraleListByBagno(idBagno, limite);
+    }
 
     //TODO: mettere Optional BagnoDto oppure senza Optional? decidere quale è il migliore.
    /* @Override
