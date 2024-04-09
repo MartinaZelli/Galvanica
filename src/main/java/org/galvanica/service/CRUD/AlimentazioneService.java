@@ -123,4 +123,5 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
         }
         return alimentazioneDtoList;
     }
+
 }

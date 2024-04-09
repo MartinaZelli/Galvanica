@@ -13,4 +13,12 @@ public interface StoricoDettaglioRepository extends CrudRepository<StoricoDettag
     List<StoricoDettaglio> storicoDettaglioList(Long idStoricoGenerale,
                                                 boolean escluso,
                                                 boolean eseguito);
+
+    @Query(value = "SELECT *\n" +
+            "FROM storico_generale\n" +
+            "INNER JOIN storico_dettaglio\n" +
+            "ON storico_generale.id_storico = storico_dettaglio.storico_generale_id_storico\n" +
+            "WHERE bagno_id_bagno = ?1\n" +
+            "ORDER BY storico_generale.concluso,storico_generale.data_creazione DESC", nativeQuery = true)
+    List<StoricoDettaglio> findByIdBagno(Long idBagno);
 }
