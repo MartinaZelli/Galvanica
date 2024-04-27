@@ -2,11 +2,14 @@ package org.galvanica.controller;
 
 import org.galvanica.dto.dtoConModel.MagazzinoDto;
 import org.galvanica.service.CRUD.MagazzinoService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
-@RestController
+@Controller
 @RequestMapping("/magazzino")
 public class MagazzinoController {
 
@@ -33,8 +36,23 @@ public class MagazzinoController {
     }
 
     @PutMapping("{id}")
-    public MagazzinoDto aggiornaMagazzino(@RequestBody MagazzinoDto magazzinoDto,
-                                          @PathVariable Long id) {
-        return magazzinoService.aggiorna(magazzinoDto, id);
+    public String aggiornaMagazzino(@RequestBody MagazzinoDto magazzinoDto,
+                                    @PathVariable Long id, Model model) {
+        magazzinoService.aggiorna(magazzinoDto, id);
+        return listaMagazzini(model);
+    }
+
+    @GetMapping("/elenco")
+    public String listaMagazzini(Model model) {
+        List<MagazzinoDto> magazzinoDtoList = magazzinoService.findAllMagazzino();
+        model.addAttribute("magazzinoList", magazzinoDtoList);
+        return "magazzinoList";
+    }
+
+    @GetMapping("/azioni/{id}")
+    public String listaMagazzini(@PathVariable Long id, Model model) {
+        MagazzinoDto magazzinoDto = magazzinoService.ricercaId(id).orElseThrow();
+        model.addAttribute("magazzino", magazzinoDto);
+        return "magazzinoAzioni";
     }
 }
