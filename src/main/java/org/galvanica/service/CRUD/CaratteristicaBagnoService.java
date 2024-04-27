@@ -7,17 +7,23 @@ import org.galvanica.repository.BagnoRepository;
 import org.galvanica.repository.CaratteristicaBagnoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class CaratteristicaBagnoService implements ICRUDService<CaratteristicaBagnoDto, CaratteristicaBagno> {
     private final CaratteristicaBagnoRepository repository;
     private final BagnoRepository repositoryBagno;
+    private final CaratteristicaBagnoRepository caratteristicaBagnoRepository;
 
     public CaratteristicaBagnoService(CaratteristicaBagnoRepository repository,
-                                      BagnoRepository repositoryBagno) {
+                                      BagnoRepository repositoryBagno,
+                                      CaratteristicaBagnoRepository caratteristicaBagnoRepository) {
         this.repository = repository;
         this.repositoryBagno = repositoryBagno;
+        this.caratteristicaBagnoRepository = caratteristicaBagnoRepository;
     }
 
     @Override
@@ -102,6 +108,13 @@ public class CaratteristicaBagnoService implements ICRUDService<CaratteristicaBa
                 .nome(oggettoDaTrasformare.getNome())
                 .descrizione(oggettoDaTrasformare.getDescrizione())
                 .build();
+    }
+
+    public List<CaratteristicaBagnoDto> findAllCaratteristicaBagno() {
+        return StreamSupport.stream(caratteristicaBagnoRepository.findAll()
+                        .spliterator(),
+                false).map(this::fromModelToDto).collect(
+                Collectors.toList());
     }
 }
 

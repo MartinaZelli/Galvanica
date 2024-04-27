@@ -7,7 +7,10 @@ import org.galvanica.repository.MagazzinoRepository;
 import org.galvanica.repository.ProdottoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
@@ -98,5 +101,11 @@ public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
                 .descrizione(oggettoDaTrasformare.getDescrizione())
                 .ph(oggettoDaTrasformare.getPh())
                 .build();
+    }
+
+    public List<ProdottoDto> findAllProdotto() {
+        return StreamSupport.stream(prodottoRepository.findAll().spliterator(),
+                false).map(this::fromModelToDto).collect(
+                Collectors.toList());
     }
 }

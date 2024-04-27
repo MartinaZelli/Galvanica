@@ -9,7 +9,10 @@ import org.galvanica.repository.ProdottoRepository;
 import org.galvanica.repository.RelazioneBagnoProdottoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class RelazioneBagnoProdottoService implements ICRUDService<RelazioneBagnoProdottoDto, RelazioneBagnoProdotto> {
@@ -124,5 +127,12 @@ public class RelazioneBagnoProdottoService implements ICRUDService<RelazioneBagn
                 .idProdotto(oggettoDaTrasformare.getProdotto().getIdProdotto())
                 .note(oggettoDaTrasformare.getNote())
                 .build();
+    }
+
+    public List<RelazioneBagnoProdottoDto> findAllRelazioneBagnoProdotto() {
+        return StreamSupport.stream(relazioneBagnoProdottoRepository.findAll()
+                        .spliterator(),
+                false).map(this::fromModelToDto).collect(
+                Collectors.toList());
     }
 }

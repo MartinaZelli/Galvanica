@@ -23,7 +23,7 @@ public class FrontEndTestController {
 
     @GetMapping("bagnoFe/elenco")
     public String listaBagni(Model model) {
-        List<BagnoDto> bagni = bagnoService.getAllBagno();
+        List<BagnoDto> bagni = bagnoService.findAllBagno();
         model.addAttribute("bagnoList", bagni);
         return "bagnoList";
     }

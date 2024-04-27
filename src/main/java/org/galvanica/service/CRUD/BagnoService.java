@@ -101,7 +101,7 @@ public class BagnoService implements ICRUDService<BagnoDto, Bagno> {
                 .build();
     }
 
-    public List<BagnoDto> getAllBagno() {
+    public List<BagnoDto> findAllBagno() {
         return StreamSupport.stream(repository.findAll().spliterator(), false)
                 .map(this::fromModelToDto)
                 .collect(Collectors.toList());

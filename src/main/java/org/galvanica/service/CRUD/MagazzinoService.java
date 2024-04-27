@@ -5,15 +5,21 @@ import org.galvanica.model.Magazzino;
 import org.galvanica.repository.MagazzinoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class MagazzinoService implements ICRUDService<MagazzinoDto, Magazzino> {
 
     private final MagazzinoRepository magazzinoRepository;
+    private final RelazioneBagnoProdottoService relazioneBagnoProdottoService;
 
-    public MagazzinoService(MagazzinoRepository magazzinoRepository) {
+    public MagazzinoService(MagazzinoRepository magazzinoRepository,
+                            RelazioneBagnoProdottoService relazioneBagnoProdottoService) {
         this.magazzinoRepository = magazzinoRepository;
+        this.relazioneBagnoProdottoService = relazioneBagnoProdottoService;
     }
 
     @Override
@@ -64,5 +70,11 @@ public class MagazzinoService implements ICRUDService<MagazzinoDto, Magazzino> {
                 .idMagazzino(oggettoDaTrasformare.getIdMagazzino())
                 .descrizione(oggettoDaTrasformare.getDescrizione())
                 .build();
+    }
+
+    public List<MagazzinoDto> findAllMagazzino() {
+        return StreamSupport.stream(magazzinoRepository.findAll().spliterator(),
+                false).map(this::fromModelToDto).collect(
+                Collectors.toList());
     }
 }

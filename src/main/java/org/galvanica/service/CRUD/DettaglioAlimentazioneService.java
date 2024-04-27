@@ -9,7 +9,10 @@ import org.galvanica.repository.DettaglioAlimentazioneRepository;
 import org.galvanica.repository.ProdottoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlimentazioneDto, DettaglioAlimentazione> {
@@ -141,5 +144,12 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
                 .idAlimentazione(oggettoDaTrasformare.getAlimentazione()
                         .getIdAlimentazione())
                 .build();
+    }
+
+    public List<DettaglioAlimentazioneDto> findAllDettaglioAlimentazione() {
+        return StreamSupport.stream(dettaglioAlimentazioneRepository.findAll()
+                        .spliterator(),
+                false).map(this::fromModelToDto).collect(
+                Collectors.toList());
     }
 }

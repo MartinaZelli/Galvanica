@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alimentazione> {
@@ -122,6 +124,12 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
             alimentazioneDtoList.add(fromModelToDto(alimentazione));
         }
         return alimentazioneDtoList;
+    }
+
+    public List<AlimentazioneDto> findAllAlimentazione() {
+        return StreamSupport.stream(alimentazioneRepository.findAll().spliterator(),
+                false).map(this::fromModelToDto).collect(
+                Collectors.toList());
     }
 
 }
