@@ -28,15 +28,4 @@ public class DayOfWeekConverter implements AttributeConverter<List<DayOfWeek>, S
                 .collect(Collectors.toList());
     }
 
-    /*
-    i numeri della settimana saranno:
-    0 domenica
-    1 lunedì
-    2 martedì
-    3 mercoledì
-    4 giovedì
-    5 venerdì
-    6 sabato
-
-     */
 }

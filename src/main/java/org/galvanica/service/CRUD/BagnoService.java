@@ -17,11 +17,14 @@ import java.util.stream.StreamSupport;
 public class BagnoService implements ICRUDService<BagnoDto, Bagno> {
     private final BagnoRepository repository;
     private final StoricoGeneraleRepository storicoGeneraleRepository;
+    private final ProdottoService prodottoService;
 
     public BagnoService(BagnoRepository repository,
-                        StoricoGeneraleRepository storicoGeneraleRepository) {
+                        StoricoGeneraleRepository storicoGeneraleRepository,
+                        ProdottoService prodottoService) {
         this.repository = repository;
         this.storicoGeneraleRepository = storicoGeneraleRepository;
+        this.prodottoService = prodottoService;
     }
 
     @Override
@@ -120,6 +123,22 @@ public class BagnoService implements ICRUDService<BagnoDto, Bagno> {
                                                             Long limite) {
         return storicoGeneraleRepository.storicoGeneraleListByBagno(idBagno, limite);
     }
+
+    public boolean controllaSeBagnoHaAlimentazioneAScatti(Long idBagno) {
+        Optional<Bagno> bagnoOptional = repository.findById(idBagno);
+        if (bagnoOptional.isEmpty()) {
+            throw new RuntimeException(
+                    "non esiste bagno con questo ID");
+        }
+        if (bagnoOptional.get().getAlimentazioneList() != null) {
+            return bagnoOptional.get()
+                    .getAlimentazioneList()
+                    .stream()
+                    .anyMatch(alimentazione -> alimentazione.getScatti() != null);
+        }
+        return false;
+    }
+
 
     //TODO: mettere Optional BagnoDto oppure senza Optional? decidere quale è il migliore.
    /* @Override

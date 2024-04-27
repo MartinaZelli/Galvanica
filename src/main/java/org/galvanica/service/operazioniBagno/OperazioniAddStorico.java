@@ -1,4 +1,4 @@
-package org.galvanica.service.OperazioniBagno;
+package org.galvanica.service.operazioniBagno;
 
 import jakarta.persistence.EntityManager;
 import org.galvanica.dto.AlimentazioneRisposta;

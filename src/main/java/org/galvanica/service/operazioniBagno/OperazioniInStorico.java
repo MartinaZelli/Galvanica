@@ -1,4 +1,4 @@
-package org.galvanica.service.OperazioniBagno;
+package org.galvanica.service.operazioniBagno;
 
 import org.galvanica.model.StoricoDettaglio;
 import org.galvanica.model.StoricoGenerale;

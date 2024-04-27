@@ -45,6 +45,15 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
             throw new RuntimeException(
                     "l'id del bagno non esiste, correggere.");
         }
+        if (bagnoOptional.get().getAlimentazioneList() != null) {
+            if (bagnoOptional.get()
+                    .getAlimentazioneList()
+                    .stream()
+                    .anyMatch(alimentazione -> alimentazione.getScatti() != null)) {
+                throw new RuntimeException(
+                        "esiste già un alimentazione a scatti per questo bagno.");
+            }
+        }
         Alimentazione alimentazione = Alimentazione.builder()
                 .bagno(bagnoOptional.get())
                 .tempo(elemento.getTempo())

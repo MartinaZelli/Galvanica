@@ -10,6 +10,7 @@ import org.galvanica.repository.ProdottoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -59,6 +60,16 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
             throw new RuntimeException(
                     "mettere un id prodotto corretto");
         }
+        if (alimentazioneOptional.get()
+                .getDettaglioAlimentazioneList()
+                .stream()
+                .anyMatch(dettaglioAlimentazione -> Objects.equals(prodottoOptional.get()
+                        .getIdProdotto(), elemento.getIdProdotto()))) {
+            throw new RuntimeException(
+                    "il prodotto è già inserito nel dettaglio alimentazione. " +
+                            "Si prega di modificare o eliminare quello precedente.");
+        }
+
         DettaglioAlimentazione dettaglioAlimentazione = DettaglioAlimentazione.builder()
                 .note(elemento.getNote())
                 .quantitaProdotto(elemento.getQuantitaProdotto())

@@ -1,12 +1,16 @@
 package org.galvanica.service.CRUD;
 
 import org.galvanica.dto.dtoConModel.ProdottoDto;
+import org.galvanica.model.Bagno;
 import org.galvanica.model.Magazzino;
 import org.galvanica.model.Prodotto;
+import org.galvanica.model.RelazioneBagnoProdotto;
+import org.galvanica.repository.BagnoRepository;
 import org.galvanica.repository.MagazzinoRepository;
 import org.galvanica.repository.ProdottoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,11 +21,14 @@ public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
 
     private final ProdottoRepository prodottoRepository;
     private final MagazzinoRepository magazzinoRepository;
+    private final BagnoRepository bagnoRepository;
 
     public ProdottoService(ProdottoRepository prodottoRepository,
-                           MagazzinoRepository magazzinoRepository) {
+                           MagazzinoRepository magazzinoRepository,
+                           BagnoRepository bagnoRepository) {
         this.prodottoRepository = prodottoRepository;
         this.magazzinoRepository = magazzinoRepository;
+        this.bagnoRepository = bagnoRepository;
     }
 
     @Override
@@ -38,6 +45,10 @@ public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
         if (magazzinoTrovato.isEmpty()) {
             throw new RuntimeException(
                     "l'id del magazzino non esiste, correggere.");
+        }
+        if (elemento.getPh() < 0 || elemento.getPh() > 14) {
+            throw new RuntimeException(
+                    "il pH ha valori compresi fra 0 e 14 se inizializzato.");
         }
         Prodotto prodotto = Prodotto.builder()
                 .descrizione(elemento.getDescrizione())
@@ -74,6 +85,10 @@ public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
             throw new RuntimeException(
                     "l'id del magazzino non esiste, correggere.");
         }
+        if (elemento.getPh() < 0 || elemento.getPh() > 14) {
+            throw new RuntimeException(
+                    "il pH ha valori compresi fra 0 e 14 se inizializzato.");
+        }
         Prodotto prodotto = prodottoOptional.get();
         prodotto.setMagazzino(magazzinoTrovato.get());
         prodotto.setNome(elemento.getNome());
@@ -107,5 +122,22 @@ public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
         return StreamSupport.stream(prodottoRepository.findAll().spliterator(),
                 false).map(this::fromModelToDto).collect(
                 Collectors.toList());
+    }
+
+    public List<ProdottoDto> ricercaProdottiByBagno(Long idBagno) {
+        Optional<Bagno> bagnoOptional = bagnoRepository.findById(idBagno);
+        if (bagnoOptional.isEmpty()) {
+            throw new RuntimeException(
+                    "non esiste bagno con questo ID");
+        }
+        if (bagnoOptional.get().getRelazioneBagnoProdottoList() == null) {
+            return new ArrayList<>();
+        }
+        return bagnoOptional.get()
+                .getRelazioneBagnoProdottoList()
+                .stream()
+                .map(RelazioneBagnoProdotto::getProdotto)
+                .map(this::fromModelToDto)
+                .toList();
     }
 }
