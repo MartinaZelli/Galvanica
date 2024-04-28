@@ -41,17 +41,58 @@
 
 </div>
 
-<div th:fragment="content">
-    <a href=""> Bagni galvanici</a>
-    <a href=""> Magazzino prodotti</a>
-    <a href=""> Archivio</a>
-    <a href=""> ??? </a>
-    <a href=""> Alimentazioni </a>
-    <a href=""> Aggiunta manuale</a>
-    <a href=""> Analisi</a>
-    <a href=""> Aggiunte da Fare / Approvare</a>
+<form th:attr="hx-put=@{'/prodotto/'+${prodotto.getIdProdotto()}}"
+      hx-ext="json-enc"
+      hx-target="body"
+      hx-swap="outerHTML">
+    <div>
+        <label for="id">Id Prodotto</label>
+        <input type="text" disabled id="id" name="idProdotto"
+               th:value="${prodotto.getIdProdotto()}">
+    </div>
+    <div>
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" name="nome"
+               th:value="${prodotto.getNome()}">
+    </div>
+    <div>
+        <label for="descrizione">Descrizione</label>
+        <input type="text" id="descrizione" name="descrizione"
+               th:value="${prodotto.getDescrizione()}">
+    </div>
+    <div>
+        <label for="ph">pH prodotto</label>
+        <input type="text" id="ph" name="ph"
+               th:value="${prodotto.getPh()}">
+    </div>
+    <div>
+        <label for="magazzino">magazzino</label>
+        <select name="idMagazzino" id="magazzino">
+            <option></option>
+            <option th:each="magazzino: ${magazzinoList}"
+                    th:value="${magazzino.getIdMagazzino()}"
+                    th:text="${magazzino.getIdMagazzino()}+', '+${magazzino.getDescrizione()}"
+                    th:selected="${magazzino.getIdMagazzino()==prodotto.getIdMagazzino()}">
+            </option>
+        </select>
 
-</div>
+    </div>
+    <button class="btn btn-outline-primary"
+            type="submit">
+        Salva
+    </button>
+
+    <form th:attr="hx-delete=@{'/prodotto/'+${prodotto.getIdProdotto()}}"
+          hx-ext="json-enc"
+          hx-target="body"
+          hx-swap="outerHTML">
+        <button class="btn btn-outline-primary"
+                type="submit">
+            Elimina l'intero oggetto
+        </button>
+    </form>
+</form>
+
 </body>
 
 </html>

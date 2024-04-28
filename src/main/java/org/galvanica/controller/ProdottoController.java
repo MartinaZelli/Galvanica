@@ -35,9 +35,23 @@ public class ProdottoController {
     @GetMapping("/new")
     public String newProdotto(Model model) {
         model.addAttribute("magazzinoList", magazzinoService.findAllMagazzino());
-        return "prodottoNuovo";
+        return "prodotto/prodottoNuovo";
     }
 
+    @GetMapping("/list")
+    public String listaProdotti(Model model) {
+        List<ProdottoDto> prodottoDtoList = prodottoService.findAllProdotto();
+        model.addAttribute("prodottoList", prodottoDtoList);
+        return "prodotto/prodottoList";
+    }
+
+    @GetMapping("/azioni/{id}")
+    public String listaProdotti(@PathVariable Long id, Model model) {
+        ProdottoDto prodottoDto = prodottoService.ricercaId(id).orElseThrow();
+        model.addAttribute("prodotto", prodottoDto);
+        model.addAttribute("magazzinoList", magazzinoService.findAllMagazzino());
+        return "prodotto/prodottoAzioni";
+    }
 
     @PutMapping("{id}")
     public String aggiornaProdotto(@RequestBody ProdottoDto prodottoDto,
@@ -45,6 +59,7 @@ public class ProdottoController {
         service.aggiorna(prodottoDto, id);
         return listaProdotti(model);
     }
+
 
     @GetMapping("{id}")
     public Optional<ProdottoDto> ricercaId(@PathVariable Long id) {
@@ -56,19 +71,5 @@ public class ProdottoController {
         service.elimina(id);
     }
 
-    @GetMapping("/list")
-    public String listaProdotti(Model model) {
-        List<ProdottoDto> prodottoDtoList = prodottoService.findAllProdotto();
-        model.addAttribute("prodottoList", prodottoDtoList);
-        return "prodottoList";
-    }
-
-    @GetMapping("/azioni/{id}")
-    public String listaProdotti(@PathVariable Long id, Model model) {
-        ProdottoDto prodottoDto = prodottoService.ricercaId(id).orElseThrow();
-        model.addAttribute("prodotto", prodottoDto);
-        model.addAttribute("magazzinoList", magazzinoService.findAllMagazzino());
-        return "prodottoAzioni";
-    }
 
 }

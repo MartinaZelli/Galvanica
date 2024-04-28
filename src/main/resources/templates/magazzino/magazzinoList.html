@@ -25,47 +25,48 @@
             Azioni
         </a>
         <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Bagno</a></li>
-            <li><a class="dropdown-item" href="#">Alimentazione</a></li>
-            <li><a class="dropdown-item" href="#">Dettaglio alimentazione</a></li>
-            <li><a class="dropdown-item" href="#">Relazione bagno prodotto</a></li>
+            <li><a class="dropdown-item" href="/bagno/list">Bagno</a></li>
+            <li><a class="dropdown-item" href="/alimentazione/list">Alimentazione</a>
+            </li>
+            <li><a class="dropdown-item" href="/dettaglioAlimentazione/list">Dettaglio
+                alimentazione</a></li>
+            <li><a class="dropdown-item" href="/relazioneBagnoProdotto/list">Relazione
+                bagno prodotto</a></li>
             <li><a class="dropdown-item" href="/magazzino/list">Magazzino</a></li>
             <li><a class="dropdown-item" href="/prodotto/list">Prodotto</a></li>
-            <li><a class="dropdown-item" href="#">Caratteristica bagno</a></li>
+            <li><a class="dropdown-item" href="/caratteristicaBagno/list">Caratteristica
+                bagno</a></li>
         </ul>
     </div>
 
 </div>
+<div>
+    <a th:href="'/magazzino/new'">
+        nuovo </a>
+</div>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Descrizione</th>
+        <th scope="col">Azioni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="magazzino: ${magazzinoList}">
+        <td><span th:text="${magazzino.getIdMagazzino()}"/>
 
-<form th:attr="hx-put=@{'/magazzino/'+${magazzino.getIdMagazzino()}}"
-      hx-ext="json-enc"
-      hx-target="body"
-      hx-swap="outerHTML">
-    <div>
-        <label for="id">Id Magazzino</label>
-        <input type="text" disabled id="id" name="idMagazzino"
-               th:value="${magazzino.getIdMagazzino()}">
-    </div>
-    <div>
-        <label for="descrizione">Descrizione</label>
-        <input type="text" id="descrizione" name="descrizione"
-               th:value="${magazzino.getDescrizione()}">
-    </div>
-    <button class="btn btn-outline-primary"
-            type="submit">
-        Salva
-    </button>
-</form>
-<form th:attr="hx-delete=@{'/magazzino/'+${magazzino.getIdMagazzino()}}"
-      hx-ext="json-enc"
-      hx-target="body"
-      hx-swap="outerHTML">
-    <button class="btn btn-outline-primary"
-            type="submit">
-        Elimina l'intero oggetto
-    </button>
-</form>
+        </td>
+        <td><span th:text="${magazzino.getDescrizione()}"/>
 
+        </td>
+        <td><a th:href="'/magazzino/azioni/'+${magazzino.getIdMagazzino()}">
+            Modifica </a>
+
+        </td>
+    </tr>
+    </tbody>
+</table>
 </body>
 
 </html>

@@ -28,7 +28,7 @@ public class MagazzinoController {
 
     @GetMapping("/new")
     public String newMagazzinoDto(Model model) {
-        return "magazzinoNuovo";
+        return "magazzino/magazzinoNuovo";
     }
 
     @GetMapping("{id}")
@@ -53,13 +53,13 @@ public class MagazzinoController {
     public String listaMagazzini(Model model) {
         List<MagazzinoDto> magazzinoDtoList = magazzinoService.findAllMagazzino();
         model.addAttribute("magazzinoList", magazzinoDtoList);
-        return "magazzinoList";
+        return "magazzino/magazzinoList";
     }
 
     @GetMapping("/azioni/{id}")
     public String listaMagazzini(@PathVariable Long id, Model model) {
         MagazzinoDto magazzinoDto = magazzinoService.ricercaId(id).orElseThrow();
         model.addAttribute("magazzino", magazzinoDto);
-        return "magazzinoAzioni";
+        return "magazzino/magazzinoAzioni";
     }
 }

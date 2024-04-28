@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -33,40 +34,39 @@ public class BagnoController {
         this.alimentazioneService = alimentazioneService;
     }
 
-    @GetMapping("vedi/{id}")
-    public String vediBagno(@PathVariable Long id, Model model) {
-        model.addAttribute("bagno",
-                service.modelRicercaId(id));
-        return "bagnoModifica :: bagnoVedi";
+    @PostMapping
+    public String inserisciBagno(@RequestBody BagnoDto bagnoDto, Model model) {
+        service.inserisci(bagnoDto);
+        return listaBagni(model);
     }
 
-    @PutMapping(value = "aggiorna/{id}")
+    @GetMapping("/new")
+    public String newBagno(Model model) {
+        return "bagno/bagnoNuovo";
+    }
+
+    @GetMapping("/list")
+    public String listaBagni(Model model) {
+        List<BagnoDto> bagnoDtoList = service.findAllBagno();
+        model.addAttribute("bagnoList", bagnoDtoList);
+        return "bagno/bagnoList";
+    }
+
+    @PutMapping("{id}")
     public String aggiornaBagno(@RequestBody BagnoDto bagnoDto,
                                 @PathVariable Long id, Model model) {
-        BagnoDto bagno = service.aggiorna(bagnoDto, id);
-        model.addAttribute("bagno", bagno);
-        return "bagnoModifica :: showCardBagno";
+        service.aggiorna(bagnoDto, id);
+        return listaBagni(model);
     }
 
-    @GetMapping("{id}")
-    public String bagnoGenerale(@PathVariable Long id, Model model) {
-        model.addAttribute("bagno",
-                service.modelRicercaId(id));
-        model.addAttribute("storicoList",
-                service.storicoGeneraleListByBagno(id, LIMITE_LISTA));
-        return "bagnoGenerale";
+
+    @GetMapping("/azioni/{id}")
+    public String listaBagni(@PathVariable Long id, Model model) {
+        BagnoDto bagnoDto = service.ricercaId(id).orElseThrow();
+        model.addAttribute("bagno", bagnoDto);
+        return "bagno/bagnoAzioni";
     }
 
-    @PostMapping
-    public BagnoDto inserisciBagno(@RequestBody BagnoDto bagnoDto) {
-        return service.inserisci(bagnoDto);
-    }
-
-    @PutMapping("prova/aggiorna/{id}")
-    public BagnoDto aggiornaBagno(@RequestBody BagnoDto bagnoDto,
-                                  @PathVariable Long id) {
-        return service.aggiorna(bagnoDto, id);
-    }
 
     @GetMapping("prova/{id}")
     public Optional<BagnoDto> ricercaId(@PathVariable Long id) {
@@ -104,4 +104,27 @@ public class BagnoController {
     }
 
 
+    @GetMapping("vedi/{id}")
+    public String vediBagno(@PathVariable Long id, Model model) {
+        model.addAttribute("bagno",
+                service.modelRicercaId(id));
+        return "bagnoModifica :: bagnoVedi";
+    }
+
+    /* @PutMapping(value = "aggiorna/{id}")
+     public String aggiornaBagno(@RequestBody BagnoDto bagnoDto,
+                                 @PathVariable Long id, Model model) {
+         BagnoDto bagno = service.aggiorna(bagnoDto, id);
+         model.addAttribute("bagno", bagno);
+         return "bagnoModifica :: showCardBagno";
+     }
+ */
+    @GetMapping("{id}")
+    public String bagnoGenerale(@PathVariable Long id, Model model) {
+        model.addAttribute("bagno",
+                service.modelRicercaId(id));
+        model.addAttribute("storicoList",
+                service.storicoGeneraleListByBagno(id, LIMITE_LISTA));
+        return "bagnoGenerale";
+    }
 }

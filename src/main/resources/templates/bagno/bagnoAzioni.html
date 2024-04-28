@@ -25,59 +25,58 @@
             Azioni
         </a>
         <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Bagno</a></li>
-            <li><a class="dropdown-item" href="#">Alimentazione</a></li>
-            <li><a class="dropdown-item" href="#">Dettaglio alimentazione</a></li>
-            <li><a class="dropdown-item" href="#">Relazione bagno prodotto</a></li>
+            <li><a class="dropdown-item" href="/bagno/list">Bagno</a></li>
+            <li><a class="dropdown-item" href="/alimentazione/list">Alimentazione</a>
+            </li>
+            <li><a class="dropdown-item" href="/dettaglioAlimentazione/list">Dettaglio
+                alimentazione</a></li>
+            <li><a class="dropdown-item" href="/relazioneBagnoProdotto/list">Relazione
+                bagno prodotto</a></li>
             <li><a class="dropdown-item" href="/magazzino/list">Magazzino</a></li>
             <li><a class="dropdown-item" href="/prodotto/list">Prodotto</a></li>
-            <li><a class="dropdown-item" href="#">Caratteristica bagno</a></li>
+            <li><a class="dropdown-item" href="/caratteristicaBagno/list">Caratteristica
+                bagno</a></li>
         </ul>
     </div>
 
 </div>
 
-<form th:attr="hx-put=@{'/prodotto/'+${prodotto.getIdProdotto()}}"
+<form th:attr="hx-put=@{'/bagno/'+${bagno.getIdBagno()}}"
       hx-ext="json-enc"
       hx-target="body"
       hx-swap="outerHTML">
     <div>
-        <label for="id">Id Prodotto</label>
+        <label for="id">Id Bagno</label>
         <input type="text" disabled id="id" name="idProdotto"
-               th:value="${prodotto.getIdProdotto()}">
+               th:value="${bagno.getIdBagno()}">
     </div>
     <div>
         <label for="nome">Nome</label>
         <input type="text" id="nome" name="nome"
-               th:value="${prodotto.getNome()}">
+               th:value="${bagno.getNome()}">
     </div>
     <div>
-        <label for="descrizione">Descrizione</label>
-        <input type="text" id="descrizione" name="descrizione"
-               th:value="${prodotto.getDescrizione()}">
+        <label for="scattiTotali">Scatti Totali</label>
+        <input type="text" id="scattiTotali" name="scattiTotali"
+               th:value="${bagno.getScattiTotali()}">
     </div>
     <div>
-        <label for="ph">pH prodotto</label>
-        <input type="text" id="ph" name="ph"
-               th:value="${prodotto.getPh()}">
+        <label for="restoScatti">Scatti Parziali</label>
+        <input type="text" id="restoScatti" name="restoScatti"
+               th:value="${bagno.getRestoScatti()}">
     </div>
     <div>
-        <label for="magazzino">magazzino</label>
-        <select name="idMagazzino" id="magazzino">
-            <option></option>
-            <option th:each="magazzino: ${magazzinoList}"
-                    th:value="${magazzino.getIdMagazzino()}"
-                    th:text="${magazzino.getIdMagazzino()}+', '+${magazzino.getDescrizione()}"
-                    th:selected="${magazzino.getIdMagazzino()==prodotto.getIdMagazzino()}">
-            </option>
-        </select>
+        <label for="litri">Litri</label>
+        <input type="text" id="litri" name="litri"
+               th:value="${bagno.getLitri()}">
+    </div>
 
-    </div>
     <button class="btn btn-outline-primary"
             type="submit">
         Salva
     </button>
-    <form th:attr="hx-delete=@{'/prodotto/'+${prodotto.getIdProdotto()}}"
+
+    <form th:attr="hx-delete=@{'/bagno/'+${bagno.getIdBagno()}}"
           hx-ext="json-enc"
           hx-target="body"
           hx-swap="outerHTML">
