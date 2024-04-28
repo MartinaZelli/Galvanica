@@ -37,17 +37,20 @@
 
 </div>
 
-<div th:fragment="content">
-    <a href=""> Bagni galvanici</a>
-    <a href=""> Magazzino prodotti</a>
-    <a href=""> Archivio</a>
-    <a href=""> ??? </a>
-    <a href=""> Alimentazioni </a>
-    <a href=""> Aggiunta manuale</a>
-    <a href=""> Analisi</a>
-    <a href=""> Aggiunte da Fare / Approvare</a>
+<form th:attr="hx-post=@{'/magazzino'}"
+      hx-ext="json-enc"
+      hx-target="body"
+      hx-swap="outerHTML">
+    <div>
+        <label for="descrizione">Descrizione</label>
+        <input type="text" id="descrizione" name="descrizione">
+    </div>
+    <button class="btn btn-outline-primary"
+            type="submit">
+        Crea Nuovo
+    </button>
+</form>
 
-</div>
 </body>
 
 </html>

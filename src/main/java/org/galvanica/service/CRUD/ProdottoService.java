@@ -112,6 +112,7 @@ public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
         return ProdottoDto.builder()
                 .idProdotto(oggettoDaTrasformare.getIdProdotto())
                 .idMagazzino(oggettoDaTrasformare.getMagazzino().getIdMagazzino())
+                .nomeMagazzino(oggettoDaTrasformare.getMagazzino().getDescrizione())
                 .nome(oggettoDaTrasformare.getNome())
                 .descrizione(oggettoDaTrasformare.getDescrizione())
                 .ph(oggettoDaTrasformare.getPh())

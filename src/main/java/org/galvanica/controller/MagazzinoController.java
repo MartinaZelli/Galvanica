@@ -20,9 +20,15 @@ public class MagazzinoController {
     }
 
     @PostMapping
-    public MagazzinoDto aggiungiMagazzinoDto(
-            @RequestBody MagazzinoDto magazzinoDto) {
-        return magazzinoService.inserisci(magazzinoDto);
+    public String aggiungiMagazzinoDto(
+            @RequestBody MagazzinoDto magazzinoDto, Model model) {
+        magazzinoService.inserisci(magazzinoDto);
+        return listaMagazzini(model);
+    }
+
+    @GetMapping("/new")
+    public String newMagazzinoDto(Model model) {
+        return "magazzinoNuovo";
     }
 
     @GetMapping("{id}")
@@ -31,8 +37,9 @@ public class MagazzinoController {
     }
 
     @DeleteMapping("{id}")
-    public void eliminaMagazzino(@PathVariable Long id) {
+    public String eliminaMagazzino(@PathVariable Long id, Model model) {
         magazzinoService.elimina(id);
+        return listaMagazzini(model);
     }
 
     @PutMapping("{id}")
@@ -42,7 +49,7 @@ public class MagazzinoController {
         return listaMagazzini(model);
     }
 
-    @GetMapping("/elenco")
+    @GetMapping("/list")
     public String listaMagazzini(Model model) {
         List<MagazzinoDto> magazzinoDtoList = magazzinoService.findAllMagazzino();
         model.addAttribute("magazzinoList", magazzinoDtoList);

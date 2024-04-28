@@ -37,17 +37,40 @@
 
 </div>
 
-<div th:fragment="content">
-    <a href=""> Bagni galvanici</a>
-    <a href=""> Magazzino prodotti</a>
-    <a href=""> Archivio</a>
-    <a href=""> ??? </a>
-    <a href=""> Alimentazioni </a>
-    <a href=""> Aggiunta manuale</a>
-    <a href=""> Analisi</a>
-    <a href=""> Aggiunte da Fare / Approvare</a>
+<form th:attr="hx-post=@{'/prodotto'}"
+      hx-ext="json-enc"
+      hx-target="body"
+      hx-swap="outerHTML">
+    <div>
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" name="nome">
+    </div>
+    <div>
+        <label for="descrizione">Descrizione</label>
+        <input type="text" id="descrizione" name="descrizione">
+    </div>
+    <div>
+        <label for="ph">pH prodotto</label>
+        <input type="text" id="ph" name="ph">
+    </div>
+    <div>
+        <label for="magazzino">magazzino</label>
+        <select name="idMagazzino" id="magazzino">
+            <option></option>
+            <option th:each="magazzino: ${magazzinoList}"
+                    th:value="${magazzino.getIdMagazzino()}"
+                    th:text="${magazzino.getIdMagazzino()}+', '+${magazzino.getDescrizione()}">
+            </option>
+        </select>
 
-</div>
+    </div>
+    <button class="btn btn-outline-primary"
+            type="submit">
+        Salva
+    </button>
+
+</form>
+
 </body>
 
 </html>

@@ -36,18 +36,37 @@
     </div>
 
 </div>
-
-<div th:fragment="content">
-    <a href=""> Bagni galvanici</a>
-    <a href=""> Magazzino prodotti</a>
-    <a href=""> Archivio</a>
-    <a href=""> ??? </a>
-    <a href=""> Alimentazioni </a>
-    <a href=""> Aggiunta manuale</a>
-    <a href=""> Analisi</a>
-    <a href=""> Aggiunte da Fare / Approvare</a>
-
+<div>
+    <a th:href="'/prodotto/new'">
+        nuovo </a>
 </div>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Id Prodotto</th>
+        <th scope="col">Nome</th>
+        <th scope="col">Magazzino</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="prodotto: ${prodottoList}">
+        <td><span th:text="${prodotto.getIdProdotto()}"/>
+
+        </td>
+        <td><span th:text="${prodotto.getNome()}"/>
+
+        </td>
+        <td><span th:text="${prodotto.getIdMagazzino()}"/>,
+            <span th:text="${prodotto.getNomeMagazzino()}"/>
+        </td>
+        <td><a th:href="'/prodotto/azioni/'+${prodotto.getIdProdotto()}">
+            Modifica </a>
+        </td>
+
+    </tr>
+    </tbody>
+</table>
 </body>
 
 </html>
