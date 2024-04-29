@@ -1,37 +1,40 @@
 package org.galvanica.controller;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 import org.galvanica.dto.AlimentazioneRisposta;
 import org.galvanica.dto.dtoConModel.BagnoDto;
-import org.galvanica.service.CRUD.AlimentazioneService;
 import org.galvanica.service.CRUD.BagnoService;
 import org.galvanica.service.operazioniBagno.OperazioniAddStorico;
 import org.galvanica.service.operazioniBagno.OperazioniInStorico;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/bagno")
 public class BagnoController {
+
     private final BagnoService service;
     private final OperazioniAddStorico operazioniAddStorico;
     private final OperazioniInStorico operazioniInStorico;
-    private final AlimentazioneService alimentazioneService;
 
-    private final static Long LIMITE_LISTA = 10L;
+    private static final Long LIMITE_LISTA = 10L;
 
     public BagnoController(BagnoService service,
-                           OperazioniAddStorico operazioniAddStorico,
-                           OperazioniInStorico operazioniInStorico,
-                           AlimentazioneService alimentazioneService) {
+            OperazioniAddStorico operazioniAddStorico,
+            OperazioniInStorico operazioniInStorico) {
         this.service = service;
         this.operazioniAddStorico = operazioniAddStorico;
         this.operazioniInStorico = operazioniInStorico;
-        this.alimentazioneService = alimentazioneService;
     }
 
     @PostMapping
@@ -54,11 +57,10 @@ public class BagnoController {
 
     @PutMapping("{id}")
     public String aggiornaBagno(@RequestBody BagnoDto bagnoDto,
-                                @PathVariable Long id, Model model) {
+            @PathVariable Long id, Model model) {
         service.aggiorna(bagnoDto, id);
         return listaBagni(model);
     }
-
 
     @GetMapping("/azioni/{id}")
     public String listaBagni(@PathVariable Long id, Model model) {
@@ -66,7 +68,6 @@ public class BagnoController {
         model.addAttribute("bagno", bagnoDto);
         return "bagno/bagnoAzioni";
     }
-
 
     @GetMapping("prova/{id}")
     public Optional<BagnoDto> ricercaId(@PathVariable Long id) {
@@ -80,20 +81,19 @@ public class BagnoController {
 
     @PutMapping("{id}/alimentazioneScatti/{scattiParziali}")
     public AlimentazioneRisposta alimentazioneScatti(@PathVariable Long id,
-                                                     @PathVariable Integer scattiParziali) {
+            @PathVariable Integer scattiParziali) {
         return operazioniAddStorico.scattiCalcolaAlimentazione(id,
                 scattiParziali);
     }
 
     @PutMapping("{id}/alimentazioneTempo/{dataControllo}")
     public AlimentazioneRisposta alimentazioneTempo(@PathVariable Long id,
-                                                    @PathVariable LocalDate dataControllo) {
+            @PathVariable LocalDate dataControllo) {
         return operazioniAddStorico.tempoCalcolaAlimentazione(id, dataControllo);
     }
 
     @PutMapping("eseguiSingolaAggiunta/{idStoricoDettaglio}")
     public void eseguiSingolaAggiunta(@PathVariable Long idStoricoDettaglio) {
-        System.out.println("dentro eseguiSingolaAggiunta");
         operazioniInStorico.eseguiSingolaAggiunta(idStoricoDettaglio);
     }
 
@@ -103,26 +103,15 @@ public class BagnoController {
         operazioniInStorico.confermaInteraAlimentazione(idStoricoGenerale);
     }
 
-
     @GetMapping("vedi/{id}")
     public String vediBagno(@PathVariable Long id, Model model) {
-        model.addAttribute("bagno",
-                service.modelRicercaId(id));
+        model.addAttribute("bagno", service.modelRicercaId(id));
         return "bagnoModifica :: bagnoVedi";
     }
 
-    /* @PutMapping(value = "aggiorna/{id}")
-     public String aggiornaBagno(@RequestBody BagnoDto bagnoDto,
-                                 @PathVariable Long id, Model model) {
-         BagnoDto bagno = service.aggiorna(bagnoDto, id);
-         model.addAttribute("bagno", bagno);
-         return "bagnoModifica :: showCardBagno";
-     }
- */
     @GetMapping("{id}")
     public String bagnoGenerale(@PathVariable Long id, Model model) {
-        model.addAttribute("bagno",
-                service.modelRicercaId(id));
+        model.addAttribute("bagno", service.modelRicercaId(id));
         model.addAttribute("storicoList",
                 service.storicoGeneraleListByBagno(id, LIMITE_LISTA));
         return "bagnoGenerale";
