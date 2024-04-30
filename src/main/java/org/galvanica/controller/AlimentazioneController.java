@@ -36,7 +36,7 @@ public class AlimentazioneController {
     @GetMapping("/new")
     public String newAlimentazione(Model model) {
         model.addAttribute("bagnoList", bagnoService.findAllBagno());
-        model.addAttribute("giorni", mathService.dayOfWeekList());
+        model.addAttribute("giorniList", mathService.dayOfWeekList());
         return "alimentazione/alimentazioneNuovo";
     }
 
@@ -53,7 +53,7 @@ public class AlimentazioneController {
                 .orElseThrow();
         model.addAttribute("alimentazione", alimentazioneDto);
         model.addAttribute("bagnoList", bagnoService.findAllBagno());
-        model.addAttribute("giorni", mathService.dayOfWeekList());
+        model.addAttribute("giorniList", mathService.dayOfWeekList());
         return "alimentazione/alimentazioneAzioni";
     }
 
@@ -77,4 +77,22 @@ public class AlimentazioneController {
     public Optional<AlimentazioneDto> ricercaId(@PathVariable Long id) {
         return alimentazioneService.ricercaId(id);
     }
+
+    @GetMapping("/campiScatti/{id}")
+    public String campiScatti(@PathVariable Long id, Model model) {
+        AlimentazioneDto alimentazioneDto = alimentazioneService.ricercaId(id)
+                .orElseThrow();
+        model.addAttribute("alimentazione", alimentazioneDto);
+        return "alimentazione/campiTipoAlimentazione :: campiScatti";
+    }
+
+    @GetMapping("/campiTempo/{id}")
+    public String campiTempo(@PathVariable Long id, Model model) {
+        AlimentazioneDto alimentazioneDto = alimentazioneService.ricercaId(id)
+                .orElseThrow();
+        model.addAttribute("alimentazione", alimentazioneDto);
+        model.addAttribute("giorniList", mathService.dayOfWeekList());
+        return "alimentazione/campiTipoAlimentazione :: campiTempo";
+    }
+
 }

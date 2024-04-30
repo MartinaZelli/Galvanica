@@ -9,6 +9,7 @@
 
 <body>
 <div layout:fragment="content">
+
     <form th:attr="hx-put=@{'/alimentazione/'+${alimentazione.getIdAlimentazione()}}"
           hx-ext="json-enc"
           hx-target="body"
@@ -34,18 +35,48 @@
             <input type="text" id="descrizione" name="descrizione"
                    th:value="${alimentazione.getDescrizione()}">
         </div>
-        <!-- <div>
-             <label for="tipoAlimentazione">Tipo di alimentazione</label>
-             <input type="text" id="tipoAlimentazione" name="tipoAlimentazione"
-                    th:value="${/////}">
-         </div>
-         -->
+        <fieldset>
+            <div>Seleziona tipo di Alimentazione:</div>
+            <div>
+                <input th:attr="hx-get=@{'/alimentazione/campiScatti/'+${alimentazione.getIdAlimentazione()}}"
+                       hx-trigger="change"
+                       hx-target="#campiTipoAlimentazione"
+                       hx-swap="innerHTML"
+                       type="radio" id="scatti" name="tipoAlimentazione"
+                       value="Scatti"
+                       th:checked="${alimentazione.getTipoAlimentazione()=='Scatti'}"/>
+                <label for="scatti">Scatti</label>
+
+                <input th:attr="hx-get=@{'/alimentazione/campiTempo/'+${alimentazione.getIdAlimentazione()}}"
+                       hx-trigger="change"
+                       hx-target="#campiTipoAlimentazione"
+                       hx-swap="innerHTML"
+                       type="radio" id="tempo" name="tipoAlimentazione" value="Tempo"
+                       th:checked="${alimentazione.getTipoAlimentazione()=='Tempo'}"/>
+                <label for="tempo">Tempo</label>
+            </div>
+        </fieldset>
+        <div th:switch="${alimentazione.getTipoAlimentazione()}"
+             id="campiTipoAlimentazione">
+            <div th:case="Scatti">
+                <p th:replace="~{alimentazione/campiTipoAlimentazione :: campiScatti}"
+                   th:with="alimentazione=${alimentazione}"></p>
+            </div>
+            <div th:case="Tempo">
+                <p th:replace="~{alimentazione/campiTipoAlimentazione :: campiTempo}"
+                   th:with="alimentazione=${alimentazione},giorniList=${giorniList}"></p>
+            </div>
+
+        </div>
+
 
         <button class="btn btn-outline-primary"
                 type="submit">
             Salva
         </button>
     </form>
+
+
     <form th:attr="hx-delete=@{'/alimentazione/'+${alimentazione.getIdAlimentazione()}}"
           hx-ext="json-enc"
           hx-target="body"

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <title>Azioni su Alimentazione</title>
+</head>
+
+<body>
+<div th:fragment="campiScatti">
+    <div>
+        <label for="quantitaScatti">Quantità Scatti</label>
+        <input type="text" id="quantitaScatti" name="scatti"
+               th:value="${alimentazione.getScatti()}">
+    </div>
+    <div><input th:checked="${alimentazione.getArrotondaValori()==true}"
+                type="checkbox"
+                id="arrotondaValori" name="arrotondaValori">
+        <label for="arrotondaValori"> spunta se arrotonda i valori</label>
+
+    </div>
+</div>
+<div th:fragment="campiTempo">
+    <!-- <div>Giorni di Ricorrenza</div>
+     <div th:each="giorno:${giorniList}">
+         <input th:checked="${alimentazione.getArrotondaValori()==true}"
+                type="checkbox"
+                id="arrotondaValori" name="arrotondaValori">
+         <label for="arrotondaValori"> spunta se arrotonda i valori</label>
+     </div>-->
+</div>
+</body>
+
+</html>
