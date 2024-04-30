@@ -12,6 +12,8 @@ import java.util.List;
 public class AlimentazioneDto {
     private Long idAlimentazione;
     private Long idBagno;
+    private String nomeBagno;
+    private String tipoAlimentazione;
     private Integer scatti;
     private List<String> tempo;
     private String descrizione;

@@ -36,6 +36,10 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
             throw new RuntimeException(
                     "l'id bagno deve essere valorizzato");
         }
+        if (elemento.getScatti() == null && elemento.getTempo() == null) {
+            throw new RuntimeException(
+                    "deve essere valorizzato un attributo fra Scatti e Tempo");
+        }
         if (elemento.getScatti() != null && elemento.getTempo() != null) {
             throw new RuntimeException(
                     "può essere valorizzato un solo attributo fra Scatti e Tempo");
@@ -115,6 +119,10 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
 
     @Override
     public AlimentazioneDto fromModelToDto(Alimentazione oggettoDaTrasformare) {
+        String tipoAlimentazione = "Tempo";
+        if (oggettoDaTrasformare.getScatti() != null) {
+            tipoAlimentazione = "Scatti";
+        }
         return AlimentazioneDto.builder()
                 .idAlimentazione(oggettoDaTrasformare.getIdAlimentazione())
                 .idBagno(oggettoDaTrasformare.getBagno().getIdBagno())
@@ -122,6 +130,8 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
                 .tempo(oggettoDaTrasformare.getTempo())
                 .descrizione(oggettoDaTrasformare.getDescrizione())
                 .arrotondaValori(oggettoDaTrasformare.getArrotondaValori())
+                .nomeBagno(oggettoDaTrasformare.getBagno().getNome())
+                .tipoAlimentazione(tipoAlimentazione)
                 .build();
     }
 

@@ -46,7 +46,7 @@ public class ProdottoController {
     }
 
     @GetMapping("/azioni/{id}")
-    public String listaProdotti(@PathVariable Long id, Model model) {
+    public String prodottoAzioni(@PathVariable Long id, Model model) {
         ProdottoDto prodottoDto = prodottoService.ricercaId(id).orElseThrow();
         model.addAttribute("prodotto", prodottoDto);
         model.addAttribute("magazzinoList", magazzinoService.findAllMagazzino());

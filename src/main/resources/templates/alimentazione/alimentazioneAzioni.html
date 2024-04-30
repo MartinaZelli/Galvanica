@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main_layout}">
+
+<head>
+    <title>Azioni su Alimentazione</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <form th:attr="hx-put=@{'/alimentazione/'+${alimentazione.getIdAlimentazione()}}"
+          hx-ext="json-enc"
+          hx-target="body"
+          hx-swap="outerHTML">
+        <div>
+            <label for="id">Id Alimentazione</label>
+            <input type="text" disabled id="id" name="idAlimentazione"
+                   th:value="${alimentazione.getIdAlimentazione()}">
+        </div>
+        <div>
+            <label for="idBagno">Bagno</label>
+            <select id="idBagno" name="idBagno">
+                <option></option>
+                <option th:each="bagno: ${bagnoList}"
+                        th:value="${bagno.getIdBagno()}"
+                        th:text="${bagno.getNome()}"
+                        th:selected="${bagno.getIdBagno()==alimentazione.getIdBagno()}">
+                </option>
+            </select>
+        </div>
+        <div>
+            <label for="descrizione">Descrizione</label>
+            <input type="text" id="descrizione" name="descrizione"
+                   th:value="${alimentazione.getDescrizione()}">
+        </div>
+        <!-- <div>
+             <label for="tipoAlimentazione">Tipo di alimentazione</label>
+             <input type="text" id="tipoAlimentazione" name="tipoAlimentazione"
+                    th:value="${/////}">
+         </div>
+         -->
+
+        <button class="btn btn-outline-primary"
+                type="submit">
+            Salva
+        </button>
+    </form>
+    <form th:attr="hx-delete=@{'/alimentazione/'+${alimentazione.getIdAlimentazione()}}"
+          hx-ext="json-enc"
+          hx-target="body"
+          hx-swap="outerHTML">
+        <button class="btn btn-outline-primary"
+                type="submit">
+            Elimina l'intero oggetto
+        </button>
+    </form>
+
+</div>
+</body>
+
+</html>
