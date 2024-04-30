@@ -46,9 +46,11 @@ public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
             throw new RuntimeException(
                     "l'id del magazzino non esiste, correggere.");
         }
-        if (elemento.getPh() < 0 || elemento.getPh() > 14) {
-            throw new RuntimeException(
-                    "il pH ha valori compresi fra 0 e 14 se inizializzato.");
+        if (elemento.getPh() != null) {
+            if (elemento.getPh() < 0 || elemento.getPh() > 14) {
+                throw new RuntimeException(
+                        "il pH ha valori compresi fra 0 e 14 se inizializzato.");
+            }
         }
         Prodotto prodotto = Prodotto.builder()
                 .descrizione(elemento.getDescrizione())

@@ -60,15 +60,15 @@ public class ProdottoController {
         return listaProdotti(model);
     }
 
+    @DeleteMapping("{id}")
+    public String eliminaProdotto(@PathVariable Long id, Model model) {
+        service.elimina(id);
+        return listaProdotti(model);
+    }
 
     @GetMapping("{id}")
     public Optional<ProdottoDto> ricercaId(@PathVariable Long id) {
         return service.ricercaId(id);
-    }
-
-    @DeleteMapping("{id}")
-    public void eliminaProdotto(@PathVariable Long id) {
-        service.elimina(id);
     }
 
 

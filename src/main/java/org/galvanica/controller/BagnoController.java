@@ -1,9 +1,5 @@
 package org.galvanica.controller;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
 import org.galvanica.dto.AlimentazioneRisposta;
 import org.galvanica.dto.dtoConModel.BagnoDto;
 import org.galvanica.service.CRUD.BagnoService;
@@ -11,13 +7,11 @@ import org.galvanica.service.operazioniBagno.OperazioniAddStorico;
 import org.galvanica.service.operazioniBagno.OperazioniInStorico;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/bagno")
@@ -30,8 +24,8 @@ public class BagnoController {
     private static final Long LIMITE_LISTA = 10L;
 
     public BagnoController(BagnoService service,
-            OperazioniAddStorico operazioniAddStorico,
-            OperazioniInStorico operazioniInStorico) {
+                           OperazioniAddStorico operazioniAddStorico,
+                           OperazioniInStorico operazioniInStorico) {
         this.service = service;
         this.operazioniAddStorico = operazioniAddStorico;
         this.operazioniInStorico = operazioniInStorico;
@@ -57,7 +51,7 @@ public class BagnoController {
 
     @PutMapping("{id}")
     public String aggiornaBagno(@RequestBody BagnoDto bagnoDto,
-            @PathVariable Long id, Model model) {
+                                @PathVariable Long id, Model model) {
         service.aggiorna(bagnoDto, id);
         return listaBagni(model);
     }
@@ -69,26 +63,28 @@ public class BagnoController {
         return "bagno/bagnoAzioni";
     }
 
+    @DeleteMapping("{id}")
+    public String eliminaBagno(@PathVariable Long id, Model model) {
+        service.elimina(id);
+        return listaBagni(model);
+    }
+
     @GetMapping("prova/{id}")
     public Optional<BagnoDto> ricercaId(@PathVariable Long id) {
         return service.ricercaId(id);
     }
 
-    @DeleteMapping("{id}")
-    public void eliminaBagno(@PathVariable Long id) {
-        service.elimina(id);
-    }
 
     @PutMapping("{id}/alimentazioneScatti/{scattiParziali}")
     public AlimentazioneRisposta alimentazioneScatti(@PathVariable Long id,
-            @PathVariable Integer scattiParziali) {
+                                                     @PathVariable Integer scattiParziali) {
         return operazioniAddStorico.scattiCalcolaAlimentazione(id,
                 scattiParziali);
     }
 
     @PutMapping("{id}/alimentazioneTempo/{dataControllo}")
     public AlimentazioneRisposta alimentazioneTempo(@PathVariable Long id,
-            @PathVariable LocalDate dataControllo) {
+                                                    @PathVariable LocalDate dataControllo) {
         return operazioniAddStorico.tempoCalcolaAlimentazione(id, dataControllo);
     }
 
