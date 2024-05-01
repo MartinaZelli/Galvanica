@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.galvanica.math.DayOfWeekConverter;
 
+import java.time.DayOfWeek;
 import java.util.List;
 
 @Getter
@@ -24,7 +25,7 @@ public class Alimentazione {
     @Builder.Default
     private Boolean arrotondaValori = false;
     @Convert(converter = DayOfWeekConverter.class)
-    private List<String> tempo;
+    private List<DayOfWeek> tempo;
     private String descrizione;
     @OneToMany(mappedBy = "alimentazione", cascade = CascadeType.REMOVE)
     private List<DettaglioAlimentazione> dettaglioAlimentazioneList;

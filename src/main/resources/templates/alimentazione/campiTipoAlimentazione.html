@@ -23,7 +23,7 @@
     <div>Giorni di Ricorrenza</div>
 
     <div th:each="giorno:${giorniList}">
-        <input th:checked="${alimentazione.getTempo != null ? #lists.contains(alimentazione.getTempo(), giorno.name())==true : false}"
+        <input th:checked="${alimentazione.getTempo != null ? #lists.contains(alimentazione.getTempo(), giorno)==true : false}"
                type="checkbox"
                th:id="${giorno.name()}" name="tempo" th:value="${giorno.name()}">
         <label th:for="${giorno.name()}" th:text="${giorno.name()}"> </label>
