@@ -4,20 +4,30 @@
       layout:decorate="~{layout/main_layout}">
 
 <head>
-    <title>Azioni su Relazioni</title>
+    <title>Nuovo Dettaglio alimentazione</title>
 </head>
 
 <body>
 <div layout:fragment="content">
 
-    <form th:attr="hx-post=@{'/relazioneBagnoProdotto'}"
+    <form th:attr="hx-post=@{'/dettaglioAlimentazione'}"
           hx-ext="json-enc"
           hx-target="body"
           hx-swap="outerHTML">
         <div>
-            Bagno: <span th:text="${bagno.getNome()}"></span>
-            <input type="hidden" id="idBagno" name="idBagno"
-                   th:value="${bagno.getIdBagno()}">
+            Bagno: <span th:text="${alimentazione.getNomeBagno()}"></span>
+        </div>
+        <div>
+            Tipo Alimentazione: <span
+                th:text="${alimentazione.getTipoAlimentazione()}"></span>
+        </div>
+
+        <input type="hidden" id="idAlimentazione" name="idAlimentazione"
+               th:value="${alimentazione.getIdAlimentazione()}">
+
+        <div>
+            <label for="note">Note</label>
+            <input type="text" id="note" name="note">
         </div>
         <div>
             <label for="idProdotto">Nome Prodotto </label>
@@ -30,13 +40,23 @@
             </select>
         </div>
         <div>
-            <label for="note">Note</label>
-            <input type="text" id="note" name="note">
+            <label for="quantita">Quantità prodotto</label>
+            <input type="text" id="quantita" name="quantitaProdotto">
+        </div>
+        <div>
+            <label for="unitaDiMisura">Unità di Misura </label>
+            <select name="unitaDiMisura" id="unitaDiMisura">
+                <option></option>
+                <option th:each="unita: ${unitaDiMisuraList}"
+                        th:value="${unita.name()}"
+                        th:text="${unita.name()}">
+                </option>
+            </select>
         </div>
 
         <button class="btn btn-outline-primary"
                 type="submit">
-            Crea
+            Nuovo
         </button>
     </form>
 

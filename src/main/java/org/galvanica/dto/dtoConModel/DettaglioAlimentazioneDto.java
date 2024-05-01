@@ -14,5 +14,7 @@ public class DettaglioAlimentazioneDto {
     private Double quantitaProdotto;
     private UnitaDiMisura unitaDiMisura;
     private Long idProdotto;
+    private String nomeProdotto;
     private Long idAlimentazione;
+    private String nomeBagno;
 }

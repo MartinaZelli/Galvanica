@@ -9,6 +9,7 @@ import org.galvanica.repository.DettaglioAlimentazioneRepository;
 import org.galvanica.repository.ProdottoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -63,8 +64,9 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
         if (alimentazioneOptional.get()
                 .getDettaglioAlimentazioneList()
                 .stream()
-                .anyMatch(dettaglioAlimentazione -> Objects.equals(prodottoOptional.get()
-                        .getIdProdotto(), elemento.getIdProdotto()))) {
+                .anyMatch(dettaglioAlimentazione -> Objects.equals(
+                        dettaglioAlimentazione.getProdotto().getIdProdotto(),
+                        elemento.getIdProdotto()))) {
             throw new RuntimeException(
                     "il prodotto è già inserito nel dettaglio alimentazione. " +
                             "Si prega di modificare o eliminare quello precedente.");
@@ -154,6 +156,10 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
                 .idProdotto(oggettoDaTrasformare.getProdotto().getIdProdotto())
                 .idAlimentazione(oggettoDaTrasformare.getAlimentazione()
                         .getIdAlimentazione())
+                .nomeProdotto(oggettoDaTrasformare.getProdotto().getNome())
+                .nomeBagno(oggettoDaTrasformare.getAlimentazione()
+                        .getBagno()
+                        .getNome())
                 .build();
     }
 
@@ -162,5 +168,23 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
                         .spliterator(),
                 false).map(this::fromModelToDto).collect(
                 Collectors.toList());
+    }
+
+    public List<DettaglioAlimentazioneDto> ricercaDettaglioAlimentazioneByAlimentazione(
+            Long idAlimentazione) {
+        Optional<Alimentazione> alimentazioneOptional = alimentazioneRepository.findById(
+                idAlimentazione);
+        if (alimentazioneOptional.isEmpty()) {
+            throw new RuntimeException(
+                    "non esiste alimentazione con questo ID");
+        }
+        if (alimentazioneOptional.get().getDettaglioAlimentazioneList() == null) {
+            return new ArrayList<>();
+        }
+        return alimentazioneOptional.get()
+                .getDettaglioAlimentazioneList()
+                .stream()
+                .map(this::fromModelToDto)
+                .toList();
     }
 }

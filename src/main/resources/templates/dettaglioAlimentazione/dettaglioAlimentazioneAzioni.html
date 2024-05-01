@@ -10,14 +10,21 @@
 <body>
 <div layout:fragment="content">
 
-    <form th:attr="hx-put=@{'/relazioneBagnoProdotto/'+${relazione.getIdRelazione}}"
+    <form th:attr="hx-put=@{'/dettaglioAlimentazione/'+${dettaglioAlimentazione.getIdDettaglio()}}"
           hx-ext="json-enc"
           hx-target="body"
           hx-swap="outerHTML">
         <div>
-            Bagno: <span th:text="${relazione.getNomeBagno()}"></span>
-            <input type="hidden" id="idBagno" name="idBagno"
-                   th:value="${relazione.getIdBagno()}">
+            Bagno: <span th:text="${dettaglioAlimentazione.getNomeBagno()}"></span>
+        </div>
+
+        <input type="hidden" id="idAlimentazione" name="idAlimentazione"
+               th:value="${dettaglioAlimentazione.getIdAlimentazione()}">
+
+        <div>
+            <label for="note">Note</label>
+            <input type="text" id="note" name="note"
+                   th:value="${dettaglioAlimentazione.getNote()}">
         </div>
         <div>
             <label for="idProdotto">Nome Prodotto </label>
@@ -26,14 +33,25 @@
                 <option th:each="prodotto: ${prodottoList}"
                         th:value="${prodotto.getIdProdotto()}"
                         th:text="${prodotto.getNome()}"
-                        th:selected="${prodotto.getIdProdotto()==relazione.getIdProdotto()}">
+                        th:selected="${prodotto.getIdProdotto()==dettaglioAlimentazione.getIdProdotto()}">
                 </option>
             </select>
         </div>
         <div>
-            <label for="note">Note</label>
-            <input type="text" id="note" name="note"
-                   th:value="${relazione.getNote()}">
+            <label for="quantita">Quantità prodotto</label>
+            <input type="text" id="quantita" name="quantitaProdotto"
+                   th:value="${dettaglioAlimentazione.getQuantitaProdotto()}">
+        </div>
+        <div>
+            <label for="unitaDiMisura">Unità di Misura </label>
+            <select name="unitaDiMisura" id="unitaDiMisura">
+                <option></option>
+                <option th:each="unita: ${unitaDiMisuraList}"
+                        th:value="${unita.name()}"
+                        th:text="${unita.name()}"
+                        th:selected="${unita.name()==dettaglioAlimentazione.getUnitaDiMisura().name()}">
+                </option>
+            </select>
         </div>
 
         <button class="btn btn-outline-primary"

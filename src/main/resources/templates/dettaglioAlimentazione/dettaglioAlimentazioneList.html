@@ -4,7 +4,7 @@
       layout:decorate="~{layout/main_layout}">
 
 <head>
-    <title>Lista Relazioni</title>
+    <title>Lista Dettagli Alimentazioni</title>
 </head>
 
 <body>
@@ -14,26 +14,29 @@
         <thead>
         <tr>
             <th scope="col">Bagno</th>
-            <th scope="col">Prodotti</th>
+            <th scope="col">Tipo Alimentazione</th>
+            <th scope="col">Dettagli Prodotti</th>
             <th scope="col">Azioni</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="bagno: ${bagnoList}">
-            <td><span th:text="${bagno.getNome()}"/>
+        <tr th:each="alimentazione: ${alimentazioneList}">
+            <td><span th:text="${alimentazione.getNomeBagno()}"/>
+            </td>
+            <td><span th:text="${alimentazione.getTipoAlimentazione()}"/>
             </td>
             <td>
                 <a href="#"
-                   th:attr="hx-get=@{'/relazioneBagnoProdotto/prodottoList/'+${bagno.getIdBagno()}}"
+                   th:attr="hx-get=@{'/dettaglioAlimentazione/dettaglioAlimentazioneList/'+${alimentazione.getIdAlimentazione()}}"
                    hx-trigger="click"
                    hx-target="this"
-                   hx-swap="outerHTML"> Mostra Prodotti
+                   hx-swap="outerHTML"> Mostra Dettagli Prodotti
                 </a>
 
             </td>
             <td>
-                <a th:href="'/relazioneBagnoProdotto/vistaAzioni/'+${bagno.getIdBagno()}">
-                    Gestisci Relazioni </a>
+                <a th:href="'/dettaglioAlimentazione/vistaAzioni/'+${alimentazione.getIdAlimentazione()}">
+                    Gestisci Dettagli Alimentazione </a>
             </td>
 
         </tr>

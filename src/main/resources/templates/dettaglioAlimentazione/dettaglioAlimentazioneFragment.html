@@ -7,8 +7,14 @@
 
 <body>
 
-<div th:fragment="prodottoList">
-    <div th:each="prodotto:${prodottoList}" th:text="${prodotto.getNome()}">
+<div th:fragment="dettaglioAlimentazioneFragment">
+    <div th:each="dettaglio:${dettaglioAlimentazioneList}">
+        <span th:text="${dettaglio.getNomeProdotto()}">
+        </span> -->
+        <span th:text="${dettaglio.getQuantitaProdotto()}">
+        </span>
+        <span th:text="${dettaglio.getUnitaDiMisura()}">
+        </span>
     </div>
 </div>
 
