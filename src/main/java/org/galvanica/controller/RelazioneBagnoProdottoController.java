@@ -2,6 +2,7 @@ package org.galvanica.controller;
 
 import org.galvanica.dto.dtoConModel.RelazioneBagnoProdottoDto;
 import org.galvanica.service.CRUD.BagnoService;
+import org.galvanica.service.CRUD.ProdottoService;
 import org.galvanica.service.CRUD.RelazioneBagnoProdottoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,58 +13,71 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/relazioneBagnoProdotto")
 public class RelazioneBagnoProdottoController {
-    private final RelazioneBagnoProdottoService service;
+    private final RelazioneBagnoProdottoService relazioneService;
     private final BagnoService bagnoService;
+    private final ProdottoService prodottoService;
 
-    public RelazioneBagnoProdottoController(RelazioneBagnoProdottoService service,
-                                            BagnoService bagnoService) {
-        this.service = service;
+    public RelazioneBagnoProdottoController(
+            RelazioneBagnoProdottoService relazioneService,
+            BagnoService bagnoService,
+            ProdottoService prodottoService) {
+        this.relazioneService = relazioneService;
         this.bagnoService = bagnoService;
+        this.prodottoService = prodottoService;
     }
 
     @PostMapping
     public String inserisciRelazione(
             @RequestBody RelazioneBagnoProdottoDto relazioneBagnoProdottoDto,
             Model model) {
-        service.inserisci(relazioneBagnoProdottoDto);
+        relazioneService.inserisci(relazioneBagnoProdottoDto);
         return listaRelazione(model);
     }
 
     @GetMapping("/new")
     public String newRelazione(Model model) {
-        model.addAttribute("bagnoList", bagnoService.findAllBagnoModel());
+        model.addAttribute("bagnoList", bagnoService.findAllBagno());
         return "relazioneBagnoProdotto/relazioneNuovo";
     }
 
     @GetMapping("/list")
     public String listaRelazione(Model model) {
-        model.addAttribute("bagnoList", bagnoService.findAllBagnoModel());
+        model.addAttribute("bagnoList", bagnoService.findAllBagno());
         return "relazioneBagnoProdotto/relazioneList";
     }
 
     @GetMapping("/azioni/{id}")
     public String relazioneAzioni(@PathVariable Long id, Model model) {
-        /////TODO: questo
-        return "relazioneBagnoProdotto/relazioneAzioni";
+        model.addAttribute("bagno", bagnoService.ricercaId(id).orElseThrow());
+        model.addAttribute("relazioneList",
+                relazioneService.findAllRelazionePerBagno(id));
+        return "relazioneBagnoProdotto/relazioneVistaAzioni";
     }
 
     @PutMapping("{id}")
     public String aggiornaRelazione(
             @RequestBody RelazioneBagnoProdottoDto relazioneBagnoProdottoDto,
             @PathVariable Long id, Model model) {
-        service.aggiorna(relazioneBagnoProdottoDto, id);
+        relazioneService.aggiorna(relazioneBagnoProdottoDto, id);
         return listaRelazione(model);
     }
 
     @DeleteMapping("{id}")
     public String eliminaRelazione(@PathVariable Long id, Model model) {
-        service.elimina(id);
+        relazioneService.elimina(id);
         return listaRelazione(model);
+    }
+
+    @GetMapping("/prodottoList/{id}")
+    public String prodottoList(@PathVariable Long id, Model model) {
+        model.addAttribute("prodottoList",
+                prodottoService.ricercaProdottiByBagno(id));
+        return "relazioneBagnoProdotto/relazioniProdottoList :: prodottoList";
     }
 
     @GetMapping("{id}")
     public Optional<RelazioneBagnoProdottoDto> ricercaId(@PathVariable Long id) {
-        return service.ricercaId(id);
+        return relazioneService.ricercaId(id);
     }
 }
 

@@ -10,6 +10,8 @@ import lombok.*;
 public class RelazioneBagnoProdottoDto {
     private Long idRelazione;
     private Long idBagno;
+    private String nomeBagno;
     private Long idProdotto;
+    private String nomeProdotto;
     private String note;
 }

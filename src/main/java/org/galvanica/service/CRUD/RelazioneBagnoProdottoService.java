@@ -9,6 +9,7 @@ import org.galvanica.repository.ProdottoRepository;
 import org.galvanica.repository.RelazioneBagnoProdottoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -117,6 +118,7 @@ public class RelazioneBagnoProdottoService implements ICRUDService<RelazioneBagn
                 .map(this::fromModelToDto);
     }
 
+
     @Override
     public RelazioneBagnoProdottoDto fromModelToDto(
             RelazioneBagnoProdotto oggettoDaTrasformare) {
@@ -126,7 +128,24 @@ public class RelazioneBagnoProdottoService implements ICRUDService<RelazioneBagn
                 .idBagno(oggettoDaTrasformare.getBagno().getIdBagno())
                 .idProdotto(oggettoDaTrasformare.getProdotto().getIdProdotto())
                 .note(oggettoDaTrasformare.getNote())
+                .nomeBagno(oggettoDaTrasformare.getBagno().getNome())
+                .nomeProdotto(oggettoDaTrasformare.getProdotto().getNome())
                 .build();
+    }
+
+    public List<RelazioneBagnoProdottoDto> findAllRelazionePerBagno(Long idBagno) {
+        Optional<Bagno> bagnoOptional = bagnoRepository.findById(idBagno);
+        if (bagnoOptional.isEmpty()) {
+            throw new RuntimeException("non esiste bagno con questo ID");
+        }
+        if (bagnoOptional.get().getRelazioneBagnoProdottoList() == null) {
+            return new ArrayList<>();
+        }
+        return bagnoOptional.get()
+                .getRelazioneBagnoProdottoList()
+                .stream()
+                .map(this::fromModelToDto)
+                .toList();
     }
 
     public List<RelazioneBagnoProdottoDto> findAllRelazioneBagnoProdotto() {
