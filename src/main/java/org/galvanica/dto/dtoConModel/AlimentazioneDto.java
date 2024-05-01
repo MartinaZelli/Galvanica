@@ -19,4 +19,8 @@ public class AlimentazioneDto {
     private List<DayOfWeek> tempo;
     private String descrizione;
     private Boolean arrotondaValori;
+
+    public void setTempo(String giorno) {
+        this.tempo = List.of(DayOfWeek.valueOf(giorno));
+    }
 }
