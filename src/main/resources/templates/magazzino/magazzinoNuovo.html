@@ -13,7 +13,8 @@
     <form th:attr="hx-post=@{'/magazzino'}"
           hx-ext="json-enc"
           hx-target="body"
-          hx-swap="outerHTML">
+          hx-swap="outerHTML"
+          hx-replace-url="true">
         <div>
             <label for="descrizione">Descrizione</label>
             <input type="text" id="descrizione" name="descrizione">

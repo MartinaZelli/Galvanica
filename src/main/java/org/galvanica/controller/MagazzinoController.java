@@ -1,5 +1,6 @@
 package org.galvanica.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.galvanica.dto.dtoConModel.MagazzinoDto;
 import org.galvanica.service.CRUD.MagazzinoService;
 import org.springframework.stereotype.Controller;
@@ -20,11 +21,12 @@ public class MagazzinoController {
     }
 
     @PostMapping
-    public String aggiungiMagazzinoDto(
-            @RequestBody MagazzinoDto magazzinoDto, Model model) {
+    public void aggiungiMagazzinoDto(HttpServletResponse httpServletResponse, @RequestBody MagazzinoDto magazzinoDto) {
         magazzinoService.inserisci(magazzinoDto);
-        return listaMagazzini(model);
+        httpServletResponse.setHeader("Location", "/magazzino/list");
+        httpServletResponse.setStatus(302);
     }
+
 
     @GetMapping("/new")
     public String newMagazzinoDto(Model model) {
