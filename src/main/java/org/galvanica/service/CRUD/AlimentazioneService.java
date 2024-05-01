@@ -119,9 +119,12 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
 
     @Override
     public AlimentazioneDto fromModelToDto(Alimentazione oggettoDaTrasformare) {
-        String tipoAlimentazione = "Tempo";
+        String tipoAlimentazione = "";
         if (oggettoDaTrasformare.getScatti() != null) {
             tipoAlimentazione = "Scatti";
+        }
+        if (oggettoDaTrasformare.getTempo() != null) {
+            tipoAlimentazione = "Tempo";
         }
         return AlimentazioneDto.builder()
                 .idAlimentazione(oggettoDaTrasformare.getIdAlimentazione())

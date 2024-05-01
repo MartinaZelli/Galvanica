@@ -20,13 +20,14 @@
     </div>
 </div>
 <div th:fragment="campiTempo">
-    <!-- <div>Giorni di Ricorrenza</div>
-     <div th:each="giorno:${giorniList}">
-         <input th:checked="${alimentazione.getArrotondaValori()==true}"
-                type="checkbox"
-                id="arrotondaValori" name="arrotondaValori">
-         <label for="arrotondaValori"> spunta se arrotonda i valori</label>
-     </div>-->
+    <div>Giorni di Ricorrenza</div>
+
+    <div th:each="giorno:${giorniList}">
+        <input th:checked="${alimentazione.getTempo != null ? #lists.contains(alimentazione.getTempo(), giorno.name())==true : false}"
+               type="checkbox"
+               th:id="${giorno.name()}" name="tempo" th:value="${giorno.name()}">
+        <label th:for="${giorno.name()}" th:text="${giorno.name()}"> </label>
+    </div>
 </div>
 </body>
 
