@@ -110,6 +110,12 @@ public class BagnoService implements ICRUDService<BagnoDto, Bagno> {
                 .collect(Collectors.toList());
     }
 
+    public List<Bagno> findAllBagnoModel() {
+        return StreamSupport.stream(repository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
+    }
+
+
     public Bagno modelRicercaId(long id) {
         Optional<Bagno> bagnoTrovato = repository.findById(id);
         if (bagnoTrovato.isEmpty()) {

@@ -4,33 +4,35 @@
       layout:decorate="~{layout/main_layout}">
 
 <head>
-    <title>Lista Bagni</title>
+    <title>Lista Relazioni</title>
 </head>
 
 <body>
 <div layout:fragment="content">
     <div>
-        <a th:href="'/bagno/new'">
+        <a th:href="'/relazioneBagnoProdotto/new'">
             nuovo </a>
     </div>
 
     <table class="table">
         <thead>
         <tr>
-            <th scope="col">Id Bagno</th>
-            <th scope="col">Nome</th>
+            <th scope="col">Bagno</th>
+            <th scope="col">Prodotti</th>
             <th scope="col">Azioni</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="bagno: ${bagnoList}">
-            <td><span th:text="${bagno.getIdBagno()}"/>
-
-            </td>
             <td><span th:text="${bagno.getNome()}"/>
+            </td>
+            <td>
+                <div th:each="relazione:${bagno.getRelazioneBagnoProdottoList()}"
+                >prova
+                </div>
 
             </td>
-            <td><a th:href="'/bagno/azioni/'+${bagno.getIdBagno()}">
+            <td><a th:href="'/relazioneBagnoProdotto/azioni/'+${bagno.getIdBagno()}">
                 Modifica </a>
             </td>
 
