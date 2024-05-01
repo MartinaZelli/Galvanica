@@ -154,4 +154,5 @@ public class RelazioneBagnoProdottoService implements ICRUDService<RelazioneBagn
                 false).map(this::fromModelToDto).collect(
                 Collectors.toList());
     }
+
 }

@@ -23,15 +23,17 @@
             <td><span th:text="${bagno.getNome()}"/>
             </td>
             <td>
-                <a th:attr="hx-get=@{'/relazioneBagnoProdotto/prodottoList/'+${bagno.getIdBagno()}}"
+                <a href="#"
+                   th:attr="hx-get=@{'/relazioneBagnoProdotto/prodottoList/'+${bagno.getIdBagno()}}"
                    hx-trigger="click"
                    hx-target="this"
                    hx-swap="outerHTML"> Mostra Prodotti
                 </a>
 
             </td>
-            <td><a th:href="'/relazioneBagnoProdotto/azioni/'+${bagno.getIdBagno()}">
-                Gestisci Relazioni </a>
+            <td>
+                <a th:href="'/relazioneBagnoProdotto/vistaAzioni/'+${bagno.getIdBagno()}">
+                    Gestisci Relazioni </a>
             </td>
 
         </tr>

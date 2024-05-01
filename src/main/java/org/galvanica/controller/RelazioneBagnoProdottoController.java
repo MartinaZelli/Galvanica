@@ -30,13 +30,16 @@ public class RelazioneBagnoProdottoController {
     public String inserisciRelazione(
             @RequestBody RelazioneBagnoProdottoDto relazioneBagnoProdottoDto,
             Model model) {
-        relazioneService.inserisci(relazioneBagnoProdottoDto);
-        return listaRelazione(model);
+
+        return relazioneVistaAzioni(relazioneService.inserisci(
+                relazioneBagnoProdottoDto).getIdBagno(), model);
+
     }
 
-    @GetMapping("/new")
-    public String newRelazione(Model model) {
-        model.addAttribute("bagnoList", bagnoService.findAllBagno());
+    @GetMapping("/new/{id}")
+    public String newRelazione(@PathVariable Long id, Model model) {
+        model.addAttribute("prodottoList", prodottoService.findAllProdotto());
+        model.addAttribute("bagno", bagnoService.ricercaId(id).orElseThrow());
         return "relazioneBagnoProdotto/relazioneNuovo";
     }
 
@@ -46,20 +49,30 @@ public class RelazioneBagnoProdottoController {
         return "relazioneBagnoProdotto/relazioneList";
     }
 
-    @GetMapping("/azioni/{id}")
-    public String relazioneAzioni(@PathVariable Long id, Model model) {
+    @GetMapping("/vistaAzioni/{id}")
+    public String relazioneVistaAzioni(@PathVariable Long id, Model model) {
         model.addAttribute("bagno", bagnoService.ricercaId(id).orElseThrow());
         model.addAttribute("relazioneList",
                 relazioneService.findAllRelazionePerBagno(id));
         return "relazioneBagnoProdotto/relazioneVistaAzioni";
     }
 
+    @GetMapping("/azioni/{id}")
+    public String relazioneAzioni(@PathVariable Long id,
+                                  Model model) {
+        model.addAttribute("prodottoList", prodottoService.findAllProdotto());
+        model.addAttribute("relazione",
+                relazioneService.ricercaId(id).orElseThrow());
+        return "relazioneBagnoProdotto/relazioneAzioni";
+    }
+
     @PutMapping("{id}")
     public String aggiornaRelazione(
             @RequestBody RelazioneBagnoProdottoDto relazioneBagnoProdottoDto,
             @PathVariable Long id, Model model) {
-        relazioneService.aggiorna(relazioneBagnoProdottoDto, id);
-        return listaRelazione(model);
+        return relazioneVistaAzioni(relazioneService.aggiorna(
+                relazioneBagnoProdottoDto,
+                id).getIdBagno(), model);
     }
 
     @DeleteMapping("{id}")
