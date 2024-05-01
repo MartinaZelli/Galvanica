@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main_layout}">
+
+<head>
+    <title>Lista Relazioni</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Bagno</th>
+            <th scope="col">Prodotti</th>
+            <th scope="col">Azioni</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="bagno: ${bagnoList}">
+            <td><span th:text="${bagno.getNome()}"/>
+            </td>
+            <td>
+                <a href="#"
+                   th:attr="hx-get=@{'/relazioneBagnoProdotto/prodottoList/'+${bagno.getIdBagno()}}"
+                   hx-trigger="click"
+                   hx-target="this"
+                   hx-swap="outerHTML"> Mostra Prodotti
+                </a>
+
+            </td>
+            <td>
+                <a th:href="'/relazioneBagnoProdotto/vistaAzioni/'+${bagno.getIdBagno()}">
+                    Gestisci Relazioni </a>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main_layout}">
+
+<head>
+    <title>Azioni su Bagno</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div>
+        <a th:href="'/relazioneBagnoProdotto/new/'+${bagno.getIdBagno()}">
+            Nuovo </a>
+    </div>
+    <div></div>
+
+
+    <div>
+        <label for="nome">Nome</label>
+        <input type="text" disabled id="nome" name="nome"
+               th:value="${bagno.getNome()}">
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Prodotto</th>
+            <th scope="col">Note</th>
+            <th scope="col">Azioni</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="relazione: ${relazioneList}">
+            <td><span th:text="${relazione.getNomeProdotto()}"/>
+            </td>
+            <td><span th:text="${relazione.getNote()}"/>
+            </td>
+            <td>
+                <a th:href="'/relazioneBagnoProdotto/azioni/'+${relazione.getIdRelazione()}">
+                    Modifica </a>
+                <div></div>
+                <a href="#"
+                   hx-target="body"
+                   hx-swap="outerHTML"
+                   th:attr="hx-delete=@{'/relazioneBagnoProdotto/'+${relazione.getIdRelazione()}}">
+                    Elimina </a>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+</body>
+
+</html>

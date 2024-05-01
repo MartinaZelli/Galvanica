@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <title>Lista Relazioni </title>
+</head>
+
+<body>
+
+<div th:fragment="prodottoList">
+    <div th:each="prodotto:${prodottoList}" th:text="${prodotto.getNome()}">
+    </div>
+</div>
+
+</body>
+
+</html>
