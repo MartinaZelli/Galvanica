@@ -22,8 +22,7 @@ public class Alimentazione {
     @ManyToOne
     private Bagno bagno;
     private Integer scatti;
-    @Builder.Default
-    private Boolean arrotondaValori = false;
+    private Boolean arrotondaValori;
     @Convert(converter = DayOfWeekConverter.class)
     private List<DayOfWeek> tempo;
     private String descrizione;

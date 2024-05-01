@@ -95,4 +95,15 @@ public class AlimentazioneController {
         return "alimentazione/campiTipoAlimentazione :: campiTempo";
     }
 
+    @GetMapping("/campiScattiNuovo")
+    public String campiScatti(Model model) {
+
+        return "alimentazione/campiTipoAlimentazione :: campiScattiNuovo";
+    }
+
+    @GetMapping("/campiTempoNuovo")
+    public String campiTempo(Model model) {
+        model.addAttribute("giorniList", mathService.dayOfWeekList());
+        return "alimentazione/campiTipoAlimentazione :: campiTempoNuovo";
+    }
 }

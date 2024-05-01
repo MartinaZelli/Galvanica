@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main_layout}">
+
+<head>
+    <title>Lista Bagni</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div>
+        <a th:href="'/bagno/new'">
+            nuovo </a>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Id Bagno</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Azioni</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="bagno: ${bagnoList}">
+            <td><span th:text="${bagno.getIdBagno()}"/>
+
+            </td>
+            <td><span th:text="${bagno.getNome()}"/>
+
+            </td>
+            <td><a th:href="'/bagno/azioni/'+${bagno.getIdBagno()}">
+                Modifica </a>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+
+</html>

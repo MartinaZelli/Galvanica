@@ -18,6 +18,5 @@ public class AlimentazioneDto {
     private Integer scatti;
     private List<DayOfWeek> tempo;
     private String descrizione;
-    @Builder.Default
-    private Boolean arrotondaValori = false;
+    private Boolean arrotondaValori;
 }

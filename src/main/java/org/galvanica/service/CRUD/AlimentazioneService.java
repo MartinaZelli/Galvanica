@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -44,18 +45,23 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
             throw new RuntimeException(
                     "può essere valorizzato un solo attributo fra Scatti e Tempo");
         }
+        if (elemento.getArrotondaValori() == null) {
+            elemento.setArrotondaValori(false);
+        }
         Optional<Bagno> bagnoOptional = bagnoRepository.findById(elemento.getIdBagno());
         if (bagnoOptional.isEmpty()) {
             throw new RuntimeException(
                     "l'id del bagno non esiste, correggere.");
         }
-        if (bagnoOptional.get().getAlimentazioneList() != null) {
-            if (bagnoOptional.get()
-                    .getAlimentazioneList()
-                    .stream()
-                    .anyMatch(alimentazione -> alimentazione.getScatti() != null)) {
-                throw new RuntimeException(
-                        "esiste già un alimentazione a scatti per questo bagno.");
+        if (Objects.equals(elemento.getTipoAlimentazione(), "Scatti")) {
+            if (bagnoOptional.get().getAlimentazioneList() != null) {
+                if (bagnoOptional.get()
+                        .getAlimentazioneList()
+                        .stream()
+                        .anyMatch(alimentazione -> alimentazione.getScatti() != null)) {
+                    throw new RuntimeException(
+                            "esiste già un alimentazione a scatti per questo bagno.");
+                }
             }
         }
         Alimentazione alimentazione = Alimentazione.builder()
@@ -99,11 +105,15 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
             throw new RuntimeException(
                     "può essere valorizzato un solo attributo fra Scatti e Tempo");
         }
+        if (elemento.getArrotondaValori() == null) {
+            elemento.setArrotondaValori(false);
+        }
         Alimentazione alimentazione = alimentazioneOptional.get();
         alimentazione.setDescrizione(elemento.getDescrizione());
         alimentazione.setTempo(elemento.getTempo());
         alimentazione.setScatti(elemento.getScatti());
         alimentazione.setBagno(bagnoOptional.get());
+        alimentazione.setArrotondaValori(elemento.getArrotondaValori());
         alimentazione = alimentazioneRepository.save(alimentazione);
 
         return fromModelToDto(alimentazione);

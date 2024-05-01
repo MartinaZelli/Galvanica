@@ -29,6 +29,28 @@
         <label th:for="${giorno.name()}" th:text="${giorno.name()}"> </label>
     </div>
 </div>
+
+
+<div th:fragment="campiScattiNuovo">
+    <div>
+        <label for="quantitaScatti">Quantità Scatti</label>
+        <input type="text" id="quantitaScatti" name="scatti">
+    </div>
+    <div><input type="checkbox"
+                id="arrotondaValori" name="arrotondaValori" value="true">
+        <label for="arrotondaValori"> spunta se arrotonda i valori</label>
+
+    </div>
+</div>
+<div th:fragment="campiTempoNuovo">
+    <div>Giorni di Ricorrenza</div>
+
+    <div th:each="giorno:${giorniList}">
+        <input type="checkbox"
+               th:id="${giorno.name()}" name="tempo" th:value="${giorno.name()}">
+        <label th:for="${giorno.name()}" th:text="${giorno.name()}"> </label>
+    </div>
+</div>
 </body>
 
 </html>
