@@ -16,16 +16,13 @@
           hx-replace-url="true">
         <div>
             <label for="id">Id Magazzino</label>
-            <input type="text" disabled id="id" name="idMagazzino"
-                   th:value="${magazzino.getIdMagazzino()}">
+            <input type="text" disabled id="id" name="idMagazzino" th:value="${magazzino.getIdMagazzino()}">
         </div>
         <div>
             <label for="descrizione">Descrizione</label>
-            <input type="text" id="descrizione" name="descrizione"
-                   th:value="${magazzino.getDescrizione()}">
+            <input type="text" id="descrizione" name="descrizione" th:value="${magazzino.getDescrizione()}">
         </div>
-        <button class="btn btn-outline-primary"
-                type="submit">
+        <button class="btn btn-outline-primary" type="submit">
             Salva
         </button>
     </form>

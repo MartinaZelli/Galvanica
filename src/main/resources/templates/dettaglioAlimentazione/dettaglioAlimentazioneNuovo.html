@@ -13,7 +13,8 @@
     <form th:attr="hx-post=@{'/dettaglioAlimentazione'}"
           hx-ext="json-enc"
           hx-target="body"
-          hx-swap="outerHTML">
+          hx-swap="outerHTML"
+          hx-replace-url="true">
         <div>
             Bagno: <span th:text="${alimentazione.getNomeBagno()}"></span>
         </div>
