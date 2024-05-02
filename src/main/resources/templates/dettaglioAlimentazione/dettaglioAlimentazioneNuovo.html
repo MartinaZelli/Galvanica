@@ -26,10 +26,6 @@
                th:value="${alimentazione.getIdAlimentazione()}">
 
         <div>
-            <label for="note">Note</label>
-            <input type="text" id="note" name="note">
-        </div>
-        <div>
             <label for="idProdotto">Nome Prodotto </label>
             <select name="idProdotto" id="idProdotto">
                 <option></option>
@@ -53,10 +49,14 @@
                 </option>
             </select>
         </div>
+        <div>
+            <label for="note">Note</label>
+            <input type="text" id="note" name="note">
+        </div>
 
         <button class="btn btn-outline-primary"
                 type="submit">
-            Nuovo
+            Crea
         </button>
     </form>
 

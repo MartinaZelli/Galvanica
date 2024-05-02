@@ -82,9 +82,9 @@ public class DettaglioAlimentazioneController {
             @RequestBody DettaglioAlimentazioneDto dettaglioAlimentazioneDto,
             @PathVariable Long id, Model model) {
 
-        dettaglioAlimentazioneService.aggiorna(dettaglioAlimentazioneDto, id);
-
-        return dettaglioAlimentazioneVistaAzioni(dettaglioAlimentazioneDto.getIdAlimentazione(),
+        return dettaglioAlimentazioneVistaAzioni(dettaglioAlimentazioneService.aggiorna(
+                        dettaglioAlimentazioneDto,
+                        id).getIdAlimentazione(),
                 model);
     }
 
@@ -103,10 +103,8 @@ public class DettaglioAlimentazioneController {
             @RequestBody DettaglioAlimentazioneDto dettaglioAlimentazioneDto,
             Model model
     ) {
-        dettaglioAlimentazioneService.inserisci(dettaglioAlimentazioneDto);
-
-        return dettaglioAlimentazioneVistaAzioni(dettaglioAlimentazioneDto.getIdAlimentazione(),
-                model);
+        return dettaglioAlimentazioneVistaAzioni(dettaglioAlimentazioneService.inserisci(
+                dettaglioAlimentazioneDto).getIdAlimentazione(), model);
     }
 
 
