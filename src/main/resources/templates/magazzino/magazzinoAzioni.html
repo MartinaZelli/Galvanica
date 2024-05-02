@@ -12,7 +12,8 @@
     <form th:attr="hx-put=@{'/magazzino/'+${magazzino.getIdMagazzino()}}"
           hx-ext="json-enc"
           hx-target="body"
-          hx-swap="outerHTML">
+          hx-swap="outerHTML"
+          hx-replace-url="true">
         <div>
             <label for="id">Id Magazzino</label>
             <input type="text" disabled id="id" name="idMagazzino"
@@ -28,15 +29,14 @@
             Salva
         </button>
     </form>
-    <form th:attr="hx-delete=@{'/magazzino/'+${magazzino.getIdMagazzino()}}"
-          hx-ext="json-enc"
-          hx-target="body"
-          hx-swap="outerHTML">
-        <button class="btn btn-outline-primary"
-                type="submit">
-            Elimina l'intero oggetto
-        </button>
-    </form>
+    <button class="btn btn-outline-primary" type="button"
+            th:attr="hx-delete=@{'/magazzino/'+${magazzino.getIdMagazzino()}}"
+            hx-ext="json-enc"
+            hx-target="body"
+            hx-swap="outerHTML"
+            hx-replace-url="true">
+        Elimina l'intero oggetto
+    </button>
 </div>
 </body>
 

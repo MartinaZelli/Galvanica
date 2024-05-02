@@ -45,13 +45,12 @@ public class MagazzinoController {
     }
 
     @PutMapping("{id}")
-    public String aggiornaMagazzino(@RequestBody MagazzinoDto magazzinoDto,
-                                    @PathVariable Long id, Model model) {
+    public String aggiornaMagazzino(@RequestBody MagazzinoDto magazzinoDto, @PathVariable Long id) {
         magazzinoService.aggiorna(magazzinoDto, id);
-        return listaMagazzini(model);
+        return "redirect:/magazzino/list";
     }
 
-    @GetMapping("/list")
+    @RequestMapping(value = "/list", method = {RequestMethod.GET, RequestMethod.PUT})
     public String listaMagazzini(Model model) {
         List<MagazzinoDto> magazzinoDtoList = magazzinoService.findAllMagazzino();
         model.addAttribute("magazzinoList", magazzinoDtoList);
