@@ -21,7 +21,7 @@ public class DettaglioAlimentazione {
     private UnitaDiMisura unitaDiMisura;
     @ManyToOne
     private Prodotto prodotto;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     private Alimentazione alimentazione;
 
 }
