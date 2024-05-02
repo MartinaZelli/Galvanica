@@ -23,11 +23,11 @@ public class Bagno {
     private Integer litri;
     private LocalDate dataInizio;
     private LocalDate dataFine;
-    @OneToMany(mappedBy = "bagno")
+    @OneToMany(mappedBy = "bagno", cascade = CascadeType.REMOVE)
     private List<CaratteristicaBagno> caratteristicheList;
     @OneToMany(mappedBy = "bagno", cascade = CascadeType.REMOVE)
     private List<Alimentazione> alimentazioneList;
-    @OneToMany(mappedBy = "bagno")
+    @OneToMany(mappedBy = "bagno", cascade = CascadeType.REMOVE)
     private List<RelazioneBagnoProdotto> relazioneBagnoProdottoList;
 
 
