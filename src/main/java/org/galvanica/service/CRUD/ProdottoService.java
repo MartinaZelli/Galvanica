@@ -1,13 +1,8 @@
 package org.galvanica.service.CRUD;
 
 import org.galvanica.dto.dtoConModel.ProdottoDto;
-import org.galvanica.model.Bagno;
-import org.galvanica.model.Magazzino;
-import org.galvanica.model.Prodotto;
-import org.galvanica.model.RelazioneBagnoProdotto;
-import org.galvanica.repository.BagnoRepository;
-import org.galvanica.repository.MagazzinoRepository;
-import org.galvanica.repository.ProdottoRepository;
+import org.galvanica.model.*;
+import org.galvanica.repository.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,13 +17,20 @@ public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
     private final ProdottoRepository prodottoRepository;
     private final MagazzinoRepository magazzinoRepository;
     private final BagnoRepository bagnoRepository;
+    private final DettaglioAlimentazioneRepository dettaglioAlimentazioneRepository;
+    private final AlimentazioneRepository alimentazioneRepository;
 
     public ProdottoService(ProdottoRepository prodottoRepository,
                            MagazzinoRepository magazzinoRepository,
-                           BagnoRepository bagnoRepository) {
+                           BagnoRepository bagnoRepository,
+                           DettaglioAlimentazioneRepository dettaglioAlimentazioneRepository,
+                           AlimentazioneRepository alimentazioneRepository) {
         this.prodottoRepository = prodottoRepository;
         this.magazzinoRepository = magazzinoRepository;
         this.bagnoRepository = bagnoRepository;
+
+        this.dettaglioAlimentazioneRepository = dettaglioAlimentazioneRepository;
+        this.alimentazioneRepository = alimentazioneRepository;
     }
 
     @Override
@@ -144,5 +146,36 @@ public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
                 .map(RelazioneBagnoProdotto::getProdotto)
                 .map(this::fromModelToDto)
                 .toList();
+    }
+
+    public List<ProdottoDto> ricercaProdottiByDettaglioAlimentazione(
+            Long idDettagioAlimentazione) {
+        Optional<DettaglioAlimentazione> dettaglioAlimentazioneOptional =
+                dettaglioAlimentazioneRepository.findById(idDettagioAlimentazione);
+        if (dettaglioAlimentazioneOptional.isEmpty()) {
+            throw new RuntimeException(
+                    "non esiste DettaglioAlimentazione con questo ID");
+        }
+        Optional<Alimentazione> alimentazione = alimentazioneRepository.findById(
+                dettaglioAlimentazioneOptional.get()
+                        .getAlimentazione().getIdAlimentazione());
+        if (alimentazione.isEmpty()) {
+            throw new RuntimeException(
+                    "non esiste un Alimentazione con questo ID legata al DettaglioAlimentazione con questo ID");
+        }
+        return ricercaProdottiByBagno(alimentazione.get().getBagno().getIdBagno());
+
+    }
+
+    public List<ProdottoDto> ricercaProdottiByAlimentazione(
+            Long idAlimentazione) {
+        Optional<Alimentazione> alimentazione = alimentazioneRepository.findById(
+                idAlimentazione);
+        if (alimentazione.isEmpty()) {
+            throw new RuntimeException(
+                    "non esiste un Alimentazione con questo ID legata al DettaglioAlimentazione con questo ID");
+        }
+        return ricercaProdottiByBagno(alimentazione.get().getBagno().getIdBagno());
+
     }
 }

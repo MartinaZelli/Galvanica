@@ -68,10 +68,12 @@ public class DettaglioAlimentazioneController {
     @GetMapping("/azioni/{id}")
     public String relazioneAzioni(@PathVariable Long id,
                                   Model model) {
-        model.addAttribute("prodottoList", prodottoService.findAllProdotto());
-        model.addAttribute("unitaDiMisuraList", mathService.unitaDiMisuraList());
         model.addAttribute("dettaglioAlimentazione",
                 dettaglioAlimentazioneService.ricercaId(id).orElseThrow());
+        model.addAttribute("prodottoList",
+                prodottoService.ricercaProdottiByDettaglioAlimentazione(id));
+        model.addAttribute("unitaDiMisuraList", mathService.unitaDiMisuraList());
+
         return "dettaglioAlimentazione/dettaglioAlimentazioneAzioni";
     }
 
@@ -88,7 +90,8 @@ public class DettaglioAlimentazioneController {
 
     @GetMapping("/new/{id}")
     public String newDettaglioAlimentazione(@PathVariable Long id, Model model) {
-        model.addAttribute("prodottoList", prodottoService.findAllProdotto());
+        model.addAttribute("prodottoList",
+                prodottoService.ricercaProdottiByAlimentazione(id));
         model.addAttribute("unitaDiMisuraList", mathService.unitaDiMisuraList());
         model.addAttribute("alimentazione",
                 alimentazioneService.ricercaId(id).orElseThrow());
