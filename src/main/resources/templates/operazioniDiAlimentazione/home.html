@@ -4,20 +4,38 @@
       layout:decorate="~{layout/main_layout}">
 
 <head>
-    <title>Home</title>
+    <title>Alimentazioni</title>
 </head>
 
 <body>
 <div layout:fragment="content">
-    <div><a href="">Bagni galvanici</a></div>
-    <div><a href="">Magazzino prodotti</a></div>
-
-    <a href="">Archivio</a>
-    <a href="">???</a>
-    <a href="">Alimentazioni</a>
-    <a href="">Aggiunta manuale</a>
-    <a href="">Analisi</a>
-    <a href="">Aggiunte da Fare / Approvare</a>
+    <form th:attr="hx-get=@{'/operazioni/alimentazioni/scatti'}"
+          hx-ext="json-enc"
+          hx-target="body"
+          hx-swap="outerHTML">
+        <button class="btn btn-outline-primary"
+                type="submit">
+            Alimentazione a Scatti
+        </button>
+    </form>
+    <form
+            hx-ext="json-enc"
+            hx-target="body"
+            hx-swap="outerHTML">
+        <button class="btn btn-outline-primary"
+                type="submit">
+            Alimentazione a Tempo
+        </button>
+    </form>
+    <form
+            hx-ext="json-enc"
+            hx-target="body"
+            hx-swap="outerHTML">
+        <button class="btn btn-outline-primary"
+                type="submit">
+            Alimentazioni Non fatte
+        </button>
+    </form>
 </div>
 </body>
 
