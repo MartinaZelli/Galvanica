@@ -166,12 +166,31 @@ public class OperazioniAddStorico {
 
     }
 
+
     private List<OggettoAggiunta> aggiuntaDaStoriciPassatiList(
             List<StoricoGenerale> storicoGeneraleListDaEseguire) {
+        //crea una mappa di idProdotto e oggettoAggiunta.
         Map<Long, OggettoAggiunta> oggettoAggiuntaMap = new HashMap<>();
 
+        /*ricerca uno storico dettaglio:
+        1.filtra storicoGeneraleList
+        2.recupero lo storicoDettaglio
+        3.se non c'0è faccio storicoDettaglioRepository.storicoDettaglioList(
+                            s.getIdStorico(),
+                            false,
+                            false); (ps--per lazy!)
+        4.una volta ottenute n. liste di storicoDettaglio dalle liste di StoricoGenerale
+        le riduco tutte ad un unica lista di StoricoDettaglio (flatMap(Collection::parallelStream)
+        5. tale lista unica ottenuta viene filtrata per: tutti i valori !eseguti e !esclusi.
+        6.riporto infine la lista.
+
+        attenzione! i return riportano il valore dentro la funzione al valore sotto (qui .flatmap)
+         e non al valore List<StoricoDettaglio> storicoDettaglioList
+
+         */
         List<StoricoDettaglio> storicoDettaglioList = storicoGeneraleListDaEseguire.stream()
                 .map(s -> {
+                    //todo: verifica se possibile pulzia codice per lazy!
                     if (s.getStoricoDettaglioList() != null) {
                         return s.getStoricoDettaglioList();
                     }
@@ -180,9 +199,11 @@ public class OperazioniAddStorico {
                             false,
                             false);
                 })
+
                 .flatMap(Collection::parallelStream)
                 .filter(storicoDettaglio -> !storicoDettaglio.getEseguito() && !storicoDettaglio.getEscluso())
                 .toList();
+
 
         for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
             if (oggettoAggiuntaMap.containsKey(storicoDettaglio.getProdotto()
@@ -217,74 +238,48 @@ public class OperazioniAddStorico {
 
     public AlimentazioneRisposta tempoCalcolaAlimentazione(
             Long idBagno, LocalDate dataControllo) {
-        //trova ultimo storicoGenerale per il Tempo per idbagno,
-        // trova giorno settimana dataControllo,
-        //trova lista delle alimentazioni da fare per il giorno della data di controllo
-        //crea un' alimentazioneRisposta e la builda con idBagno.
         StoricoGenerale storicoGeneraleTempoLast =
                 storicoGeneraleRepository.storicoGeneraleTempoLast(idBagno);
-        String findByTempo = dataControllo.getDayOfWeek().name();
-        //todo: controllare se ha senso alimentazioneRepository.findByTempo
         List<Alimentazione> alimentazioneList = alimentazioneRepository.findByTempo(
                 idBagno,
-                findByTempo);
+                dataControllo.getDayOfWeek().name());
         AlimentazioneRisposta alimentazioneRisposta = AlimentazioneRisposta.builder()
                 .idBagno(idBagno)
+                .messaggio(tempoCalcolaSoloMessaggio(
+                        dataControllo,
+                        storicoGeneraleTempoLast,
+                        alimentazioneList))
                 .build();
 
-        //se non c'è uno storicoGeneraleTempo o la data di controllo
-        // è successiva all'ultimo storicoGeneraleTempo di 10 giorni o più
-        // il conteggio riparte da oggi.
-        //todo: se data controllo+10giorni allora dovremmo segnare come annullate le aggiunte precedenti!
-        if (storicoGeneraleTempoLast == null || dataControllo.isAfter(
+        LocalDate dataUltimoStorico;
+
+        if (storicoGeneraleTempoLast != null && dataControllo.isAfter(
                 storicoGeneraleTempoLast.getDataControlloTempo().plusDays(10))) {
-            String rispostaPrimaPt = null;
-            if (storicoGeneraleTempoLast == null) {
-                rispostaPrimaPt = "In questo bagno non sono mai state eseguite aggiunte a tempo prima. le aggiunte cominceranno da oggi.";
-            } else {
-                rispostaPrimaPt = "In questo bagno è stata eseguita l'ultima aggiunta a tempo da più di 10 giorni; il : "
-                        + storicoGeneraleTempoLast.getDataControlloTempo() + ". le aggiunte ricominceranno da oggi.";
-            }
-            //se non ci sono alimentazioni da fare ritorna alimentazioneRisposta.
+            throw new RuntimeException(
+                    "imbecille! ci sono aggiunte a tempo da confermare " +
+                            "o escludere da più di 10 giorni in archivio!");
+        }
+        if (storicoGeneraleTempoLast == null) {
+            dataUltimoStorico = LocalDate.now();
+
             if (alimentazioneList.isEmpty()) {
-                alimentazioneRisposta.setMessaggio(rispostaPrimaPt + " Non ci sono aggiunte da eseguire oggi.");
                 return alimentazioneRisposta;
             }
-
-            //altrimenti si ciclano le alimentazioni da lista e usiamo tempoCreaStorico
-            // per creare storico generale e dettaglio di ogni alimentazione.
-            for (Alimentazione alimentazione : alimentazioneList) {
-                tempoCreaStorico(alimentazione, dataControllo);
-            }
-            //crea una lista di tutte le aggiunte a tempo non fatte per il bagno
-            //todo: in questo caso potremmo metterle direttamente nel ciclo for precedente??
-            List<StoricoGenerale> storicoGeneraleDaEsegureList = storicoGeneraleRepository.storicoGeneraleDescList(
-                    false, idBagno, false);
-
-            //todo: arrivata fino a qui
-            System.out.println(storicoGeneraleDaEsegureList.getFirst()
-                    .getStoricoDettaglioList());
-            alimentazioneRisposta.setOggettoAggiuntaList(aggiuntaDaStoriciPassatiList(
-                    storicoGeneraleDaEsegureList));
-            alimentazioneRisposta.setMessaggio(rispostaPrimaPt + " queste sono le aggiunte da eseguire di oggi.");
-            return alimentazioneRisposta;
+        } else {
+            dataUltimoStorico = storicoGeneraleTempoLast.getDataControlloTempo();
         }
-        if (!dataControllo.isAfter(storicoGeneraleTempoLast.getDataControlloTempo()) || dataControllo.isAfter(
+
+        if (!dataControllo.isAfter(dataUltimoStorico) || dataControllo.isAfter(
                 LocalDate.now().plusDays(7))) {
-            alimentazioneRisposta.setMessaggio(
-                    "la data inserta è precedente l'ultima aggiunta fatta il  "
-                            + storicoGeneraleTempoLast.getDataControlloTempo() +
-                            " Oppure la data di controllo inserita (" + dataControllo + ") è più di 7 giorni avanti alla data di oggi "
-                            + LocalDate.now() + ". Non verranno fatte aggiunte");
-
             return alimentazioneRisposta;
         }
-        for (LocalDate data = storicoGeneraleTempoLast.getDataControlloTempo()
-                .plusDays(1);
+
+        for (LocalDate data = dataUltimoStorico.plusDays(1);
              !data.isAfter(dataControllo); data = data.plusDays(1)) {
             for (Alimentazione alimentazione : alimentazioneList) {
-                if (alimentazione.getTempo().contains(data.getDayOfWeek().name())) {
-                    tempoCreaStorico(alimentazione, dataControllo);
+
+                if (alimentazione.getTempo().contains(data.getDayOfWeek())) {
+                    tempoCreaStorico(alimentazione, data);
                 }
             }
         }
@@ -292,14 +287,53 @@ public class OperazioniAddStorico {
                 false, idBagno, false);
         alimentazioneRisposta.setOggettoAggiuntaList(aggiuntaDaStoriciPassatiList(
                 storicoGeneraleDaEsegureList));
-        alimentazioneRisposta.setMessaggio(
-                "Queste sono le aggiunte non ancora eseguite da " + storicoGeneraleTempoLast.getDataControlloTempo() + " a " + dataControllo);
         return alimentazioneRisposta;
     }
 
+    public String tempoCalcolaSoloMessaggio(
+            LocalDate dataControllo,
+            StoricoGenerale storicoGeneraleTempoLast,
+            List<Alimentazione> alimentazioneList) {
+        String stringRisposta;
+        if (storicoGeneraleTempoLast == null || dataControllo.isAfter(
+                storicoGeneraleTempoLast.getDataControlloTempo().plusDays(10))) {
+            String rispostaPrimaPt;
+            if (storicoGeneraleTempoLast == null) {
+                rispostaPrimaPt = "In questo bagno non sono mai state eseguite aggiunte " +
+                        "a tempo prima. le aggiunte cominceranno da oggi.";
+                if (alimentazioneList.isEmpty()) {
+                    stringRisposta = rispostaPrimaPt + " Non ci sono aggiunte da eseguire oggi.";
+                    return stringRisposta;
+                }
+                stringRisposta = rispostaPrimaPt + " queste sono le aggiunte da eseguire di oggi.";
+            } else {
+                stringRisposta = "In questo bagno è stata eseguita l'ultima aggiunta a tempo " +
+                        "da più di 10 giorni; il : "
+                        + storicoGeneraleTempoLast.getDataControlloTempo()
+                        + ". Gestire le vecchie aggiunte prima di ricominciare.";
+            }
+            return stringRisposta;
 
-    private List<StoricoDettaglio> tempoCreaStorico(Alimentazione alimentazione,
-                                                    LocalDate dataControllo) {
+
+        }
+        if (!dataControllo.isAfter(storicoGeneraleTempoLast.getDataControlloTempo()) || dataControllo.isAfter(
+                LocalDate.now().plusDays(7))) {
+            stringRisposta =
+                    "la data inserta è precedente l'ultima aggiunta fatta il  "
+                            + storicoGeneraleTempoLast.getDataControlloTempo() +
+                            " Oppure la data di controllo inserita (" + dataControllo + ") è più di 7 giorni avanti alla data di oggi "
+                            + LocalDate.now() + ". Non verranno calcolate aggiunte";
+
+            return stringRisposta;
+        }
+        stringRisposta = "Queste sono le aggiunte non ancora eseguite da " +
+                storicoGeneraleTempoLast.getDataControlloTempo() + " a " + dataControllo;
+        return stringRisposta;
+    }
+
+
+    private void tempoCreaStorico(Alimentazione alimentazione,
+                                  LocalDate dataControllo) {
 
         StoricoGenerale storicoGenerale = storicoGeneraleRepository.save(
                 StoricoGenerale.builder()
@@ -308,20 +342,17 @@ public class OperazioniAddStorico {
                         .sonoScatti(false)
                         .dataControlloTempo(dataControllo)
                         .build());
-        List<StoricoDettaglio> storicoDettaglioList = new ArrayList<>();
         for (DettaglioAlimentazione dettaglio : alimentazione
                 .getDettaglioAlimentazioneList()) {
 
-            storicoDettaglioList.add(storicoDettaglioRepository.save(
+            storicoDettaglioRepository.save(
                     StoricoDettaglio.builder()
                             .prodotto(dettaglio.getProdotto())
                             .storicoGenerale(storicoGenerale)
                             .quantita(dettaglio.getQuantitaProdotto())
                             .unitaDiMisura(dettaglio.getUnitaDiMisura())
-                            .build()));
+                            .build());
         }
-        return storicoDettaglioList;
-
     }
 
 
