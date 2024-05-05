@@ -25,18 +25,22 @@
                 </td>
                 <td>
                     <!--th:name="${bagno.getIdBagno()}"-->
-                    <input type="number" th:name="@{'scatti_' + ${bagno.getIdBagno()}}"
+                    <input type="number"
+                           th:name="${bagno.getIdBagno()}"
                            hx-trigger="input changed dalay:1000ms"
                            th:attr="hx-get=@{'/operazioni/alimentazioni/scatti/preconto/'+${bagno.getIdBagno()}},
-                          hx-target=@{'#preconto'+${bagno.getIdBagno()}}">
+                           hx-target=@{'#preconto'+${bagno.getIdBagno()}}">
                 </td>
                 <td th:id="@{'preconto'+${bagno.getIdBagno()}}"></td>
             </tr>
             </tbody>
         </table>
 
-        <button class="btn btn-outline-primary"
-                type="submit">
+        <button class="btn btn-outline-primary" type="submit"
+                th:attr="hx-post=@{'/operazioni/alimentazioni/scatti'}"
+                hx-ext="json-enc"
+                hx-target="body"
+                hx-swap="outerHTML">
             Calcola Alimentazioni
         </button>
     </form>
