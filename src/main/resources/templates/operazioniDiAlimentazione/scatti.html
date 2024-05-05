@@ -25,7 +25,7 @@
                 </td>
                 <td>
                     <!--th:name="${bagno.getIdBagno()}"-->
-                    <input type="number" name="scatti"
+                    <input type="number" th:name="@{'scatti_' + ${bagno.getIdBagno()}}"
                            hx-trigger="input changed dalay:1000ms"
                            th:attr="hx-get=@{'/operazioni/alimentazioni/scatti/preconto/'+${bagno.getIdBagno()}},
                           hx-target=@{'#preconto'+${bagno.getIdBagno()}}">

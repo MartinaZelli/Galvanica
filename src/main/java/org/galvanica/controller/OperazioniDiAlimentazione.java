@@ -27,9 +27,8 @@ public class OperazioniDiAlimentazione {
 
     @GetMapping("/scatti/preconto/{id}")
     @ResponseBody
-    public String preconto(@PathVariable Long id, @RequestParam Integer scatti) {
-        Integer scattiAlimentazione = alimentazioneService.ricercaAlimentazioneByBagno(
-                        id)
+    public String preconto(@PathVariable Long id, @RequestParam(name = "scatti{id}") Integer scatti) {
+        Integer scattiAlimentazione = alimentazioneService.ricercaAlimentazioneByBagno(id)
                 .stream()
                 .filter(alimentazione -> alimentazione.getScatti() != null)
                 .findFirst()
