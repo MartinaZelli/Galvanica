@@ -5,14 +5,25 @@ public class MetodiArrotondamenti {
                                                      int scattiAlimentazione,
                                                      boolean arrotondaValori,
                                                      Double primoValoreVolumetrico) {
+        //risposta:  private long restoScatti;
+        //           private double moltiplicatoreAlimentazione;
         ScattiMath risposta = new ScattiMath();
-        double moltiplicatoreReale = (double) scattiAttuali / scattiAlimentazione;
+        double moltiplicatoreReale = ((double) scattiAttuali) / scattiAlimentazione;
 
+        //se il rapporto scattiattuali/alimentazione non supera 0.9 allora esci con moltiplicatore 0;
         if (moltiplicatoreReale < 0.9) {
             risposta.setRestoScatti(scattiAttuali);
             risposta.setMoltiplicatoreAlimentazione(0D);
             return risposta;
         }
+        //se non vi sono valori volumetrici ma solo valori di peso allora possiamo usare il moltiplicatore reale.
+        if (primoValoreVolumetrico == null) {
+            risposta.setMoltiplicatoreAlimentazione(moltiplicatoreReale);
+            risposta.setRestoScatti(0);
+            return risposta;
+        }
+        //se è richiesto dall'alimentazione di arrotondare i valori allora usando math.floor
+        // (arrotonda al numero intero più piccolo) troviamo prima il moltiplicatore da usare poi lo riportiamo.
         if (arrotondaValori) {
             double moltiplicatoreFloor = Math.floor(moltiplicatoreReale);
             double moltiplicatoreApprossimato = moltiplicatoreApprossimato(
@@ -24,13 +35,10 @@ public class MetodiArrotondamenti {
 
             return risposta;
         }
-        if (primoValoreVolumetrico == null) {
-            risposta.setMoltiplicatoreAlimentazione(moltiplicatoreReale);
-            risposta.setRestoScatti(0);
-            return risposta;
-        }
+        //infine se l'aggiunta non è da approssimare ma vi sono valori volumetrici
+        // approssimiamo l'aggiunta per l'approssimazione del volume.
         double aggiunta = moltiplicatoreReale * primoValoreVolumetrico;
-        double aggiuntaApprossimata = approssimazioneAggiunta(aggiunta);
+        double aggiuntaApprossimata = moltiplicatoreApprossimatoPerAggiunta(aggiunta);
 
         double moltiplicatoreApprossimato = aggiuntaApprossimata / primoValoreVolumetrico * 1;
         double scattiAggiunti = moltiplicatoreApprossimato * scattiAlimentazione;
@@ -54,7 +62,7 @@ public class MetodiArrotondamenti {
         return 0;
     }
 
-    public static double approssimazioneAggiunta(double aggiunta) {
+    public static double moltiplicatoreApprossimatoPerAggiunta(double aggiunta) {
         if (aggiunta < 100) {
             double resto = aggiunta % 5;
             return aggiunta - resto;

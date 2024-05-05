@@ -39,32 +39,52 @@ public class OperazioniAddStorico {
         this.entityManager = entityManager;
     }
 
+    //fai scattiCalcolaAlimentazione ma per una mappa di bagno/valore e riporta una lista.
+    public List<AlimentazioneRisposta> scattiCalcolaAlimentazioneList(
+            Map<Long, Integer> idBagnoScattiParzialiMap) {
+        List<AlimentazioneRisposta> risposta = new ArrayList<>();
+        for (Long id : idBagnoScattiParzialiMap.keySet()) {
+            risposta.add(scattiCalcolaAlimentazione(id, id.intValue()));
+        }
+        return risposta;
+    }
+
     public AlimentazioneRisposta scattiCalcolaAlimentazione(Long id,
                                                             Integer scattiParziali) {
+        //trova bagno, alimentazione e storico
         Bagno bagno = trovaBagno(id);
         Alimentazione alimentazione = scattiTrovaAlimentazione(bagno);
         List<StoricoGenerale> storicoGeneraleListDaEseguire = storicoGeneraleRepository.storicoGeneraleDescList(
                 false, id, true);
+        //gestione scattiAttuali e scatti parziali
         int scattiAttuali = scattiParziali;
         int scattiTotali;
         boolean risposta = !storicoGeneraleListDaEseguire.isEmpty();
+        //se listastorico è popolata: aggiungi a scatti precedenti quelli della chiamata.
         if (risposta) {
-            scattiAttuali = storicoGeneraleListDaEseguire.getFirst()
-                    .getRestoScatti() + scattiAttuali;
-            scattiTotali = storicoGeneraleListDaEseguire.getFirst()
-                    .getScattiTotali() + scattiParziali;
+            scattiAttuali = storicoGeneraleListDaEseguire.getFirst().getRestoScatti()
+                    + scattiAttuali;
+            scattiTotali = storicoGeneraleListDaEseguire.getFirst().getScattiTotali()
+                    + scattiParziali;
+            //altrimenti prendi scatti dal bagno (già aggiornato)
         } else {
             scattiAttuali = bagno.getRestoScatti() + scattiAttuali;
             scattiTotali = bagno.getScattiTotali() + scattiParziali;
         }
+
+        //conti: trova valore volumetrico ; valore null gestito in MetodiArrotondamenti.alimentazioneScattiMath
         Double primoValoreVolumetrico = trovaPrimoValoreVolumetrico(alimentazione);
 
+        //trova scattiMath: private long restoScatti;
+        //                  private double moltiplicatoreAlimentazione;
         ScattiMath scattiMath = MetodiArrotondamenti.alimentazioneScattiMath(
                 scattiAttuali,
                 alimentazione.getScatti(),
                 alimentazione.getArrotondaValori(),
                 primoValoreVolumetrico);
 
+        //se non c'è necessità di alimentazioni allora setta nuovo scattiTotali e scattiAttuali
+        // su bagno o repository se presente
         if (scattiMath.getMoltiplicatoreAlimentazione() == 0) {
             System.out.println(
                     "il bagno non richiede aggiunte per ora. nuovo resto scatti : " + scattiAttuali);
@@ -88,7 +108,8 @@ public class OperazioniAddStorico {
                     .moltiplicatoreAlimentazione(0D)
                     .build();
         }
-
+        //altrimenti (se c'è alimentazione).
+        // A: crea nuovo storicoGenerale
         StoricoGenerale storicoGenerale = storicoGeneraleRepository.save(
                 StoricoGenerale.builder()
                         .alimentazione(alimentazione)
@@ -99,7 +120,7 @@ public class OperazioniAddStorico {
                         .moltiplicatoreAlimentazione(scattiMath.getMoltiplicatoreAlimentazione())
                         .build());
 
-
+        // B: crea gli storicoDettaglio per ogni dettaglioAlimentazione trovato.
         scattiConteggiProdotti(
                 alimentazione,
                 scattiMath,
@@ -109,6 +130,8 @@ public class OperazioniAddStorico {
 
         return AlimentazioneRisposta.builder()
                 .idBagno(id)
+                //TODO: verificare che basti in AlimentazioneRisposta aggiuntaDaStoriciPassatiList
+                // e non debba essere implementata scattiConteggiProdotti.
                 .oggettoAggiuntaList(aggiuntaDaStoriciPassatiList(
                         storicoGeneraleListDaEseguire))
                 .restoScatti((int) scattiMath.getRestoScatti())
@@ -116,35 +139,129 @@ public class OperazioniAddStorico {
                 .build();
     }
 
+    //crea storico dettaglio con approssimazioni di misura per volume
+    private List<StoricoDettaglio> scattiConteggiProdotti(
+            Alimentazione alimentazione,
+            ScattiMath scattiMath,
+            StoricoGenerale storicoGenerale) {
+        List<StoricoDettaglio> storicoDettaglioList = new ArrayList<>();
+        for (DettaglioAlimentazione dettaglio : alimentazione.getDettaglioAlimentazioneList()) {
+            double quantitaProdottoAggiunta = dettaglio.getQuantitaProdotto()
+                    * scattiMath.getMoltiplicatoreAlimentazione();
+            if (dettaglio.getUnitaDiMisura().isSonoVolume()) {
+                quantitaProdottoAggiunta = MetodiArrotondamenti.moltiplicatoreApprossimatoPerAggiunta(
+                        quantitaProdottoAggiunta);
+            }
+            StoricoDettaglio storicoDettaglio = storicoDettaglioRepository.save(
+                    StoricoDettaglio.builder()
+                            .prodotto(dettaglio.getProdotto())
+                            .storicoGenerale(trovaStoricoGenerale(storicoGenerale.getIdStorico()))
+                            .quantita(quantitaProdottoAggiunta)
+                            .unitaDiMisura(dettaglio.getUnitaDiMisura())
+                            .build());
+
+            storicoDettaglioList.add(storicoDettaglio);
+        }
+        return storicoDettaglioList;
+
+    }
+
+    private List<OggettoAggiunta> aggiuntaDaStoriciPassatiList(
+            List<StoricoGenerale> storicoGeneraleListDaEseguire) {
+        Map<Long, OggettoAggiunta> oggettoAggiuntaMap = new HashMap<>();
+
+        List<StoricoDettaglio> storicoDettaglioList = storicoGeneraleListDaEseguire.stream()
+                .map(s -> {
+                    if (s.getStoricoDettaglioList() != null) {
+                        return s.getStoricoDettaglioList();
+                    }
+                    return storicoDettaglioRepository.storicoDettaglioList(
+                            s.getIdStorico(),
+                            false,
+                            false);
+                })
+                .flatMap(Collection::parallelStream)
+                .filter(storicoDettaglio -> !storicoDettaglio.getEseguito() && !storicoDettaglio.getEscluso())
+                .toList();
+
+        for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
+            if (oggettoAggiuntaMap.containsKey(storicoDettaglio.getProdotto()
+                    .getIdProdotto())) {
+                Double quantitaProdotto = oggettoAggiuntaMap.get(storicoDettaglio.getProdotto()
+                        .getIdProdotto()).getQuantitaProdotto()
+                        + storicoDettaglio.getQuantita();
+                oggettoAggiuntaMap.get(storicoDettaglio.getProdotto()
+                        .getIdProdotto()).setQuantitaProdotto(quantitaProdotto);
+            }
+
+            if (!oggettoAggiuntaMap.containsKey(storicoDettaglio.getProdotto()
+                    .getIdProdotto())) {
+                oggettoAggiuntaMap.put(storicoDettaglio.getProdotto()
+                                .getIdProdotto(),
+                        oggettoAggiuntaTrasformer(storicoDettaglio));
+            }
+
+        }
+        return new ArrayList<>(oggettoAggiuntaMap.values());
+    }
+
+    private Alimentazione scattiTrovaAlimentazione(Bagno bagno) {
+        return bagno.getAlimentazioneList()
+                .stream()
+                .filter(alimentazioneFilter -> alimentazioneFilter.getScatti() != null)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException(
+                        "Alimentazione a scatti non trovata per bagno " + bagno.getIdBagno() + " nome: " + bagno.getNome()));
+    }
+
+
     public AlimentazioneRisposta tempoCalcolaAlimentazione(
             Long idBagno, LocalDate dataControllo) {
-        StoricoGenerale storicoGeneraletempoLast = storicoGeneraleRepository.storicoGeneraleTempoLast(
-                idBagno);
+        //trova ultimo storicoGenerale per il Tempo per idbagno,
+        // trova giorno settimana dataControllo,
+        //trova lista delle alimentazioni da fare per il giorno della data di controllo
+        //crea un' alimentazioneRisposta e la builda con idBagno.
+        StoricoGenerale storicoGeneraleTempoLast =
+                storicoGeneraleRepository.storicoGeneraleTempoLast(idBagno);
         String findByTempo = dataControllo.getDayOfWeek().name();
+        //todo: controllare se ha senso alimentazioneRepository.findByTempo
         List<Alimentazione> alimentazioneList = alimentazioneRepository.findByTempo(
                 idBagno,
                 findByTempo);
         AlimentazioneRisposta alimentazioneRisposta = AlimentazioneRisposta.builder()
                 .idBagno(idBagno)
                 .build();
-        if (storicoGeneraletempoLast == null || dataControllo.isAfter(
-                storicoGeneraletempoLast.getDataControlloTempo().plusDays(10))) {
+
+        //se non c'è uno storicoGeneraleTempo o la data di controllo
+        // è successiva all'ultimo storicoGeneraleTempo di 10 giorni o più
+        // il conteggio riparte da oggi.
+        //todo: se data controllo+10giorni allora dovremmo segnare come annullate le aggiunte precedenti!
+        if (storicoGeneraleTempoLast == null || dataControllo.isAfter(
+                storicoGeneraleTempoLast.getDataControlloTempo().plusDays(10))) {
             String rispostaPrimaPt = null;
-            if (storicoGeneraletempoLast == null) {
+            if (storicoGeneraleTempoLast == null) {
                 rispostaPrimaPt = "In questo bagno non sono mai state eseguite aggiunte a tempo prima. le aggiunte cominceranno da oggi.";
             } else {
                 rispostaPrimaPt = "In questo bagno è stata eseguita l'ultima aggiunta a tempo da più di 10 giorni; il : "
-                        + storicoGeneraletempoLast.getDataControlloTempo() + ". le aggiunte ricominceranno da oggi.";
+                        + storicoGeneraleTempoLast.getDataControlloTempo() + ". le aggiunte ricominceranno da oggi.";
             }
+            //se non ci sono alimentazioni da fare ritorna alimentazioneRisposta.
             if (alimentazioneList.isEmpty()) {
                 alimentazioneRisposta.setMessaggio(rispostaPrimaPt + " Non ci sono aggiunte da eseguire oggi.");
                 return alimentazioneRisposta;
             }
+
+            //altrimenti si ciclano le alimentazioni da lista e usiamo tempoCreaStorico
+            // per creare storico generale e dettaglio di ogni alimentazione.
             for (Alimentazione alimentazione : alimentazioneList) {
                 tempoCreaStorico(alimentazione, dataControllo);
             }
+            //crea una lista di tutte le aggiunte a tempo non fatte per il bagno
+            //todo: in questo caso potremmo metterle direttamente nel ciclo for precedente??
             List<StoricoGenerale> storicoGeneraleDaEsegureList = storicoGeneraleRepository.storicoGeneraleDescList(
                     false, idBagno, false);
+
+            //todo: arrivata fino a qui
             System.out.println(storicoGeneraleDaEsegureList.getFirst()
                     .getStoricoDettaglioList());
             alimentazioneRisposta.setOggettoAggiuntaList(aggiuntaDaStoriciPassatiList(
@@ -152,17 +269,17 @@ public class OperazioniAddStorico {
             alimentazioneRisposta.setMessaggio(rispostaPrimaPt + " queste sono le aggiunte da eseguire di oggi.");
             return alimentazioneRisposta;
         }
-        if (!dataControllo.isAfter(storicoGeneraletempoLast.getDataControlloTempo()) || dataControllo.isAfter(
+        if (!dataControllo.isAfter(storicoGeneraleTempoLast.getDataControlloTempo()) || dataControllo.isAfter(
                 LocalDate.now().plusDays(7))) {
             alimentazioneRisposta.setMessaggio(
                     "la data inserta è precedente l'ultima aggiunta fatta il  "
-                            + storicoGeneraletempoLast.getDataControlloTempo() +
+                            + storicoGeneraleTempoLast.getDataControlloTempo() +
                             " Oppure la data di controllo inserita (" + dataControllo + ") è più di 7 giorni avanti alla data di oggi "
                             + LocalDate.now() + ". Non verranno fatte aggiunte");
 
             return alimentazioneRisposta;
         }
-        for (LocalDate data = storicoGeneraletempoLast.getDataControlloTempo()
+        for (LocalDate data = storicoGeneraleTempoLast.getDataControlloTempo()
                 .plusDays(1);
              !data.isAfter(dataControllo); data = data.plusDays(1)) {
             for (Alimentazione alimentazione : alimentazioneList) {
@@ -176,44 +293,8 @@ public class OperazioniAddStorico {
         alimentazioneRisposta.setOggettoAggiuntaList(aggiuntaDaStoriciPassatiList(
                 storicoGeneraleDaEsegureList));
         alimentazioneRisposta.setMessaggio(
-                "Queste sono le aggiunte non ancora eseguite da " + storicoGeneraletempoLast.getDataControlloTempo() + " a " + dataControllo);
+                "Queste sono le aggiunte non ancora eseguite da " + storicoGeneraleTempoLast.getDataControlloTempo() + " a " + dataControllo);
         return alimentazioneRisposta;
-    }
-
-
-    private List<StoricoDettaglio> scattiConteggiProdotti(
-            Alimentazione alimentazione,
-            ScattiMath scattiMath,
-            StoricoGenerale storicoGenerale) {
-        List<StoricoDettaglio> storicoDettaglioList = new ArrayList<>();
-        StoricoGenerale storico = trovaStoricoGenerale(storicoGenerale.getIdStorico());
-        for (DettaglioAlimentazione dettaglio : alimentazione.getDettaglioAlimentazioneList()) {
-            double quantitaProdottoAggiunta = dettaglio.getQuantitaProdotto() * scattiMath.getMoltiplicatoreAlimentazione();
-            if (dettaglio.getUnitaDiMisura().isSonoVolume()) {
-                quantitaProdottoAggiunta = MetodiArrotondamenti.approssimazioneAggiunta(
-                        quantitaProdottoAggiunta);
-            }
-            StoricoDettaglio storicoDettaglio = storicoDettaglioRepository.save(
-                    StoricoDettaglio.builder()
-                            .prodotto(dettaglio.getProdotto())
-                            .storicoGenerale(storico)
-                            .quantita(quantitaProdottoAggiunta)
-                            .unitaDiMisura(dettaglio.getUnitaDiMisura())
-                            .build());
-
-            storicoDettaglioList.add(storicoDettaglio);
-        }
-        return storicoDettaglioList;
-
-    }
-
-    private Alimentazione scattiTrovaAlimentazione(Bagno bagno) {
-        return bagno.getAlimentazioneList()
-                .stream()
-                .filter(alimentazioneFilter -> alimentazioneFilter.getScatti() != null)
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException(
-                        "Alimentazione a scatti non trovata per bagno " + bagno.getIdBagno() + " nome: " + bagno.getNome()));
     }
 
 
@@ -241,53 +322,6 @@ public class OperazioniAddStorico {
         }
         return storicoDettaglioList;
 
-    }
-
-
-    private List<OggettoAggiunta> aggiuntaDaStoriciPassatiList(
-            List<StoricoGenerale> storicoGeneraleListDaEseguire) {
-        Map<Long, OggettoAggiunta> oggettoAggiuntaMap = new HashMap<>();
-
-        List<StoricoDettaglio> storicoDettaglioList = storicoGeneraleListDaEseguire.stream()
-                .map(s -> {
-                    if (s.getStoricoDettaglioList() != null) {
-                        return s.getStoricoDettaglioList();
-                    }
-                    return storicoDettaglioRepository.storicoDettaglioList(
-                            s.getIdStorico(),
-                            false,
-                            false);
-                })
-                .flatMap(Collection::parallelStream)
-                .filter(storicoDettaglio -> !storicoDettaglio.getEseguito() && !storicoDettaglio.getEscluso())
-                .toList();
-
-        /*List<StoricoDettaglio> storicoDettaglioList = new ArrayList<>();
-        for (StoricoGenerale storicoGenerale : storicoGeneraleListDaEseguire) {
-            storicoDettaglioList.addAll(storicoDettaglioRepository.storicoDettaglioList(
-                    storicoGenerale.getIdStorico(),
-                    false,
-                    false));
-        }*/
-        for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
-            if (oggettoAggiuntaMap.containsKey(storicoDettaglio.getProdotto()
-                    .getIdProdotto())) {
-                Double quantitaProdotto = oggettoAggiuntaMap.get(storicoDettaglio.getProdotto()
-                        .getIdProdotto()).getQuantitaProdotto()
-                        + storicoDettaglio.getQuantita();
-                oggettoAggiuntaMap.get(storicoDettaglio.getProdotto()
-                        .getIdProdotto()).setQuantitaProdotto(quantitaProdotto);
-            }
-
-            if (!oggettoAggiuntaMap.containsKey(storicoDettaglio.getProdotto()
-                    .getIdProdotto())) {
-                oggettoAggiuntaMap.put(storicoDettaglio.getProdotto()
-                                .getIdProdotto(),
-                        oggettoAggiuntaTrasformer(storicoDettaglio));
-            }
-
-        }
-        return new ArrayList<>(oggettoAggiuntaMap.values());
     }
 
 
