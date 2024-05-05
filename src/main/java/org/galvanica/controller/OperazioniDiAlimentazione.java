@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Controller
 
 @RequestMapping("/operazioni/alimentazioni")
@@ -31,7 +33,9 @@ public class OperazioniDiAlimentazione {
 
     @GetMapping("/scatti/preconto/{id}")
     @ResponseBody
-    public String preconto(@PathVariable Long id, @RequestParam(name = "scatti{id}") Integer scatti) {
+    public String preconto(@PathVariable Long id, HttpServletRequest request) {
+        String paramName = "scatti_" + id;
+        Integer scatti = Integer.valueOf(request.getParameter(paramName));
         Integer scattiAlimentazione = alimentazioneService.ricercaAlimentazioneByBagno(id)
                 .stream()
                 .filter(alimentazione -> alimentazione.getScatti() != null)
