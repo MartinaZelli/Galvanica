@@ -30,9 +30,11 @@ public class OperazioniDiAlimentazione {
 
     @GetMapping("/scatti")
     public String scatti(Model model) {
-        model.addAttribute("bagnoList", bagnoService.findAllBagno());
+        model.addAttribute("bagnoList",
+                bagnoService.findAllBagnoIfAlimentazioneScattiNotNull());
         return "operazioniDiAlimentazione/scatti";
     }
+
 
     @GetMapping("/scatti/preconto/{id}")
     @ResponseBody
@@ -61,6 +63,21 @@ public class OperazioniDiAlimentazione {
                         mappaBagnoScatti);
         System.out.println(alimentazioneRispostaList);
         return scatti(model);
+    }
+
+    @GetMapping("/scatti/singola/{id}/{scatti}")
+    public String calcoloAlimentazioneSingola(Model model,
+                                              @PathVariable Long id,
+                                              Integer scatti) {
+        operazioniAddStoricoService.scattiCalcolaAlimentazione(id, scatti);
+        return scattiSingola(model);
+    }
+
+    @GetMapping("/scattiSingola")
+    public String scattiSingola(Model model) {
+        model.addAttribute("bagnoList",
+                bagnoService.findAllBagnoIfAlimentazioneScattiNotNull());
+        return "operazioniDiAlimentazione/scattiSingola";
     }
 
 

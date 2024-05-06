@@ -36,6 +36,15 @@
             Alimentazioni Non fatte
         </button>
     </form>
+    <form th:attr="hx-get=@{'/operazioni/alimentazioni/scattiSingola'}"
+          hx-ext="json-enc"
+          hx-target="body"
+          hx-swap="outerHTML">
+        <button class="btn btn-outline-primary"
+                type="submit">
+            Prova, singola alimentazione a scatti
+        </button>
+    </form>
 </div>
 </body>
 
