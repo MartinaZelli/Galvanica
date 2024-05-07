@@ -43,8 +43,13 @@ public class OperazioniAddStorico {
     public List<AlimentazioneRisposta> scattiCalcolaAlimentazioneList(
             Map<Long, Integer> idBagnoScattiParzialiMap) {
         List<AlimentazioneRisposta> risposta = new ArrayList<>();
-        for (Long id : idBagnoScattiParzialiMap.keySet()) {
-            risposta.add(scattiCalcolaAlimentazione(id, id.intValue()));
+        for (Map.Entry<Long, Integer> entry : idBagnoScattiParzialiMap.entrySet()) {
+            if (entry.getValue() == null) {
+                continue;
+            }
+            risposta.add(scattiCalcolaAlimentazione(entry.getKey(),
+                    entry.getValue()));
+
         }
         return risposta;
     }

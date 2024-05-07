@@ -2,6 +2,7 @@ package org.galvanica.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.galvanica.dto.AlimentazioneRisposta;
+import org.galvanica.dto.AlimentazioneSingolaDto;
 import org.galvanica.service.CRUD.AlimentazioneService;
 import org.galvanica.service.CRUD.BagnoService;
 import org.galvanica.service.operazioniBagno.OperazioniAddStorico;
@@ -65,13 +66,15 @@ public class OperazioniDiAlimentazione {
         return scatti(model);
     }
 
-    @GetMapping("/scatti/singola/{id}/{scatti}")
-    public String calcoloAlimentazioneSingola(Model model,
-                                              @PathVariable Long id,
-                                              Integer scatti) {
-        operazioniAddStoricoService.scattiCalcolaAlimentazione(id, scatti);
+    @PostMapping(path = "/scatti/singola", consumes = "application/x-www-form-urlencoded")
+    public String calcoloAlimentazioneSingola(AlimentazioneSingolaDto alimentazione,
+                                              Model model) {
+        operazioniAddStoricoService.scattiCalcolaAlimentazione(
+                alimentazione.getIdBagno(),
+                alimentazione.getScatti());
         return scattiSingola(model);
     }
+
 
     @GetMapping("/scattiSingola")
     public String scattiSingola(Model model) {

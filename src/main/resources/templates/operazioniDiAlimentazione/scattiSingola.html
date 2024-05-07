@@ -9,17 +9,16 @@
 
 <body>
 <div layout:fragment="content">
-    <form th:attr="hx-get=@{'/operazioni/alimentazioni/scattiSingola'}"
-          hx-ext="json-enc"
+    <form hx-ext="json"
+          hx-swap="outerHTML"
           hx-target="body"
-          hx-swap="outerHTML">
+          th:attr="hx-post=@{'/operazioni/alimentazioni/scatti/singola'}">
         <div>
             <label for="idBagno">Bagno</label>
             <select id="idBagno" name="idBagno">
-                <option></option>
                 <option th:each="bagno: ${bagnoList}"
                         th:text="${bagno.getNome()}"
-                        th:name="${bagno.getIdBagno()}">
+                        th:value="${bagno.getIdBagno()}">
                 </option>
             </select>
         </div>
