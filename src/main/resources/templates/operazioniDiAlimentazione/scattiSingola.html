@@ -9,7 +9,7 @@
 
 <body>
 <div layout:fragment="content">
-    <form hx-ext="json"
+    <form hx-ext="json-enc"
           hx-swap="outerHTML"
           hx-target="body"
           th:attr="hx-post=@{'/operazioni/alimentazioni/scatti/singola'}">

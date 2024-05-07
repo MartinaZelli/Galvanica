@@ -66,9 +66,10 @@ public class OperazioniDiAlimentazione {
         return scatti(model);
     }
 
-    @PostMapping(path = "/scatti/singola", consumes = "application/x-www-form-urlencoded")
-    public String calcoloAlimentazioneSingola(AlimentazioneSingolaDto alimentazione,
-                                              Model model) {
+    @PostMapping("/scatti/singola")
+    public String calcoloAlimentazioneSingola(
+            @RequestBody AlimentazioneSingolaDto alimentazione,
+            Model model) {
         operazioniAddStoricoService.scattiCalcolaAlimentazione(
                 alimentazione.getIdBagno(),
                 alimentazione.getScatti());
