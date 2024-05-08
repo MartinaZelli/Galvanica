@@ -12,5 +12,6 @@ public class OggettoAggiunta {
     private Double quantitaProdotto;
     private UnitaDiMisura unitaDiMisura;
     private Long idProdotto;
+    private String nomeProdotto;
 
 }

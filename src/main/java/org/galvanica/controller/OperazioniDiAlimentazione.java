@@ -62,9 +62,16 @@ public class OperazioniDiAlimentazione {
         List<AlimentazioneRisposta> alimentazioneRispostaList =
                 operazioniAddStoricoService.scattiCalcolaAlimentazioneList(
                         mappaBagnoScatti);
+        model.addAttribute("alimentazioneRispostaList", alimentazioneRispostaList);
         System.out.println(alimentazioneRispostaList);
-        return scatti(model);
+        return "operazioniDiAlimentazione/rispostaScatti";
     }
+
+    @GetMapping("/rispostaScatti")
+    public String rispostaScatti(Model model) {
+        return "";
+    }
+
 
     @PostMapping("/scatti/singola")
     public String calcoloAlimentazioneSingola(
@@ -83,6 +90,4 @@ public class OperazioniDiAlimentazione {
                 bagnoService.findAllBagnoIfAlimentazioneScattiNotNull());
         return "operazioniDiAlimentazione/scattiSingola";
     }
-
-
 }

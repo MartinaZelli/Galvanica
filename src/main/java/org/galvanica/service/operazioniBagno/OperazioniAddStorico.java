@@ -107,6 +107,7 @@ public class OperazioniAddStorico {
 
             return AlimentazioneRisposta.builder()
                     .idBagno(id)
+                    .nomeBagno(bagno.getNome())
                     .restoScatti(scattiAttuali)
                     .messaggio("gli scatti sono inferiori al 90% dell'alimentazione,"
                             + "le aggiunte non verranno eseguite ma messe in conto per la prossima chiamata.")
@@ -135,6 +136,7 @@ public class OperazioniAddStorico {
 
         return AlimentazioneRisposta.builder()
                 .idBagno(id)
+                .nomeBagno(bagno.getNome())
                 //TODO: verificare che basti in AlimentazioneRisposta aggiuntaDaStoriciPassatiList
                 // e non debba essere implementata scattiConteggiProdotti.
                 .oggettoAggiuntaList(aggiuntaDaStoriciPassatiList(
@@ -366,6 +368,7 @@ public class OperazioniAddStorico {
                 .unitaDiMisura(dettaglio.getUnitaDiMisura())
                 .quantitaProdotto(dettaglio.getQuantita())
                 .idProdotto(dettaglio.getProdotto().getIdProdotto())
+                .nomeProdotto(dettaglio.getProdotto().getNome())
                 .build();
     }
 

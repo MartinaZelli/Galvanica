@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main_layout}">
+
+<head>
+    <title>Aggiunta a scatti</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Bagno</th>
+            <th scope="col">Moltiplicatore</th>
+            <th scope="col">Resto Scatti</th>
+            <th scope="col">Aggiunta</th>
+            <th scope="col">Messaggio</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="risposta: ${alimentazioneRispostaList}">
+            <td><span th:text="${risposta.getNomeBagno()}"/>
+            </td>
+            <td>
+                <span th:text="${risposta.getMoltiplicatoreAlimentazione()}"/>
+
+            </td>
+            <td>
+                <span th:text="${risposta.getRestoScatti()}"/>
+            </td>
+            <td>
+                <div th:each="aggiunta:${risposta.getOggettoAggiuntaList()}">
+                    <span th:text="${aggiunta.getNomeProdotto()}"/>-->
+                    <span th:text="${aggiunta.getQuantitaProdotto()}"/>
+                    <span th:text="${aggiunta.getUnitaDiMisura()}"/>
+                </div>
+            </td>
+            <td>
+                <span th:text="${risposta.getMessaggio()}"/>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+</body>
+
+</html>

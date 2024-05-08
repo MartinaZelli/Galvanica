@@ -14,6 +14,7 @@ import java.util.List;
 public class AlimentazioneRisposta {
 
     private Long idBagno;
+    private String nomeBagno;
     private List<OggettoAggiunta> oggettoAggiuntaList;
     private Double moltiplicatoreAlimentazione;
     private Integer restoScatti;
