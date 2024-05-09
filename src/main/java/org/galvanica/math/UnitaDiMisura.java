@@ -7,6 +7,7 @@ public enum UnitaDiMisura {
 
     ML(true),
     L(true),
+    MG(false),
     G(false),
     KG(false);
 

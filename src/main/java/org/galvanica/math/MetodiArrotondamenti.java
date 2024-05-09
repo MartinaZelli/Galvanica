@@ -43,7 +43,7 @@ public class MetodiArrotondamenti {
         double moltiplicatoreApprossimato = aggiuntaApprossimata / primoValoreVolumetrico * 1;
         double scattiAggiunti = moltiplicatoreApprossimato * scattiAlimentazione;
         risposta.setRestoScatti(Math.round(scattiAttuali - scattiAggiunti));
-        risposta.setMoltiplicatoreAlimentazione(moltiplicatoreApprossimato);
+        risposta.setMoltiplicatoreAlimentazione(Math.round(moltiplicatoreApprossimato * 100) / 100D);
         return risposta;
     }
 
