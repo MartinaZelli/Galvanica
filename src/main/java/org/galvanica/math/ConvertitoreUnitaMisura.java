@@ -1,8 +1,24 @@
 package org.galvanica.math;
 
 public class ConvertitoreUnitaMisura {
-    public Double convertiMisura(double misura, UnitaDiMisura unitaDiMisuraFROM,
-                                 UnitaDiMisura unitaDiMisuraTO) {
+    public Integer convertiQuantitaToDatabase(Double misura,
+                                              UnitaDiMisura unitaDiMisuraFROM) {
+        if (unitaDiMisuraFROM == UnitaDiMisura.MG || unitaDiMisuraFROM == UnitaDiMisura.ML) {
+            return misura.intValue();
+        }
+        if (unitaDiMisuraFROM == UnitaDiMisura.KG) {
+            double misuracorretta = misura * 1000000;
+            return (int) misuracorretta;
+        } else {
+            double misuracorretta = misura * 1000;
+            return (int) misuracorretta;
+        }
+    }
+
+
+    public Double convertiQuantitaGenerico(Double misura,
+                                           UnitaDiMisura unitaDiMisuraFROM,
+                                           UnitaDiMisura unitaDiMisuraTO) {
         if (unitaDiMisuraFROM.isSonoVolume() != unitaDiMisuraTO.isSonoVolume()) {
             throw new RuntimeException(
                     "non si trasforma il volume in peso e viceversa, la matematica non è un opinione.");

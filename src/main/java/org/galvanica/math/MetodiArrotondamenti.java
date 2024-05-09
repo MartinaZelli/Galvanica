@@ -79,4 +79,39 @@ public class MetodiArrotondamenti {
         return aggiunta - resto;
     }
 
+    public static Double convertiQuantitaPerDto(Integer quantita,
+                                                Boolean sonoVolume) {
+        if (sonoVolume) {
+            if (quantita <= 1000) {
+                return quantita.doubleValue();
+            }
+            return quantita.doubleValue() / 1000;
+        }
+        if (quantita <= 1000) {
+            return quantita.doubleValue();
+        }
+        if (quantita >= 1000000) {
+            return quantita.doubleValue() / 1000000;
+        }
+        return quantita.doubleValue() / 1000;
+    }
+
+    public static UnitaDiMisura convertiUnitaMisuraPerDto(Integer quantita,
+                                                          Boolean sonoVolume) {
+        if (sonoVolume) {
+            if (quantita <= 1000) {
+                return UnitaDiMisura.ML;
+            }
+            return UnitaDiMisura.L;
+        }
+        if (quantita <= 1000) {
+            return UnitaDiMisura.MG;
+        }
+        if (quantita >= 1000000) {
+            return UnitaDiMisura.KG;
+        }
+        return UnitaDiMisura.G;
+
+    }
+
 }

@@ -16,7 +16,7 @@ public class DettaglioAlimentazione {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idDettaglio;
     private String note;
-    private Double quantitaProdotto;
+    private Integer quantitaProdotto;
     @Enumerated(EnumType.STRING)
     private UnitaDiMisura unitaDiMisura;
     @ManyToOne

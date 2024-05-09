@@ -1,6 +1,8 @@
 package org.galvanica.service.CRUD;
 
 import org.galvanica.dto.dtoConModel.DettaglioAlimentazioneDto;
+import org.galvanica.math.ConvertitoreUnitaMisura;
+import org.galvanica.math.UnitaDiMisura;
 import org.galvanica.model.Alimentazione;
 import org.galvanica.model.DettaglioAlimentazione;
 import org.galvanica.model.Prodotto;
@@ -16,12 +18,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static org.galvanica.math.MetodiArrotondamenti.convertiQuantitaPerDto;
+import static org.galvanica.math.MetodiArrotondamenti.convertiUnitaMisuraPerDto;
+
 @Service
 public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlimentazioneDto, DettaglioAlimentazione> {
 
     private final DettaglioAlimentazioneRepository dettaglioAlimentazioneRepository;
     private final ProdottoRepository prodottoRepository;
     private final AlimentazioneRepository alimentazioneRepository;
+    private ConvertitoreUnitaMisura convertitore;
 
     public DettaglioAlimentazioneService(
             DettaglioAlimentazioneRepository dettaglioAlimentazioneRepository,
@@ -71,14 +77,19 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
                     "il prodotto è già inserito nel dettaglio alimentazione. " +
                             "Si prega di modificare o eliminare quello precedente.");
         }
-
         DettaglioAlimentazione dettaglioAlimentazione = DettaglioAlimentazione.builder()
                 .note(elemento.getNote())
-                .quantitaProdotto(elemento.getQuantitaProdotto())
-                .unitaDiMisura(elemento.getUnitaDiMisura())
                 .prodotto(prodottoOptional.get())
                 .alimentazione(alimentazioneOptional.get())
                 .build();
+        UnitaDiMisura unita = UnitaDiMisura.MG;
+        if (elemento.getUnitaDiMisura().isSonoVolume()) {
+            unita = UnitaDiMisura.ML;
+        }
+        Integer quantita = convertitore.convertiQuantitaToDatabase(elemento.getQuantitaProdotto(),
+                elemento.getUnitaDiMisura());
+        dettaglioAlimentazione.setUnitaDiMisura(unita);
+        dettaglioAlimentazione.setQuantitaProdotto(quantita);
         dettaglioAlimentazione = dettaglioAlimentazioneRepository.save(
                 dettaglioAlimentazione);
         return fromModelToDto(dettaglioAlimentazione);
@@ -125,12 +136,20 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
             throw new RuntimeException(
                     "mettere un id prodotto corretto");
         }
+
         DettaglioAlimentazione dettaglioAlimentazione = dettaglioAlimentazioneOptional.get();
         dettaglioAlimentazione.setNote(elemento.getNote());
-        dettaglioAlimentazione.setQuantitaProdotto(elemento.getQuantitaProdotto());
-        dettaglioAlimentazione.setUnitaDiMisura(elemento.getUnitaDiMisura());
         dettaglioAlimentazione.setProdotto(prodottoOptional.get());
         dettaglioAlimentazione.setAlimentazione(alimentazioneOptional.get());
+        UnitaDiMisura unita = UnitaDiMisura.MG;
+        if (elemento.getUnitaDiMisura().isSonoVolume()) {
+            unita = UnitaDiMisura.ML;
+        }
+        Integer quantita = convertitore.convertiQuantitaToDatabase(elemento.getQuantitaProdotto(),
+                elemento.getUnitaDiMisura());
+        dettaglioAlimentazione.setUnitaDiMisura(unita);
+        dettaglioAlimentazione.setQuantitaProdotto(quantita);
+
         dettaglioAlimentazione = dettaglioAlimentazioneRepository.save(
                 dettaglioAlimentazione);
 
@@ -148,11 +167,17 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
     @Override
     public DettaglioAlimentazioneDto fromModelToDto(
             DettaglioAlimentazione oggettoDaTrasformare) {
+        Double quantitaProdotto = convertiQuantitaPerDto(
+                oggettoDaTrasformare.getQuantitaProdotto(),
+                oggettoDaTrasformare.getUnitaDiMisura().isSonoVolume());
+        UnitaDiMisura unita = convertiUnitaMisuraPerDto(
+                oggettoDaTrasformare.getQuantitaProdotto(),
+                oggettoDaTrasformare.getUnitaDiMisura().isSonoVolume());
         return DettaglioAlimentazioneDto.builder()
                 .idDettaglio(oggettoDaTrasformare.getIdDettaglio())
                 .note(oggettoDaTrasformare.getNote())
-                .quantitaProdotto(oggettoDaTrasformare.getQuantitaProdotto())
-                .unitaDiMisura(oggettoDaTrasformare.getUnitaDiMisura())
+                .quantitaProdotto(quantitaProdotto)
+                .unitaDiMisura(unita)
                 .idProdotto(oggettoDaTrasformare.getProdotto().getIdProdotto())
                 .idAlimentazione(oggettoDaTrasformare.getAlimentazione()
                         .getIdAlimentazione())
