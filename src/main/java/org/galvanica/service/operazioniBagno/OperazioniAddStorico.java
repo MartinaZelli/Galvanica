@@ -5,6 +5,7 @@ import org.galvanica.dto.AlimentazioneRisposta;
 import org.galvanica.dto.OggettoAggiunta;
 import org.galvanica.math.MetodiArrotondamenti;
 import org.galvanica.math.ScattiMath;
+import org.galvanica.math.UnitaDiMisura;
 import org.galvanica.model.*;
 import org.galvanica.repository.AlimentazioneRepository;
 import org.galvanica.repository.BagnoRepository;
@@ -14,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
+
+import static org.galvanica.math.MetodiArrotondamenti.convertiQuantitaPerDto;
+import static org.galvanica.math.MetodiArrotondamenti.convertiUnitaMisuraPerDto;
 
 @Service
 public class OperazioniAddStorico {
@@ -78,7 +82,7 @@ public class OperazioniAddStorico {
         }
 
         //conti: trova valore volumetrico ; valore null gestito in MetodiArrotondamenti.alimentazioneScattiMath
-        Double primoValoreVolumetrico = trovaPrimoValoreVolumetrico(alimentazione);
+        Integer primoValoreVolumetrico = trovaPrimoValoreVolumetrico(alimentazione);
 
         //trova scattiMath: private long restoScatti;
         //                  private double moltiplicatoreAlimentazione;
@@ -153,17 +157,18 @@ public class OperazioniAddStorico {
             StoricoGenerale storicoGenerale) {
         List<StoricoDettaglio> storicoDettaglioList = new ArrayList<>();
         for (DettaglioAlimentazione dettaglio : alimentazione.getDettaglioAlimentazioneList()) {
-            double quantitaProdottoAggiunta = dettaglio.getQuantitaProdotto()
+            Double quantitaProdottoAggiunta = dettaglio.getQuantitaProdotto()
                     * scattiMath.getMoltiplicatoreAlimentazione();
             if (dettaglio.getUnitaDiMisura().isSonoVolume()) {
                 quantitaProdottoAggiunta = MetodiArrotondamenti.moltiplicatoreApprossimatoPerAggiunta(
                         quantitaProdottoAggiunta);
             }
+            //todo: potrebbe fare casini??????? farà bene gli arrotondamenti?
             StoricoDettaglio storicoDettaglio = storicoDettaglioRepository.save(
                     StoricoDettaglio.builder()
                             .prodotto(dettaglio.getProdotto())
                             .storicoGenerale(trovaStoricoGenerale(storicoGenerale.getIdStorico()))
-                            .quantita(quantitaProdottoAggiunta)
+                            .quantita((int) Math.round(quantitaProdottoAggiunta))
                             .unitaDiMisura(dettaglio.getUnitaDiMisura())
                             .build());
 
@@ -364,15 +369,22 @@ public class OperazioniAddStorico {
 
 
     private OggettoAggiunta oggettoAggiuntaTrasformer(StoricoDettaglio dettaglio) {
+        Double quantitaProdotto = convertiQuantitaPerDto(
+                dettaglio.getQuantita(),
+                dettaglio.getUnitaDiMisura().isSonoVolume());
+        UnitaDiMisura unita = convertiUnitaMisuraPerDto(
+                dettaglio.getQuantita(),
+                dettaglio.getUnitaDiMisura().isSonoVolume());
         return OggettoAggiunta.builder()
-                .unitaDiMisura(dettaglio.getUnitaDiMisura())
-                .quantitaProdotto(dettaglio.getQuantita())
+                .unitaDiMisura(unita)
+                .quantitaProdotto(quantitaProdotto)
                 .idProdotto(dettaglio.getProdotto().getIdProdotto())
                 .nomeProdotto(dettaglio.getProdotto().getNome())
                 .build();
     }
 
-    private Double trovaPrimoValoreVolumetrico(Alimentazione alimentazione) {
+    private Integer trovaPrimoValoreVolumetrico(Alimentazione alimentazione) {
+
         return alimentazione
                 .getDettaglioAlimentazioneList()
                 .stream()

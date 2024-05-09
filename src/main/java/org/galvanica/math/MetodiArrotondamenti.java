@@ -4,7 +4,7 @@ public class MetodiArrotondamenti {
     public static ScattiMath alimentazioneScattiMath(int scattiAttuali,
                                                      int scattiAlimentazione,
                                                      boolean arrotondaValori,
-                                                     Double primoValoreVolumetrico) {
+                                                     Integer primoValoreVolumetrico) {
         //risposta:  private long restoScatti;
         //           private double moltiplicatoreAlimentazione;
         ScattiMath risposta = new ScattiMath();

@@ -23,7 +23,7 @@ public class StoricoDettaglio {
     private Prodotto prodotto;
     @ManyToOne
     private StoricoGenerale storicoGenerale;
-    private Double quantita;
+    private Integer quantita;
     @Enumerated(EnumType.STRING)
     private UnitaDiMisura unitaDiMisura;
 
