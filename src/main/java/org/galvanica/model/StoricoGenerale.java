@@ -30,6 +30,8 @@ public class StoricoGenerale {
     private LocalDate dataControlloTempo;
     @Builder.Default
     private Boolean concluso = false;
+    @Builder.Default
+    private Boolean annullato = false;
     private Boolean sonoScatti;
     @OneToMany(mappedBy = "storicoGenerale", cascade = CascadeType.REMOVE)
     private List<StoricoDettaglio> storicoDettaglioList;

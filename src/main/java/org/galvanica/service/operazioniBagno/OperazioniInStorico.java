@@ -18,7 +18,7 @@ public class OperazioniInStorico {
     private final BagnoRepository bagnoRepository;
     private final StoricoGeneraleRepository storicoGeneraleRepository;
     private final StoricoDettaglioRepository storicoDettaglioRepository;
-    private final AlimentazioneRepository alimentazioneRepository;
+
 
     public OperazioniInStorico(BagnoRepository bagnoRepository,
                                StoricoGeneraleRepository storicoGeneraleRepository,
@@ -27,7 +27,6 @@ public class OperazioniInStorico {
         this.bagnoRepository = bagnoRepository;
         this.storicoGeneraleRepository = storicoGeneraleRepository;
         this.storicoDettaglioRepository = storicoDettaglioRepository;
-        this.alimentazioneRepository = alimentazioneRepository;
     }
 
     public void eseguiSingolaAggiunta(Long idStoricoDettaglio) {
@@ -45,6 +44,7 @@ public class OperazioniInStorico {
         aggiornaBagnoEStoricoGenerale(storicoDettaglio.getStoricoGenerale());
     }
 
+
     public void confermaInteraAlimentazione(Long idStoricoGenerale) {
         StoricoGenerale storicoGenerale = trovaStoricoGenerale(idStoricoGenerale);
         if (!storicoGenerale.getStoricoDettaglioList().isEmpty()) {
@@ -55,10 +55,13 @@ public class OperazioniInStorico {
         aggiornaBagnoEStoricoGenerale(storicoGenerale);
     }
 
-    ///todo: gestisci null su sonoScatti
     private void aggiornaBagnoEStoricoGenerale(
             StoricoGenerale storicoGenerale) {
         Boolean sonoScatti = storicoGenerale.getSonoScatti();
+        if (sonoScatti == null) {
+            throw new RuntimeException(
+                    "il valore booleano 'sonoScatti' di questo storicoGenerale è null");
+        }
         List<StoricoGenerale> storicoGeneraleListDaEseguire = storicoGeneraleRepository
                 .storicoGeneraleDescList(false,
                         storicoGenerale.getBagno().getIdBagno(),
@@ -68,13 +71,16 @@ public class OperazioniInStorico {
             throw new RuntimeException(
                     "vanno aggiornati gli storici dal più vecchio al più nuovo");
         }
+        if (sonoScatti) {
+            storicoGenerale.getBagno()
+                    .setRestoScatti(storicoGenerale.getRestoScatti());
+            storicoGenerale.getBagno()
+                    .setScattiTotali(storicoGenerale.getScattiTotali());
+            bagnoRepository.save(storicoGenerale.getBagno());
+        }
         storicoGenerale.setConcluso(true);
         storicoGenerale.setDataFine(LocalDateTime.now());
         storicoGeneraleRepository.save(storicoGenerale);
-        storicoGenerale.getBagno().setRestoScatti(storicoGenerale.getRestoScatti());
-        storicoGenerale.getBagno()
-                .setScattiTotali(storicoGenerale.getScattiTotali());
-        bagnoRepository.save(storicoGenerale.getBagno());
     }
 
     private void eseguiStoricoDettaglio(StoricoDettaglio storicoDettaglio) {
@@ -106,5 +112,74 @@ public class OperazioniInStorico {
                 "storico non trovato per id " + id));
     }
 
+    public void escludiSingolaAggiunta(Long idStoricoDettaglio) {
+        StoricoDettaglio storicoDettaglio = trovaStoricoDettaglio(idStoricoDettaglio);
+        if (storicoDettaglio.getEseguito()) {
+            throw new RuntimeException(
+                    "se il DettaglioStorico è eseguito, non può essere anche escluso");
+        }
+        escludiStoricoDettaglio(storicoDettaglio);
+        if (!veroSeListaStoricoDettaglioCompletata(storicoDettaglio.getStoricoGenerale())) {
+            return;
+            //todo: non so se conviene fare uscire qualcosa dal metodo per capire se anche lo storicoGenerale è aggiornato oppure no.
+            //aggiornare gli scatti solo se l-aggiunta che sto confermando e la piu vecchia aggiunta da eseguire nel bagno
+        }
+        if (!aggiornaStoricoGeneraleDaAnnullare(storicoDettaglio.getStoricoGenerale())) {
+            aggiornaBagnoEStoricoGenerale(storicoDettaglio.getStoricoGenerale());
+        }
+    }
 
+    private void escludiStoricoDettaglio(StoricoDettaglio storicoDettaglio) {
+        if (storicoDettaglio.getEseguito()) {
+            return;
+        }
+        storicoDettaglio.setEscluso(true);
+        storicoDettaglioRepository.save(storicoDettaglio);
+    }
+
+    private boolean aggiornaStoricoGeneraleDaAnnullare(
+            StoricoGenerale storicoGenerale) {
+        List<StoricoDettaglio> storicoDettaglioList = storicoGenerale.getStoricoDettaglioList();
+        for (StoricoDettaglio dettaglio : storicoDettaglioList) {
+            if (dettaglio.getEseguito() || !dettaglio.getEscluso()) {
+                return false;
+            }
+        }
+        storicoGenerale.setAnnullato(true);
+        storicoGenerale.setConcluso(true);
+        storicoGenerale.setDataFine(LocalDateTime.now());
+        storicoGeneraleRepository.save(storicoGenerale);
+        return true;
+    }
+
+    public void annullaInteraAlimentazione(Long idStoricoGenerale) {
+        StoricoGenerale storicoGenerale = trovaStoricoGenerale(idStoricoGenerale);
+        if (!storicoGenerale.getStoricoDettaglioList().isEmpty()) {
+            for (StoricoDettaglio storicoDettaglio : storicoGenerale.getStoricoDettaglioList()) {
+                if (storicoDettaglio.getEseguito()) {
+                    throw new RuntimeException("vi è almeno un aggiunta eseguita. " +
+                            "Per annullare l'intera alimentazione nessuna aggiunta deve essere eseguita.");
+                }
+                if (!storicoDettaglio.getEscluso()) {
+                    escludiStoricoDettaglio(storicoDettaglio);
+                }
+            }
+        }
+        storicoGenerale.setAnnullato(true);
+        storicoGenerale.setConcluso(true);
+        storicoGenerale.setDataFine(LocalDateTime.now());
+        storicoGeneraleRepository.save(storicoGenerale);
+    }
+
+    public void eseguiSingolaAggiuntaList(List<Long> idStoricoDettaglioList) {
+        for (Long idStoricoDettaglio : idStoricoDettaglioList) {
+            eseguiSingolaAggiunta(idStoricoDettaglio);
+        }
+    }
+
+    public void escludiSingolaAggiuntaList(List<Long> idStoricoDettaglioList) {
+        for (Long idStoricoDettaglio : idStoricoDettaglioList) {
+            escludiSingolaAggiunta(idStoricoDettaglio);
+        }
+    }
 }
