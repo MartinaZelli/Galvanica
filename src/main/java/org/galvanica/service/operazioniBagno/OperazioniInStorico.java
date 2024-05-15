@@ -172,6 +172,8 @@ public class OperazioniInStorico {
     }
 
     public void eseguiSingolaAggiuntaList(List<Long> idStoricoDettaglioList) {
+        idStoricoDettaglioList = storicoDettaglioRepository.orderAscIdList(
+                idStoricoDettaglioList);
         for (Long idStoricoDettaglio : idStoricoDettaglioList) {
             eseguiSingolaAggiunta(idStoricoDettaglio);
         }

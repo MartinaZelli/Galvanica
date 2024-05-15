@@ -19,6 +19,8 @@ public class AlimentazioneRisposta {
     private Double moltiplicatoreAlimentazione;
     private Integer restoScatti;
     private String messaggio;
+    private Long idStoricoGenerale;
+    private List<Long> idStoricoDettaglioList;
 
 
 }

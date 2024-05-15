@@ -137,14 +137,20 @@ public class OperazioniAddStorico {
                 storicoGenerale);
         storicoGeneraleListDaEseguire = storicoGeneraleRepository.storicoGeneraleDescList(
                 false, id, true);
+        List<OggettoAggiunta> oggettoAggiuntaList = aggiuntaDaStoriciPassatiList(
+                storicoGeneraleListDaEseguire);
+        List<Long> idDettaglioList = oggettoAggiuntaList.stream()
+                .flatMap(oggettoAggiunta -> oggettoAggiunta.getIdStoricoDettaglioList()
+                        .stream()).toList();
 
         return AlimentazioneRisposta.builder()
                 .idBagno(id)
                 .nomeBagno(bagno.getNome())
                 //TODO: verificare che basti in AlimentazioneRisposta aggiuntaDaStoriciPassatiList
                 // e non debba essere implementata scattiConteggiProdotti.
-                .oggettoAggiuntaList(aggiuntaDaStoriciPassatiList(
-                        storicoGeneraleListDaEseguire))
+                .oggettoAggiuntaList(oggettoAggiuntaList)
+                .idStoricoGenerale(storicoGenerale.getIdStorico())
+                .idStoricoDettaglioList(idDettaglioList)
                 .restoScatti((int) scattiMath.getRestoScatti())
                 .moltiplicatoreAlimentazione(scattiMath.getMoltiplicatoreAlimentazione())
                 .build();
@@ -187,7 +193,7 @@ public class OperazioniAddStorico {
         /*ricerca uno storico dettaglio:
         1.filtra storicoGeneraleList
         2.recupero lo storicoDettaglio
-        3.se non c'0è faccio storicoDettaglioRepository.storicoDettaglioList(
+        3.se non c'è faccio storicoDettaglioRepository.storicoDettaglioList(
                             s.getIdStorico(),
                             false,
                             false); (ps--per lazy!)
@@ -218,6 +224,7 @@ public class OperazioniAddStorico {
 
 
         for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
+
             if (oggettoAggiuntaMap.containsKey(storicoDettaglio.getProdotto()
                     .getIdProdotto())) {
                 Double quantitaProdotto = oggettoAggiuntaMap.get(storicoDettaglio.getProdotto()
@@ -225,15 +232,17 @@ public class OperazioniAddStorico {
                         + storicoDettaglio.getQuantita();
                 oggettoAggiuntaMap.get(storicoDettaglio.getProdotto()
                         .getIdProdotto()).setQuantitaProdotto(quantitaProdotto);
+                oggettoAggiuntaMap.get(storicoDettaglio.getProdotto()
+                                .getIdProdotto())
+                        .getIdStoricoDettaglioList()
+                        .add(storicoDettaglio.getIdStoricoDettaglio());
             }
-
             if (!oggettoAggiuntaMap.containsKey(storicoDettaglio.getProdotto()
                     .getIdProdotto())) {
                 oggettoAggiuntaMap.put(storicoDettaglio.getProdotto()
                                 .getIdProdotto(),
                         oggettoAggiuntaTrasformer(storicoDettaglio));
             }
-
         }
         return new ArrayList<>(oggettoAggiuntaMap.values());
     }
@@ -375,11 +384,14 @@ public class OperazioniAddStorico {
         UnitaDiMisura unita = convertiUnitaMisuraPerDto(
                 dettaglio.getQuantita(),
                 dettaglio.getUnitaDiMisura().isSonoVolume());
+        List<Long> list = new ArrayList<>();
+        list.add(dettaglio.getIdStoricoDettaglio());
         return OggettoAggiunta.builder()
                 .unitaDiMisura(unita)
                 .quantitaProdotto(quantitaProdotto)
                 .idProdotto(dettaglio.getProdotto().getIdProdotto())
                 .nomeProdotto(dettaglio.getProdotto().getNome())
+                .idStoricoDettaglioList(list)
                 .build();
     }
 

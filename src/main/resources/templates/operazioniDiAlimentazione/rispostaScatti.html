@@ -9,42 +9,57 @@
 
 <body>
 <div layout:fragment="content">
+    <form th:attr="hx-post=@{'/operazioni/alimentazioni/confermaTutto'}"
+          hx-target="body"
+          hx-swap="outerHTML">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Bagno</th>
+                <th scope="col">Moltiplicatore</th>
+                <th scope="col">Resto Scatti</th>
+                <th scope="col">Aggiunta</th>
+                <th scope="col">Messaggio</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="risposta: ${alimentazioneRispostaList}">
+                <td><span th:text="${risposta.getNomeBagno()}"/>
+                </td>
+                <td>
+                    <span th:text="${risposta.getMoltiplicatoreAlimentazione()}"/>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">Bagno</th>
-            <th scope="col">Moltiplicatore</th>
-            <th scope="col">Resto Scatti</th>
-            <th scope="col">Aggiunta</th>
-            <th scope="col">Messaggio</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="risposta: ${alimentazioneRispostaList}">
-            <td><span th:text="${risposta.getNomeBagno()}"/>
-            </td>
-            <td>
-                <span th:text="${risposta.getMoltiplicatoreAlimentazione()}"/>
+                </td>
+                <td>
+                    <span th:text="${risposta.getRestoScatti()}"/>
+                </td>
+                <td>
+                    <div th:each="aggiunta:${risposta.getOggettoAggiuntaList()}">
+                        <span th:text="${aggiunta.getNomeProdotto()}"/>-->
+                        <span th:text="${aggiunta.getQuantitaProdotto()}"/>
+                        <span th:text="${aggiunta.getUnitaDiMisura()}"/>
+                    </div>
+                </td>
+                <td>
+                    <span th:text="${risposta.getMessaggio()}"/>
 
-            </td>
-            <td>
-                <span th:text="${risposta.getRestoScatti()}"/>
-            </td>
-            <td>
-                <div th:each="aggiunta:${risposta.getOggettoAggiuntaList()}">
-                    <span th:text="${aggiunta.getNomeProdotto()}"/>-->
-                    <span th:text="${aggiunta.getQuantitaProdotto()}"/>
-                    <span th:text="${aggiunta.getUnitaDiMisura()}"/>
-                </div>
-            </td>
-            <td>
-                <span th:text="${risposta.getMessaggio()}"/>
-            </td>
+                    <input th:each="id:${risposta.getIdStoricoDettaglioList()}"
+                           type="hidden"
+                           name="idDettaglioList"
+                           th:value="${id}">
+                </td>
 
-        </tr>
-        </tbody>
-    </table>
+            </tr>
+            </tbody>
+        </table>
+
+
+        <button class="btn btn-outline-primary"
+                type="submit">
+            Conferma tutte le alimentazioni
+        </button>
+    </form>
+
 
 </div>
 </body>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="it"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main_layout}">
+
+<head>
+    <title>Storico home</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <form
+            hx-ext="json-enc"
+            hx-target="body"
+            hx-swap="outerHTML">
+        <button class="btn btn-outline-primary"
+                type="submit">
+            Mostra alimentazioni non eseguite
+        </button>
+    </form>
+    <form
+            hx-ext="json-enc"
+            hx-target="body"
+            hx-swap="outerHTML">
+        <button class="btn btn-outline-primary"
+                type="submit">
+            Mostra alimentazioni eseguite
+        </button>
+    </form>
+    <form
+            hx-ext="json-enc"
+            hx-target="body"
+            hx-swap="outerHTML">
+        <button class="btn btn-outline-primary"
+                type="submit">
+            Mostra tutte le alimentazioni
+        </button>
+    </form>
+</div>
+</body>
+
+</html>

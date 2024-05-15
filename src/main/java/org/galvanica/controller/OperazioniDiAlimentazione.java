@@ -6,6 +6,7 @@ import org.galvanica.dto.AlimentazioneSingolaDto;
 import org.galvanica.service.CRUD.AlimentazioneService;
 import org.galvanica.service.CRUD.BagnoService;
 import org.galvanica.service.operazioniBagno.OperazioniAddStorico;
+import org.galvanica.service.operazioniBagno.OperazioniInStorico;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,13 +21,17 @@ public class OperazioniDiAlimentazione {
     private final BagnoService bagnoService;
     private final AlimentazioneService alimentazioneService;
     private final OperazioniAddStorico operazioniAddStoricoService;
+    private final OperazioniInStorico operazioniInStorico;
 
     public OperazioniDiAlimentazione(BagnoService bagnoService,
                                      AlimentazioneService alimentazioneService,
-                                     OperazioniAddStorico operazioniAddStoricoService) {
+                                     OperazioniAddStorico operazioniAddStoricoService,
+                                     OperazioniInStorico operazioniInStorico) {
         this.bagnoService = bagnoService;
         this.alimentazioneService = alimentazioneService;
         this.operazioniAddStoricoService = operazioniAddStoricoService;
+        this.operazioniInStorico = operazioniInStorico;
+
     }
 
     @GetMapping("/scatti")
@@ -65,6 +70,14 @@ public class OperazioniDiAlimentazione {
         model.addAttribute("alimentazioneRispostaList", alimentazioneRispostaList);
         System.out.println(alimentazioneRispostaList);
         return "operazioniDiAlimentazione/rispostaScatti";
+    }
+
+
+    @PostMapping("/confermaTutto")
+    public String confermaTutto(Model model,
+                                @RequestParam List<Long> idDettaglioList) {
+        operazioniInStorico.eseguiSingolaAggiuntaList(idDettaglioList);
+        return "";
     }
 
     @GetMapping("/rispostaScatti")

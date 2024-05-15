@@ -17,4 +17,10 @@ public class HomeController {
     public String operazioniDiAlimentazioneHome(Model model) {
         return "operazioniDiAlimentazione/home";
     }
+
+    @GetMapping("/storico/home")
+    public String storico(Model model) {
+        return "storico/home";
+    }
+
 }
