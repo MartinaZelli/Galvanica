@@ -15,6 +15,8 @@ import java.util.List;
 @Entity
 public class StoricoGenerale {
 
+    //todo: inserire scatti inseriti come parametro!!
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idStorico;
