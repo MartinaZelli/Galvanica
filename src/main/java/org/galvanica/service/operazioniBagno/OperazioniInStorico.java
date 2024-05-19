@@ -20,6 +20,8 @@ public class OperazioniInStorico {
     private final StoricoDettaglioRepository storicoDettaglioRepository;
 
 
+    //todo: impostare i controlli a monte di tutti i metodi
+
     public OperazioniInStorico(BagnoRepository bagnoRepository,
                                StoricoGeneraleRepository storicoGeneraleRepository,
                                StoricoDettaglioRepository storicoDettaglioRepository,
@@ -66,10 +68,12 @@ public class OperazioniInStorico {
                 .storicoGeneraleDescList(false,
                         storicoGenerale.getBagno().getIdBagno(),
                         sonoScatti);
-        if (!Objects.equals(storicoGeneraleListDaEseguire.getLast()
-                .getIdStorico(), storicoGenerale.getIdStorico())) {
-            throw new RuntimeException(
-                    "vanno aggiornati gli storici dal più vecchio al più nuovo");
+        if (!storicoGeneraleListDaEseguire.isEmpty()) {
+            if (!Objects.equals(storicoGeneraleListDaEseguire.getLast()
+                    .getIdStorico(), storicoGenerale.getIdStorico())) {
+                throw new RuntimeException(
+                        "vanno aggiornati gli storici dal più vecchio al più nuovo");
+            }
         }
         if (sonoScatti) {
             storicoGenerale.getBagno()

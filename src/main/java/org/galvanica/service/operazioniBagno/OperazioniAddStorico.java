@@ -28,6 +28,7 @@ public class OperazioniAddStorico {
     private final AlimentazioneRepository alimentazioneRepository;
 
     private final EntityManager entityManager;
+//todo: impostare i controlli a monte di tutti i metodi
 
     //todo: attenzione, quando si confermano le aggiunte storico precedenti vanno approvate in ordine crescente di data, mai al contrario o non tornano gli scatti totali e parziali
 //todo: attenzione! in questo momentoo viene ricercato su StoricoGenerale tutte gli storici (sia con il parametro scatti che con il parametro tempo), da implementare controllo!

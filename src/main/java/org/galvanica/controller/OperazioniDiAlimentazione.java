@@ -1,6 +1,7 @@
 package org.galvanica.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import org.galvanica.dto.AlimentazioneRisposta;
 import org.galvanica.dto.AlimentazioneSingolaDto;
 import org.galvanica.service.CRUD.AlimentazioneService;
@@ -74,10 +75,11 @@ public class OperazioniDiAlimentazione {
 
 
     @PostMapping("/confermaTutto")
+    @Transactional
     public String confermaTutto(Model model,
                                 @RequestParam List<Long> idDettaglioList) {
         operazioniInStorico.eseguiSingolaAggiuntaList(idDettaglioList);
-        return "";
+        return "operazioniDiAlimentazione/confermaInteraAlimentazione";
     }
 
     @GetMapping("/rispostaScatti")
