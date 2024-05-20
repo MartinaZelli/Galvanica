@@ -18,6 +18,10 @@ public class AlimentazioneRisposta {
     private List<OggettoAggiunta> oggettoAggiuntaList;
     private Double moltiplicatoreAlimentazione;
     private Integer restoScatti;
+    private Integer scattiAlimentazione;
+    private Integer scattiTotali;
+    private Integer scattiInseriti;
+    private Integer scattiParzialiPrecedenti;
     private String messaggio;
     private Long idStoricoGenerale;
     private List<Long> idStoricoDettaglioList;

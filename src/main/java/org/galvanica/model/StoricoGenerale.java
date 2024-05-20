@@ -16,7 +16,7 @@ import java.util.List;
 public class StoricoGenerale {
 
     //todo: inserire scatti inseriti come parametro!!
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idStorico;
@@ -24,6 +24,8 @@ public class StoricoGenerale {
     private Bagno bagno;
     private Integer scattiTotali;
     private Integer restoScatti;
+    private Integer scattiInseriti;
+
     @ManyToOne
     private Alimentazione alimentazione;
     @Builder.Default
