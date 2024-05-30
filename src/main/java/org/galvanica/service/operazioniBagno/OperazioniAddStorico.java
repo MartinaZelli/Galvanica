@@ -170,7 +170,6 @@ public class OperazioniAddStorico {
                 quantitaProdottoAggiunta = MetodiArrotondamenti.moltiplicatoreApprossimatoPerAggiunta(
                         quantitaProdottoAggiunta);
             }
-            //todo: potrebbe fare casini??????? farà bene gli arrotondamenti?
             StoricoDettaglio storicoDettaglio = storicoDettaglioRepository.save(
                     StoricoDettaglio.builder()
                             .prodotto(dettaglio.getProdotto())
