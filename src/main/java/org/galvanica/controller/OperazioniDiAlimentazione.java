@@ -6,8 +6,8 @@ import org.galvanica.dto.AlimentazioneRisposta;
 import org.galvanica.dto.AlimentazioneSingolaDto;
 import org.galvanica.service.CRUD.AlimentazioneService;
 import org.galvanica.service.CRUD.BagnoService;
-import org.galvanica.service.operazioniBagno.OperazioniAddStorico;
-import org.galvanica.service.operazioniBagno.OperazioniInStorico;
+import org.galvanica.service.operazioniBagno.AlimentazioneAScattiService;
+import org.galvanica.service.operazioniBagno.StoriciAnnullaOConcludiService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,18 +21,18 @@ import java.util.Map;
 public class OperazioniDiAlimentazione {
     private final BagnoService bagnoService;
     private final AlimentazioneService alimentazioneService;
-    private final OperazioniAddStorico operazioniAddStoricoService;
-    private final OperazioniInStorico operazioniInStorico;
+    private final StoriciAnnullaOConcludiService storiciAnnullaOConcludiService;
+    private final AlimentazioneAScattiService alimentazioneAScattiService;
 
     public OperazioniDiAlimentazione(BagnoService bagnoService,
                                      AlimentazioneService alimentazioneService,
-                                     OperazioniAddStorico operazioniAddStoricoService,
-                                     OperazioniInStorico operazioniInStorico) {
+                                     StoriciAnnullaOConcludiService storiciAnnullaOConcludiService,
+                                     AlimentazioneAScattiService alimentazioneAScattiService) {
         this.bagnoService = bagnoService;
         this.alimentazioneService = alimentazioneService;
-        this.operazioniAddStoricoService = operazioniAddStoricoService;
-        this.operazioniInStorico = operazioniInStorico;
+        this.storiciAnnullaOConcludiService = storiciAnnullaOConcludiService;
 
+        this.alimentazioneAScattiService = alimentazioneAScattiService;
     }
 
     @GetMapping("/scatti")
@@ -66,7 +66,7 @@ public class OperazioniDiAlimentazione {
     public String calcoloAlimentazione(Model model,
                                        @RequestBody Map<Long, Integer> mappaBagnoScatti) {
         List<AlimentazioneRisposta> alimentazioneRispostaList =
-                operazioniAddStoricoService.scattiCalcolaAlimentazioneList(
+                alimentazioneAScattiService.calcolaAlimentazioneList(
                         mappaBagnoScatti);
         model.addAttribute("alimentazioneRispostaList", alimentazioneRispostaList);
         System.out.println(alimentazioneRispostaList);
@@ -78,7 +78,7 @@ public class OperazioniDiAlimentazione {
     @Transactional
     public String confermaTutto(Model model,
                                 @RequestParam List<Long> idDettaglioList) {
-        operazioniInStorico.eseguiSingolaAggiuntaList(idDettaglioList);
+        storiciAnnullaOConcludiService.eseguiSingolaAggiuntaList(idDettaglioList);
         return "operazioniDiAlimentazione/confermaInteraAlimentazione";
     }
 
@@ -92,7 +92,7 @@ public class OperazioniDiAlimentazione {
     public String calcoloAlimentazioneSingola(
             @RequestBody AlimentazioneSingolaDto alimentazione,
             Model model) {
-        operazioniAddStoricoService.scattiCalcolaAlimentazione(
+        alimentazioneAScattiService.calcolaAlimentazioneNuovo(
                 alimentazione.getIdBagno(),
                 alimentazione.getScatti());
         return scattiSingola(model);

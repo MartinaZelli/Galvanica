@@ -18,8 +18,6 @@ public class Bagno {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idBagno;
     private String nome;
-    private Integer scattiTotali;
-    private Integer restoScatti;
     private Integer litri;
     private LocalDate dataInizio;
     private LocalDate dataFine;

@@ -1,6 +1,7 @@
 package org.galvanica.service.CRUD;
 
 import org.galvanica.dto.dtoConModel.BagnoDto;
+import org.galvanica.math.TipologiaAggiunta;
 import org.galvanica.model.Bagno;
 import org.galvanica.model.StoricoGenerale;
 import org.galvanica.repository.BagnoRepository;
@@ -8,6 +9,7 @@ import org.galvanica.repository.StoricoGeneraleRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,14 +19,12 @@ import java.util.stream.StreamSupport;
 public class BagnoService implements ICRUDService<BagnoDto, Bagno> {
     private final BagnoRepository repository;
     private final StoricoGeneraleRepository storicoGeneraleRepository;
-    private final ProdottoService prodottoService;
+
 
     public BagnoService(BagnoRepository repository,
-                        StoricoGeneraleRepository storicoGeneraleRepository,
-                        ProdottoService prodottoService) {
+                        StoricoGeneraleRepository storicoGeneraleRepository) {
         this.repository = repository;
         this.storicoGeneraleRepository = storicoGeneraleRepository;
-        this.prodottoService = prodottoService;
     }
 
     @Override
@@ -47,12 +47,19 @@ public class BagnoService implements ICRUDService<BagnoDto, Bagno> {
         Bagno bagno = Bagno.builder()
                 .nome(elemento.getNome())
                 .litri(elemento.getLitri())
-                .scattiTotali(elemento.getScattiTotali())
-                .restoScatti(elemento.getRestoScatti())
                 .dataInizio(LocalDate.now())
                 .dataFine(null)
                 .build();
         bagno = repository.save(bagno);
+        storicoGeneraleRepository.save(StoricoGenerale.builder().bagno(bagno)
+                .scattiTotali(elemento.getScattiTotali())
+                .restoScatti(elemento.getRestoScatti())
+                .dataCreazione(LocalDateTime.now())
+                .dataFine(LocalDateTime.now())
+                .concluso(true)
+                .tipologiaAggiunta(TipologiaAggiunta.SCATTI)
+                .note("valori bagno iniziali")
+                .build());
 
         return fromModelToDto(bagno);
 
@@ -76,10 +83,17 @@ public class BagnoService implements ICRUDService<BagnoDto, Bagno> {
         }
         Bagno bagno = bagnoTrovato.get();
         bagno.setNome(elemento.getNome());
-        bagno.setRestoScatti(elemento.getRestoScatti());
-        bagno.setScattiTotali(elemento.getScattiTotali());
         bagno.setLitri(elemento.getLitri());
         bagno = repository.save(bagno);
+        storicoGeneraleRepository.save(StoricoGenerale.builder().bagno(bagno)
+                .scattiTotali(elemento.getScattiTotali())
+                .restoScatti(elemento.getRestoScatti())
+                .dataCreazione(LocalDateTime.now())
+                .dataFine(LocalDateTime.now())
+                .concluso(true)
+                .tipologiaAggiunta(TipologiaAggiunta.SCATTI)
+                .note("modifica manuale")
+                .build());
         return fromModelToDto(bagno);
 
     }
@@ -98,8 +112,6 @@ public class BagnoService implements ICRUDService<BagnoDto, Bagno> {
         return BagnoDto.builder()
                 .idBagno(oggettoDaTrasformare.getIdBagno())
                 .nome(oggettoDaTrasformare.getNome())
-                .scattiTotali(oggettoDaTrasformare.getScattiTotali())
-                .restoScatti(oggettoDaTrasformare.getRestoScatti())
                 .litri(oggettoDaTrasformare.getLitri())
                 .build();
     }

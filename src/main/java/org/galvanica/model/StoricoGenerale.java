@@ -2,6 +2,7 @@ package org.galvanica.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.galvanica.math.TipologiaAggiunta;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -36,9 +37,11 @@ public class StoricoGenerale {
     private Boolean concluso = false;
     @Builder.Default
     private Boolean annullato = false;
-    private Boolean sonoScatti;
+    @Enumerated(EnumType.STRING)
+    private TipologiaAggiunta tipologiaAggiunta;
     @OneToMany(mappedBy = "storicoGenerale", cascade = CascadeType.REMOVE)
     private List<StoricoDettaglio> storicoDettaglioList;
     private Double moltiplicatoreAlimentazione;
+    private String note;
 
 }
