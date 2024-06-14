@@ -1,67 +1,60 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org" lang="it">
+
 <head>
     <meta charset="UTF-8">
     <title>bagnoCard</title>
 </head>
+
 <body>
-<div th:fragment="showCardBagno" class="card-body" hx-target="this"
-     hx-swap="outerHTML">
+    <div th:fragment="showCardBagno" class="card-body" hx-target="this" hx-swap="outerHTML">
 
-    <h5 class="card-title mb-0">
-        <span th:text="${bagno.getIdBagno()}"/>
-        <span th:text="${bagno.getNome()}"/>
-    </h5>
-    <div>Litri: <span th:text="${bagno.getLitri()}"/></div>
-    <div>Scatti Totali: <span th:text="${bagno.getScattiTotali()}"/></div>
-    <div>Resto Scatti: <span th:text="${bagno.getRestoScatti()}"/></div>
-
-    <div>
-        <button th:attr="hx-get=@{'/bagno/vedi/' + ${bagno.getIdBagno()}}"
-                class="btn btn-outline-primary">
-            Modifica
-        </button>
-    </div>
-</div>
-
-<form th:attr="hx-put=@{'/bagno/aggiorna/' + ${bagno.getIdBagno()}}"
-      th:fragment="bagnoVedi"
-      hx-ext="json-enc"
-      hx-target="this"
-      hx-swap="outerHTML">
-    <div class="card-body">
         <h5 class="card-title mb-0">
-            <label for="nome">Nome:</label>
-            <input type="text" id="nome" name="nome"
-                   th:value="${bagno.getNome()}"/>
+            <span th:text="${bagno.getIdBagno()}"></span>
+            <span th:text="${bagno.getNome()}"></span>
         </h5>
-        <div>
-            <span th:text="${bagno.getIdBagno()}"/>
-        </div>
-        <div>
-            <label for="litri">Litri:</label>
-            <input type="text" id="litri" name="litri"
-                   th:value="${bagno.getLitri()}"/>
-        </div>
-        <div>
-            <label for="scattiTotali">Scatti Totali:</label>
-            <input type="text" id="scattiTotali" name="scattiTotali"
-                   th:value="${bagno.getScattiTotali()}"/>
-        </div>
-        <div>
-            <label for="restoScatti">Resto Scatti:</label>
-            <input type="text" id="restoScatti" name="restoScatti"
-                   th:value="${bagno.getRestoScatti()}"/>
-        </div>
+        <div>Litri: <span th:text="${bagno.getLitri()}"></span></div>
+        <div>Scatti Totali: <span th:text="${bagno.getScattiTotali()}"></span></div>
+        <div>Resto Scatti: <span th:text="${bagno.getRestoScatti()}"></span></div>
 
         <div>
-            <button class="btn btn-outline-primary"
-                    type="submit">
-                Save
-            </button>
+            <a th:href="'/bagno/vedi/' + ${bagno.getIdBagno()}" class="btn btn-outline-primary">
+                Modifica
+            </a>
         </div>
     </div>
 
-</form>
+    <form th:attr="hx-put=@{'/bagno/aggiorna/' + ${bagno.getIdBagno()}}" th:fragment="bagnoVedi" hx-ext="json-enc"
+        hx-target="this" hx-swap="outerHTML">
+        <div class="card-body">
+            <h5 class="card-title mb-0">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome" th:value="${bagno.getNome()}"></span>
+            </h5>
+            <div>
+                <span th:text="${bagno.getIdBagno()}"></span>
+            </div>
+            <div>
+                <label for="litri">Litri:</label>
+                <input type="text" id="litri" name="litri" th:value="${bagno.getLitri()}"></span>
+            </div>
+            <div>
+                <label for="scattiTotali">Scatti Totali:</label>
+                <input type="text" id="scattiTotali" name="scattiTotali" th:value="${bagno.getScattiTotali()}"></span>
+            </div>
+            <div>
+                <label for="restoScatti">Resto Scatti:</label>
+                <input type="text" id="restoScatti" name="restoScatti" th:value="${bagno.getRestoScatti()}"></span>
+            </div>
+
+            <div>
+                <button class="btn btn-outline-primary" type="submit">
+                    Save
+                </button>
+            </div>
+        </div>
+
+    </form>
 </body>
+
 </html>

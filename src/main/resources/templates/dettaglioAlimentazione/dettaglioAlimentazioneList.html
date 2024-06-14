@@ -1,48 +1,43 @@
 <!DOCTYPE html>
-<html lang="it" xmlns:th="https://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/main_layout}">
+<html lang="it" xmlns:th="https://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/main_layout}">
 
 <head>
     <title>Lista Dettagli Alimentazioni</title>
 </head>
 
 <body>
-<div layout:fragment="content">
+    <div layout:fragment="content">
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">Bagno</th>
-            <th scope="col">Tipo Alimentazione</th>
-            <th scope="col">Dettagli Prodotti</th>
-            <th scope="col">Azioni</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="alimentazione: ${alimentazioneList}">
-            <td><span th:text="${alimentazione.getNomeBagno()}"/>
-            </td>
-            <td><span th:text="${alimentazione.getTipoAlimentazione()}"/>
-            </td>
-            <td>
-                <a href="#"
-                   th:attr="hx-get=@{'/dettaglioAlimentazione/dettaglioAlimentazioneList/'+${alimentazione.getIdAlimentazione()}}"
-                   hx-trigger="click"
-                   hx-target="this"
-                   hx-swap="outerHTML"> Mostra Dettagli Prodotti
-                </a>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Bagno</th>
+                    <th scope="col">Tipo Alimentazione</th>
+                    <th scope="col">Dettagli Prodotti</th>
+                    <th scope="col">Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="alimentazione: ${alimentazioneList}">
+                    <td><span th:text="${alimentazione.getNomeBagno()}"></span></td>
+                    <td><span th:text="${alimentazione.getTipoAlimentazione()}"></span></td>
+                    <td>
+                        <a
+                            th:href="'/dettaglioAlimentazione/dettaglioAlimentazioneList/'+${alimentazione.getIdAlimentazione()}">
+                            Mostra Dettagli Prodotti
+                        </a>
+                    </td>
+                    <td>
+                        <a th:href="'/dettaglioAlimentazione/vistaAzioni/'+${alimentazione.getIdAlimentazione()}">
+                            Gestisci Dettagli Alimentazione
+                        </a>
+                    </td>
 
-            </td>
-            <td>
-                <a th:href="'/dettaglioAlimentazione/vistaAzioni/'+${alimentazione.getIdAlimentazione()}">
-                    Gestisci Dettagli Alimentazione </a>
-            </td>
-
-        </tr>
-        </tbody>
-    </table>
-</div>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </body>
 
 </html>

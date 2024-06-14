@@ -1,50 +1,44 @@
 <!DOCTYPE html>
-<html lang="it" xmlns:th="https://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/main_layout}">
+<html lang="it" xmlns:th="https://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/main_layout}">
 
 <head>
     <title>Aggiunta a scatti</title>
 </head>
 
 <body>
-<div layout:fragment="content">
-    <form>
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">Bagno</th>
+    <div layout:fragment="content">
+        <form>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Bagno</th>
 
-                <th scope="col">Scatti</th>
-                <th scope="col">Preconto</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="bagno: ${bagnoList}">
-                <td><span th:text="${bagno.getNome()}"/>
-                </td>
-                <td>
-                    <!--th:name="${bagno.getIdBagno()}"-->
-                    <input type="number"
-                           th:name="${bagno.getIdBagno()}"
-                           hx-trigger="input changed dalay:1000ms"
-                           th:attr="hx-get=@{'/operazioni/alimentazioni/scatti/preconto/'+${bagno.getIdBagno()}},
-                           hx-target=@{'#preconto'+${bagno.getIdBagno()}}">
-                </td>
-                <td th:id="@{'preconto'+${bagno.getIdBagno()}}"></td>
-            </tr>
-            </tbody>
-        </table>
+                        <th scope="col">Scatti</th>
+                        <th scope="col">Preconto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="bagno: ${bagnoList}">
+                        <td><span th:text="${bagno.getNome()}"></span>
+                        </td>
+                        <td>
+                            <input type="number" th:name="${bagno.getIdBagno()}" hx-trigger="input changed dalay:1000ms"
+                                th:attr="hx-get=@{'/operazioni/alimentazioni/scatti/preconto/'+${bagno.getIdBagno()}},
+                                hx-target=@{'#preconto'+${bagno.getIdBagno()}}">
+                        </td>
+                        <td th:id="@{'preconto'+${bagno.getIdBagno()}}"></td>
+                    </tr>
+                </tbody>
+            </table>
 
-        <button class="btn btn-outline-primary" type="submit"
-                th:attr="hx-post=@{'/operazioni/alimentazioni/scatti'}"
-                hx-ext="json-enc"
-                hx-target="body"
+            <button class="btn btn-outline-primary" type="submit"
+                th:attr="hx-post=@{'/operazioni/alimentazioni/scatti'}" hx-ext="json-enc" hx-target="body"
                 hx-swap="outerHTML">
-            Calcola Alimentazioni
-        </button>
-    </form>
-</div>
+                Calcola Alimentazioni
+            </button>
+        </form>
+    </div>
 </body>
 
 </html>

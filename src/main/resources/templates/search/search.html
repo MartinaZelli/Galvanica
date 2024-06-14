@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/main_layout}">
+
+<head>
+    <title>Prova Ricerca</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+
+        <div class="card mb-2">
+            <div class="card-header">
+                Filtro
+            </div>
+            <div class="card-body">
+                <form hx-get="/search/filter" hx-target="#data" hx-swap="outerHTML">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <input type="text" name="name" class="form-control" placeholder="Nome" aria-label="Nome">
+                        </div>
+                        <div class="col">
+                            <input type="text" name="surname" class="form-control" placeholder="Cognome"
+                                aria-label="Cognome">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Filtra</button>
+                </form>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                Dati
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Cognome</th>
+                        </tr>
+                    </thead>
+                    <tbody id="data" th:fragment="data">
+                        <tr th:each="anagrafic: ${anagrafics}">
+                            <td th:text="${anagrafic.name}"></td>
+                            <td th:text="${anagrafic.surname}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+</body>
+
+</html>

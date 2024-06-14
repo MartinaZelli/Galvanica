@@ -1,53 +1,51 @@
 <!DOCTYPE html>
-<html lang="it" xmlns:th="https://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/main_layout}">
+<html lang="it" xmlns:th="https://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/main_layout}">
 
 <head>
     <title>Lista Alimentazioni</title>
 </head>
 
 <body>
-<div layout:fragment="content">
-    <div>
-        <a th:href="'/alimentazione/new'">
-            nuovo </a>
+    <div layout:fragment="content">
+        <div>
+            <a href="/alimentazione/new"> nuovo </a>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Id Alimentazione</th>
+                    <th scope="col">Bagno</th>
+                    <th scope="col">Descrizione</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Azioni</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="alimentazione: ${alimentazioneList}">
+                    <td>
+                        <span th:text="${alimentazione.getIdAlimentazione()}" />
+                    </td>
+                    <td>
+                        <span th:text="${alimentazione.getNomeBagno()}" />
+                    </td>
+                    <td>
+                        <span th:text="${alimentazione.getDescrizione()}" />
+                    </td>
+                    <td>
+                        <span th:text="${alimentazione.getTipoAlimentazione()}" />
+                    </td>
+                    <td>
+                        <a th:href="'/alimentazione/azioni/'+${alimentazione.getIdAlimentazione()}">
+                            Modifica </a>
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
     </div>
-
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">Id Alimentazione</th>
-            <th scope="col">Bagno</th>
-            <th scope="col">Descrizione</th>
-            <th scope="col">Tipo</th>
-            <th scope="col">Azioni</th>
-
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="alimentazione: ${alimentazioneList}">
-            <td>
-                <span th:text="${alimentazione.getIdAlimentazione()}"/>
-            </td>
-            <td>
-                <span th:text="${alimentazione.getNomeBagno()}"/>
-            </td>
-            <td>
-                <span th:text="${alimentazione.getDescrizione()}"/>
-            </td>
-            <td>
-                <span th:text="${alimentazione.getTipoAlimentazione()}"/>
-            </td>
-            <td>
-                <a th:href="'/alimentazione/azioni/'+${alimentazione.getIdAlimentazione()}">
-                    Modifica </a>
-            </td>
-
-        </tr>
-        </tbody>
-    </table>
-</div>
 </body>
 
 </html>

@@ -1,51 +1,33 @@
 <!DOCTYPE html>
-<html lang="it"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/main_layout}">
+<html lang="it" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/main_layout}">
 
 <head>
     <title>Alimentazioni</title>
 </head>
 
 <body>
-<div layout:fragment="content">
-    <form th:attr="hx-get=@{'/operazioni/alimentazioni/scatti'}"
-          hx-ext="json-enc"
-          hx-target="body"
-          hx-swap="outerHTML">
-        <button class="btn btn-outline-primary"
-                type="submit">
-            Alimentazione a Scatti
-        </button>
-    </form>
-    <form
-            hx-ext="json-enc"
-            hx-target="body"
-            hx-swap="outerHTML">
-        <button class="btn btn-outline-primary"
-                type="submit">
-            Alimentazione a Tempo
-        </button>
-    </form>
-    <form
-            hx-ext="json-enc"
-            hx-target="body"
-            hx-swap="outerHTML">
-        <button class="btn btn-outline-primary"
-                type="submit">
-            Alimentazioni Non fatte
-        </button>
-    </form>
-    <form th:attr="hx-get=@{'/operazioni/alimentazioni/scattiSingola'}"
-          hx-ext="json-enc"
-          hx-target="body"
-          hx-swap="outerHTML">
-        <button class="btn btn-outline-primary"
-                type="submit">
-            Prova, singola alimentazione a scatti
-        </button>
-    </form>
-</div>
+    <div layout:fragment="content">
+        <div class="mb-1">
+            <a class="btn btn-outline-primary" role="button" href="/operazioni/alimentazioni/scatti">
+                Alimentazione a Scatti
+            </a>
+        </div>
+        <div class="mb-1">
+            <a class="btn btn-outline-primary" role="button" href="#">
+                Alimentazione a Tempo
+            </a>
+        </div>
+        <div class="mb-1">
+            <a class="btn btn-outline-primary" role="button" href="#">
+                Alimentazioni Non fatte
+            </a>
+        </div>
+        <div class="mb-1">
+            <a class="btn btn-outline-primary" role="button" href="/operazioni/alimentazioni/scattiSingola">
+                Prova, singola alimentazione a scatti
+            </a>
+        </div>
+    </div>
 </body>
 
 </html>
