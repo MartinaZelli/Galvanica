@@ -44,8 +44,8 @@ public class MagazzinoService implements ICRUDService<MagazzinoDto, Magazzino> {
     }
 
     @Override
-    public MagazzinoDto aggiorna(MagazzinoDto elemento, long id) {
-        Optional<Magazzino> magazzinoTrovato = magazzinoRepository.findById(id);
+    public MagazzinoDto aggiorna(MagazzinoDto elemento) {
+        Optional<Magazzino> magazzinoTrovato = magazzinoRepository.findById(elemento.getIdMagazzino());
         if (magazzinoTrovato.isEmpty()) {
             throw new RuntimeException(
                     "mettere un id corretto");

@@ -75,8 +75,8 @@ public class BagnoService implements ICRUDService<BagnoDto, Bagno> {
     }
 
     @Override
-    public BagnoDto aggiorna(BagnoDto elemento, long id) {
-        Optional<Bagno> bagnoTrovato = repository.findById(id);
+    public BagnoDto aggiorna(BagnoDto elemento) {
+        Optional<Bagno> bagnoTrovato = repository.findById(elemento.getIdBagno());
         if (bagnoTrovato.isEmpty()) {
             throw new RuntimeException(
                     "metti un id corretto che questo non c'è, bischero.");

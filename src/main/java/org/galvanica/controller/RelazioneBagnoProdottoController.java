@@ -70,9 +70,9 @@ public class RelazioneBagnoProdottoController {
     public String aggiornaRelazione(
             @RequestBody RelazioneBagnoProdottoDto relazioneBagnoProdottoDto,
             @PathVariable Long id, Model model) {
+        relazioneBagnoProdottoDto.setIdRelazione(id);
         return relazioneVistaAzioni(relazioneService.aggiorna(
-                relazioneBagnoProdottoDto,
-                id).getIdBagno(), model);
+                relazioneBagnoProdottoDto).getIdBagno(), model);
     }
 
     @DeleteMapping("{id}")

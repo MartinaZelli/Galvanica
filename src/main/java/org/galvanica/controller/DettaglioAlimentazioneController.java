@@ -39,15 +39,19 @@ public class DettaglioAlimentazioneController {
     @GetMapping("/dettaglioAlimentazioneList/{id}")
     public String dettaglioAlimentazioneList(@PathVariable Long id, Model model) {
         model.addAttribute("dettaglioAlimentazioneList",
-                dettaglioAlimentazioneService.ricercaDettaglioAlimentazioneByAlimentazione(id));
+                dettaglioAlimentazioneService.ricercaDettaglioAlimentazioneByAlimentazione(
+                        id));
         return "dettaglioAlimentazione/dettaglioAlimentazioneFragment :: dettaglioAlimentazioneFragment";
     }
 
     @RequestMapping(value = "/vistaAzioni/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
-    public String dettaglioAlimentazioneVistaAzioni(@PathVariable Long id, Model model) {
-        model.addAttribute("alimentazione", alimentazioneService.ricercaId(id).orElseThrow());
+    public String dettaglioAlimentazioneVistaAzioni(@PathVariable Long id,
+                                                    Model model) {
+        model.addAttribute("alimentazione",
+                alimentazioneService.ricercaId(id).orElseThrow());
         model.addAttribute("dettaglioAlimentazioneList",
-                dettaglioAlimentazioneService.ricercaDettaglioAlimentazioneByAlimentazione(id));
+                dettaglioAlimentazioneService.ricercaDettaglioAlimentazioneByAlimentazione(
+                        id));
         return "dettaglioAlimentazione/dettaglioAlimentazioneVistaAzioni";
     }
 
@@ -62,31 +66,40 @@ public class DettaglioAlimentazioneController {
 
     @GetMapping("/azioni/{id}")
     public String relazioneAzioni(@PathVariable Long id, Model model) {
-        model.addAttribute("dettaglioAlimentazione", dettaglioAlimentazioneService.ricercaId(id).orElseThrow());
-        model.addAttribute("prodottoList", prodottoService.ricercaProdottiByDettaglioAlimentazione(id));
+        model.addAttribute("dettaglioAlimentazione",
+                dettaglioAlimentazioneService.ricercaId(id).orElseThrow());
+        model.addAttribute("prodottoList",
+                prodottoService.ricercaProdottiByDettaglioAlimentazione(id));
         model.addAttribute("unitaDiMisuraList", mathService.unitaDiMisuraList());
 
         return "dettaglioAlimentazione/dettaglioAlimentazioneAzioni";
     }
 
     @PutMapping("{id}")
-    public String aggiornaDettaglioAlimentazione(@RequestBody DettaglioAlimentazioneDto dettaglioAlimentazioneDto,
+    public String aggiornaDettaglioAlimentazione(
+            @RequestBody DettaglioAlimentazioneDto dettaglioAlimentazioneDto,
             @PathVariable Long id) {
-        DettaglioAlimentazioneDto dettaglio = dettaglioAlimentazioneService.aggiorna(dettaglioAlimentazioneDto, id);
+        dettaglioAlimentazioneDto.setIdAlimentazione(id);
+        DettaglioAlimentazioneDto dettaglio = dettaglioAlimentazioneService.aggiorna(
+                dettaglioAlimentazioneDto);
         return "redirect:/dettaglioAlimentazione/vistaAzioni/" + dettaglio.getIdAlimentazione();
     }
 
     @GetMapping("/new/{id}")
     public String newDettaglioAlimentazione(@PathVariable Long id, Model model) {
-        model.addAttribute("prodottoList", prodottoService.ricercaProdottiByAlimentazione(id));
+        model.addAttribute("prodottoList",
+                prodottoService.ricercaProdottiByAlimentazione(id));
         model.addAttribute("unitaDiMisuraList", mathService.unitaDiMisuraList());
-        model.addAttribute("alimentazione", alimentazioneService.ricercaId(id).orElseThrow());
+        model.addAttribute("alimentazione",
+                alimentazioneService.ricercaId(id).orElseThrow());
         return "dettaglioAlimentazione/dettaglioAlimentazioneNuovo";
     }
 
     @PostMapping
-    public String inserisciDettaglioAlimentazione(@RequestBody DettaglioAlimentazioneDto dettaglioAlimentazioneDto) {
-        DettaglioAlimentazioneDto dettaglio = dettaglioAlimentazioneService.inserisci(dettaglioAlimentazioneDto);
+    public String inserisciDettaglioAlimentazione(
+            @RequestBody DettaglioAlimentazioneDto dettaglioAlimentazioneDto) {
+        DettaglioAlimentazioneDto dettaglio = dettaglioAlimentazioneService.inserisci(
+                dettaglioAlimentazioneDto);
         return "redirect:/dettaglioAlimentazione/vistaAzioni/" + dettaglio.getIdAlimentazione();
     }
 

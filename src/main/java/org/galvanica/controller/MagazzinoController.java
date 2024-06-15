@@ -21,7 +21,8 @@ public class MagazzinoController {
     }
 
     @PostMapping
-    public void aggiungiMagazzinoDto(HttpServletResponse httpServletResponse, @RequestBody MagazzinoDto magazzinoDto) {
+    public void aggiungiMagazzinoDto(HttpServletResponse httpServletResponse,
+                                     @RequestBody MagazzinoDto magazzinoDto) {
         magazzinoService.inserisci(magazzinoDto);
         httpServletResponse.setHeader("Location", "/magazzino/list");
         httpServletResponse.setStatus(302);
@@ -45,8 +46,10 @@ public class MagazzinoController {
     }
 
     @PutMapping("{id}")
-    public String aggiornaMagazzino(@RequestBody MagazzinoDto magazzinoDto, @PathVariable Long id) {
-        magazzinoService.aggiorna(magazzinoDto, id);
+    public String aggiornaMagazzino(@RequestBody MagazzinoDto magazzinoDto,
+                                    @PathVariable Long id) {
+        magazzinoDto.setIdMagazzino(id);
+        magazzinoService.aggiorna(magazzinoDto);
         return "redirect:/magazzino/list";
     }
 

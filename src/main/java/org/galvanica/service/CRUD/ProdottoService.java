@@ -74,8 +74,8 @@ public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
     }
 
     @Override
-    public ProdottoDto aggiorna(ProdottoDto elemento, long id) {
-        Optional<Prodotto> prodottoOptional = prodottoRepository.findById(id);
+    public ProdottoDto aggiorna(ProdottoDto elemento) {
+        Optional<Prodotto> prodottoOptional = prodottoRepository.findById(elemento.getIdProdotto());
         if (prodottoOptional.isEmpty()) {
             throw new RuntimeException(
                     "mettere un id corretto");

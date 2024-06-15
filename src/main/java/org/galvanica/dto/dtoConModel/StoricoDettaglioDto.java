@@ -1,4 +1,4 @@
-package org.galvanica.dto.archivio;
+package org.galvanica.dto.dtoConModel;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -12,10 +12,10 @@ import org.galvanica.math.UnitaDiMisura;
 @ToString
 public class StoricoDettaglioDto {
     private Long idStoricoGenerale;
-    private Long idDettaglio;
+    private Long idStoricoDettaglio;
     private Long idProdotto;
     private String nomeProdotto;
-    private Integer quantita;
+    private Double quantita;
     private UnitaDiMisura unitaDiMisura;
     private Boolean eseguito;
     private Boolean escluso;

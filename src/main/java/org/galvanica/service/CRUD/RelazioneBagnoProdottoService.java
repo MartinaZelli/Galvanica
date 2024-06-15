@@ -74,10 +74,9 @@ public class RelazioneBagnoProdottoService implements ICRUDService<RelazioneBagn
     }
 
     @Override
-    public RelazioneBagnoProdottoDto aggiorna(RelazioneBagnoProdottoDto elemento,
-                                              long id) {
+    public RelazioneBagnoProdottoDto aggiorna(RelazioneBagnoProdottoDto elemento) {
         Optional<RelazioneBagnoProdotto> relazioneBagnoProdottoOptional = relazioneBagnoProdottoRepository.findById(
-                id);
+                elemento.getIdRelazione());
         if (relazioneBagnoProdottoOptional.isEmpty()) {
             throw new RuntimeException(
                     "mettere un id corretto");

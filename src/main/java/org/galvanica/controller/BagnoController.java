@@ -56,7 +56,8 @@ public class BagnoController {
     @PutMapping("{id}")
     public String aggiornaBagno(@RequestBody BagnoDto bagnoDto,
                                 @PathVariable Long id, Model model) {
-        service.aggiorna(bagnoDto, id);
+        bagnoDto.setIdBagno(id);
+        service.aggiorna(bagnoDto);
         return listaBagni(model);
     }
 

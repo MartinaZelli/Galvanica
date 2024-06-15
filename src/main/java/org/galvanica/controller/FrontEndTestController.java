@@ -39,7 +39,8 @@ public class FrontEndTestController {
     @PutMapping(value = "bagnoFe/{id}")
     public String aggiornaBagno(@RequestBody BagnoDto bagnoDto,
                                 @PathVariable Long id, Model model) {
-        BagnoDto bagno = bagnoService.aggiorna(bagnoDto, id);
+        bagnoDto.setIdBagno(id);
+        BagnoDto bagno = bagnoService.aggiorna(bagnoDto);
         model.addAttribute("bagno", bagno);
         return "bagnoCard :: showCard";
     }

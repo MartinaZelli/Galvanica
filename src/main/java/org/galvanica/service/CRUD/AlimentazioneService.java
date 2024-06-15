@@ -85,9 +85,9 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
     }
 
     @Override
-    public AlimentazioneDto aggiorna(AlimentazioneDto elemento, long id) {
+    public AlimentazioneDto aggiorna(AlimentazioneDto elemento) {
         Optional<Alimentazione> alimentazioneOptional = alimentazioneRepository.findById(
-                id);
+                elemento.getIdAlimentazione());
         if (alimentazioneOptional.isEmpty()) {
             throw new RuntimeException(
                     "mettere un id corretto");

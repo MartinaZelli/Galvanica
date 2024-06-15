@@ -64,10 +64,10 @@ public class CaratteristicaBagnoService implements ICRUDService<CaratteristicaBa
     }
 
     @Override
-    public CaratteristicaBagnoDto aggiorna(CaratteristicaBagnoDto elemento,
-                                           long id) {
+    public CaratteristicaBagnoDto aggiorna(CaratteristicaBagnoDto elemento) {
 
-        Optional<CaratteristicaBagno> caratteristicaOpt = repository.findById(id);
+        Optional<CaratteristicaBagno> caratteristicaOpt = repository.findById(
+                elemento.getIdCaratteristica());
         if (caratteristicaOpt.isEmpty()) {
             throw new RuntimeException(
                     "mettere un id corretto");

@@ -105,10 +105,9 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
     }
 
     @Override
-    public DettaglioAlimentazioneDto aggiorna(DettaglioAlimentazioneDto elemento,
-                                              long id) {
+    public DettaglioAlimentazioneDto aggiorna(DettaglioAlimentazioneDto elemento) {
         Optional<DettaglioAlimentazione> dettaglioAlimentazioneOptional = dettaglioAlimentazioneRepository.findById(
-                id);
+                elemento.getIdDettaglio());
         if (dettaglioAlimentazioneOptional.isEmpty()) {
             throw new RuntimeException(
                     "mettere un id corretto");

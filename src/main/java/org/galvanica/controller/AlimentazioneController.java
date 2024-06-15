@@ -61,7 +61,8 @@ public class AlimentazioneController {
     public String aggiornaAlimentazione(
             @RequestBody AlimentazioneDto alimentazioneDto,
             @PathVariable Long id, Model model) {
-        alimentazioneService.aggiorna(alimentazioneDto, id);
+        alimentazioneDto.setIdAlimentazione(id);
+        alimentazioneService.aggiorna(alimentazioneDto);
         return listaAlimentazioni(model);
     }
 

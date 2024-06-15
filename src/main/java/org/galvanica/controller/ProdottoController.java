@@ -56,7 +56,8 @@ public class ProdottoController {
     @PutMapping("{id}")
     public String aggiornaProdotto(@RequestBody ProdottoDto prodottoDto,
                                    @PathVariable Long id, Model model) {
-        service.aggiorna(prodottoDto, id);
+        prodottoDto.setIdProdotto(id);
+        service.aggiorna(prodottoDto);
         return listaProdotti(model);
     }
 
