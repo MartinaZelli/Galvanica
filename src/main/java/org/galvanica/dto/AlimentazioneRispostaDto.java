@@ -11,17 +11,17 @@ import java.util.List;
 @Setter
 @Builder
 @ToString
-public class AlimentazioneRisposta {
+public class AlimentazioneRispostaDto {
 
     private Long idBagno;
     private String nomeBagno;
-    private List<OggettoAggiunta> oggettoAggiuntaList;
+    private List<OggettoAggiuntaDto> oggettoAggiuntaDtoList;
     private Double moltiplicatoreAlimentazione;
-    private Integer restoScatti;
+    private Integer restoScattiBagno;
     private Integer scattiAlimentazione;
-    private Integer scattiTotali;
+    private Integer scattiTotaliBagno;
     private Integer scattiInseriti;
-    private Integer scattiParzialiPrecedenti;
+    private Integer restoScattiPrecedenti;
     private String messaggio;
     private Long idStoricoGenerale;
     private List<Long> idStoricoDettaglioList;

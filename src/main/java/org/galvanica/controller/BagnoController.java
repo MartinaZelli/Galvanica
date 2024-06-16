@@ -1,6 +1,6 @@
 package org.galvanica.controller;
 
-import org.galvanica.dto.AlimentazioneRisposta;
+import org.galvanica.dto.AlimentazioneRispostaDto;
 import org.galvanica.dto.dtoConModel.BagnoDto;
 import org.galvanica.service.CRUD.BagnoService;
 import org.galvanica.service.operazioniBagno.AlimentazioneAScattiService;
@@ -81,15 +81,15 @@ public class BagnoController {
 
 
     @PutMapping("{id}/alimentazioneScatti/{scattiParziali}")
-    public AlimentazioneRisposta alimentazioneScatti(@PathVariable Long id,
-                                                     @PathVariable Integer scattiParziali) {
+    public AlimentazioneRispostaDto alimentazioneScatti(@PathVariable Long id,
+                                                        @PathVariable Integer scattiParziali) {
         return alimentazioneAScattiService.calcolaAlimentazioneNuovo(id,
                 scattiParziali);
     }
 
     @PutMapping("{id}/alimentazioneTempo/{dataControllo}")
-    public AlimentazioneRisposta alimentazioneTempo(@PathVariable Long id,
-                                                    @PathVariable LocalDate dataControllo) {
+    public AlimentazioneRispostaDto alimentazioneTempo(@PathVariable Long id,
+                                                       @PathVariable LocalDate dataControllo) {
         return alimentazioneATempoService.calcolaAlimentazione(id,
                 dataControllo);
     }

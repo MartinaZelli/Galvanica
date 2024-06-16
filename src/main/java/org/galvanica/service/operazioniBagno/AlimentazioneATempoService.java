@@ -1,7 +1,7 @@
 package org.galvanica.service.operazioniBagno;
 
-import org.galvanica.dto.AlimentazioneRisposta;
-import org.galvanica.dto.OggettoAggiunta;
+import org.galvanica.dto.AlimentazioneRispostaDto;
+import org.galvanica.dto.OggettoAggiuntaDto;
 import org.galvanica.math.TipologiaAggiunta;
 import org.galvanica.math.UnitaDiMisura;
 import org.galvanica.model.Alimentazione;
@@ -43,14 +43,14 @@ public class AlimentazioneATempoService {
 
     }
 
-    public AlimentazioneRisposta calcolaAlimentazione(
+    public AlimentazioneRispostaDto calcolaAlimentazione(
             Long idBagno, LocalDate dataControllo) {
         StoricoGenerale storicoGeneraleTempoLast =
                 storicoGeneraleRepository.storicoGeneraleTempoLast(idBagno);
         List<Alimentazione> alimentazioneList = alimentazioneRepository.findByTempo(
                 idBagno,
                 dataControllo.getDayOfWeek().name());
-        AlimentazioneRisposta alimentazioneRisposta = AlimentazioneRisposta.builder()
+        AlimentazioneRispostaDto alimentazioneRispostaDto = AlimentazioneRispostaDto.builder()
                 .idBagno(idBagno)
                 .messaggio(tempoCalcolaSoloMessaggio(
                         dataControllo,
@@ -70,7 +70,7 @@ public class AlimentazioneATempoService {
             dataUltimoStorico = LocalDate.now();
 
             if (alimentazioneList.isEmpty()) {
-                return alimentazioneRisposta;
+                return alimentazioneRispostaDto;
             }
         } else {
             dataUltimoStorico = storicoGeneraleTempoLast.getDataControlloTempo();
@@ -78,7 +78,7 @@ public class AlimentazioneATempoService {
 
         if (!dataControllo.isAfter(dataUltimoStorico) || dataControllo.isAfter(
                 LocalDate.now().plusDays(7))) {
-            return alimentazioneRisposta;
+            return alimentazioneRispostaDto;
         }
 
         for (LocalDate data = dataUltimoStorico.plusDays(1);
@@ -92,9 +92,10 @@ public class AlimentazioneATempoService {
         }
         List<StoricoGenerale> storicoGeneraleDaEsegureList = storicoGeneraleRepository.storicoGeneraleDescList(
                 false, idBagno, TipologiaAggiunta.TEMPO);
-        alimentazioneRisposta.setOggettoAggiuntaList(aggiuntaDaStoriciPassatiList(
-                storicoGeneraleDaEsegureList));
-        return alimentazioneRisposta;
+        alimentazioneRispostaDto.setOggettoAggiuntaDtoList(
+                aggiuntaDaStoriciPassatiList(
+                        storicoGeneraleDaEsegureList));
+        return alimentazioneRispostaDto;
     }
 
     public String tempoCalcolaSoloMessaggio(
@@ -163,7 +164,8 @@ public class AlimentazioneATempoService {
     }
 
 
-    private OggettoAggiunta oggettoAggiuntaTrasformer(StoricoDettaglio dettaglio) {
+    private OggettoAggiuntaDto oggettoAggiuntaTrasformer(
+            StoricoDettaglio dettaglio) {
         Double quantitaProdotto = convertiQuantitaPerDto(
                 dettaglio.getQuantita(),
                 dettaglio.getUnitaDiMisura().isSonoVolume());
@@ -172,7 +174,7 @@ public class AlimentazioneATempoService {
                 dettaglio.getUnitaDiMisura().isSonoVolume());
         List<Long> list = new ArrayList<>();
         list.add(dettaglio.getIdStoricoDettaglio());
-        return OggettoAggiunta.builder()
+        return OggettoAggiuntaDto.builder()
                 .unitaDiMisura(unita)
                 .quantitaProdotto(quantitaProdotto)
                 .idProdotto(dettaglio.getProdotto().getIdProdotto())
@@ -181,10 +183,10 @@ public class AlimentazioneATempoService {
                 .build();
     }
 
-    private List<OggettoAggiunta> aggiuntaDaStoriciPassatiList(
+    private List<OggettoAggiuntaDto> aggiuntaDaStoriciPassatiList(
             List<StoricoGenerale> storicoGeneraleListDaEseguire) {
         //crea una mappa di idProdotto e oggettoAggiunta.
-        Map<Long, OggettoAggiunta> oggettoAggiuntaMap = new HashMap<>();
+        Map<Long, OggettoAggiuntaDto> oggettoAggiuntaMap = new HashMap<>();
 
         /*ricerca uno storico dettaglio:
         1.filtra storicoGeneraleList

@@ -1,7 +1,7 @@
 package org.galvanica.service.operazioniBagno;
 
-import org.galvanica.dto.AlimentazioneRisposta;
-import org.galvanica.dto.OggettoAggiunta;
+import org.galvanica.dto.AlimentazioneRispostaDto;
+import org.galvanica.dto.OggettoAggiuntaDto;
 import org.galvanica.math.MetodiArrotondamenti;
 import org.galvanica.math.ScattiMath;
 import org.galvanica.math.TipologiaAggiunta;
@@ -34,9 +34,9 @@ public class AlimentazioneAScattiService {
         this.bagnoService = bagnoService;
     }
 
-    public List<AlimentazioneRisposta> calcolaAlimentazioneList(
+    public List<AlimentazioneRispostaDto> calcolaAlimentazioneList(
             Map<Long, Integer> idBagnoScattiParzialiMap) {
-        List<AlimentazioneRisposta> risposta = new ArrayList<>();
+        List<AlimentazioneRispostaDto> risposta = new ArrayList<>();
         for (Map.Entry<Long, Integer> entry : idBagnoScattiParzialiMap.entrySet()) {
             if (entry.getValue() == null) {
                 continue;
@@ -49,8 +49,8 @@ public class AlimentazioneAScattiService {
     }
 
     //calcola nuova Alimentazione
-    public AlimentazioneRisposta calcolaAlimentazioneNuovo(Long idBagno,
-                                                           int scattiAttuali) {
+    public AlimentazioneRispostaDto calcolaAlimentazioneNuovo(Long idBagno,
+                                                              int scattiAttuali) {
         calcolaAlimentazioneControlliApprovati(idBagno);
         Bagno bagno = bagnoService.modelRicercaId(idBagno);
         Alimentazione alimentazione = trovaAlimentazioneScatti(bagno);
@@ -68,7 +68,7 @@ public class AlimentazioneAScattiService {
         String messaggio = "gli scatti sono inferiori al 90% dell'alimentazione," +
                 "le aggiunte non verranno eseguite ma messe in conto per la prossima chiamata.";
         List<Long> idDettaglioList = null;
-        List<OggettoAggiunta> oggettoAggiuntaList = null;
+        List<OggettoAggiuntaDto> oggettoAggiuntaDtoList = null;
         Long idStoricoGenerale;
 
         if (scattiMath.getMoltiplicatoreAlimentazione() == 0) {
@@ -106,9 +106,9 @@ public class AlimentazioneAScattiService {
                     storicoGenerale);
 
             storicoGenerale = trovaStoricoGenerale(storicoGenerale.getIdStorico());
-            oggettoAggiuntaList = aggiunteAttuali(storicoGenerale.getIdStorico());
-            idDettaglioList = oggettoAggiuntaList.stream()
-                    .flatMap(oggettoAggiunta -> oggettoAggiunta.getIdStoricoDettaglioList()
+            oggettoAggiuntaDtoList = aggiunteAttuali(storicoGenerale.getIdStorico());
+            idDettaglioList = oggettoAggiuntaDtoList.stream()
+                    .flatMap(oggettoAggiuntaDto -> oggettoAggiuntaDto.getIdStoricoDettaglioList()
                             .stream()).toList();
             moltiplicatoreAlimentazione = scattiMath.getMoltiplicatoreAlimentazione();
             scattiParziali = (int) scattiMath.getRestoScatti();
@@ -116,21 +116,21 @@ public class AlimentazioneAScattiService {
             idStoricoGenerale = storicoGenerale.getIdStorico();
         }
 
-        return AlimentazioneRisposta.builder()
+        return AlimentazioneRispostaDto.builder()
                 .idBagno(idBagno)
                 .nomeBagno(bagno.getNome())
                 //TODO: verificare che basti in AlimentazioneRisposta aggiuntaDaStoriciPassatiList
                 // e non debba essere implementata scattiConteggiProdotti.
                 .moltiplicatoreAlimentazione(moltiplicatoreAlimentazione)
-                .restoScatti(scattiParziali)
+                .restoScattiBagno(scattiParziali)
                 .scattiAlimentazione(alimentazione.getScatti())
-                .scattiTotali(scattiTotali)
+                .scattiTotaliBagno(scattiTotali)
                 .scattiInseriti(scattiAttuali)
-                .scattiParzialiPrecedenti(ultimoStoricoGenerale.getRestoScattiBagno())
+                .restoScattiPrecedenti(ultimoStoricoGenerale.getRestoScattiBagno())
                 .idStoricoGenerale(idStoricoGenerale)
                 .messaggio(messaggio)
                 .idStoricoDettaglioList(idDettaglioList)
-                .oggettoAggiuntaList(oggettoAggiuntaList)
+                .oggettoAggiuntaDtoList(oggettoAggiuntaDtoList)
                 .build();
     }
 
@@ -168,53 +168,53 @@ public class AlimentazioneAScattiService {
 
     }
 
-    private List<OggettoAggiunta> aggiunteAttuali(
+    private List<OggettoAggiuntaDto> aggiunteAttuali(
             Long idStoricoGenerale) {
 
-        List<OggettoAggiunta> oggettoAggiuntaList = new ArrayList<>();
+        List<OggettoAggiuntaDto> oggettoAggiuntaDtoList = new ArrayList<>();
         List<StoricoDettaglio> storicoDettaglioList = storicoDettaglioRepository.storicoDettaglioList(
                 idStoricoGenerale,
                 false,
                 false);
         for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
-            oggettoAggiuntaList.add(oggettoAggiuntaTrasformer(storicoDettaglio));
+            oggettoAggiuntaDtoList.add(oggettoAggiuntaTrasformer(storicoDettaglio));
         }
-        return oggettoAggiuntaList;
+        return oggettoAggiuntaDtoList;
     }
 
 
     //calcola tutte le aggiunte da Storico
 
-    public AlimentazioneRisposta calcolaAggiunteStorico(Long idBagno) {
+    public AlimentazioneRispostaDto calcolaAggiunteStorico(Long idBagno) {
         calcolaAlimentazioneControlliApprovati(idBagno);
         Bagno bagno = bagnoService.modelRicercaId(idBagno);
         Alimentazione alimentazione = trovaAlimentazioneScatti(bagno);
         StoricoGenerale ultimoStoricoGenerale = storicoGeneraleRepository.ultimoStoricoGeneraleScatti(
                 idBagno);
         String messaggio = "Queste sono tutte le aggiunte non ancora effettuate per il bagno.";
-        List<OggettoAggiunta> oggettoAggiuntaList = tutteLeAggiunteDaFareBagnoList(
+        List<OggettoAggiuntaDto> oggettoAggiuntaDtoList = tutteLeAggiunteDaFareBagnoList(
                 idBagno);
-        List<Long> idDettaglioList = oggettoAggiuntaList.stream()
-                .flatMap(oggettoAggiunta -> oggettoAggiunta.getIdStoricoDettaglioList()
+        List<Long> idDettaglioList = oggettoAggiuntaDtoList.stream()
+                .flatMap(oggettoAggiuntaDto -> oggettoAggiuntaDto.getIdStoricoDettaglioList()
                         .stream()).toList();
 
-        return AlimentazioneRisposta.builder()
+        return AlimentazioneRispostaDto.builder()
                 .idBagno(idBagno)
                 .nomeBagno(bagno.getNome())
-                .restoScatti(ultimoStoricoGenerale.getRestoScattiBagno())
+                .restoScattiBagno(ultimoStoricoGenerale.getRestoScattiBagno())
                 .scattiAlimentazione(alimentazione.getScatti())
-                .scattiTotali(ultimoStoricoGenerale.getScattiTotaliBagno())
+                .scattiTotaliBagno(ultimoStoricoGenerale.getScattiTotaliBagno())
                 .scattiInseriti(0)
                 .messaggio(messaggio)
                 .idStoricoDettaglioList(idDettaglioList)
-                .oggettoAggiuntaList(oggettoAggiuntaList)
+                .oggettoAggiuntaDtoList(oggettoAggiuntaDtoList)
                 .build();
     }
 
-    private List<OggettoAggiunta> tutteLeAggiunteDaFareBagnoList(Long idBagno) {
+    private List<OggettoAggiuntaDto> tutteLeAggiunteDaFareBagnoList(Long idBagno) {
         //crea una mappa di idProdotto e oggettoAggiunta.
 
-        Map<Long, OggettoAggiunta> oggettoAggiuntaMap = new HashMap<>();
+        Map<Long, OggettoAggiuntaDto> oggettoAggiuntaMap = new HashMap<>();
         List<StoricoGenerale> storicoGeneraleListDaEseguire = storicoGeneraleRepository.storicoGeneraleDescList(
                 false, idBagno, TipologiaAggiunta.SCATTI);
         /*ricerca uno storico dettaglio:
@@ -305,7 +305,8 @@ public class AlimentazioneAScattiService {
                         "Alimentazione a scatti non trovata per bagno " + bagno.getIdBagno() + " nome: " + bagno.getNome()));
     }
 
-    private OggettoAggiunta oggettoAggiuntaTrasformer(StoricoDettaglio dettaglio) {
+    private OggettoAggiuntaDto oggettoAggiuntaTrasformer(
+            StoricoDettaglio dettaglio) {
         Double quantitaProdotto = convertiQuantitaPerDto(
                 dettaglio.getQuantita(),
                 dettaglio.getUnitaDiMisura().isSonoVolume());
@@ -314,7 +315,7 @@ public class AlimentazioneAScattiService {
                 dettaglio.getUnitaDiMisura().isSonoVolume());
         List<Long> list = new ArrayList<>();
         list.add(dettaglio.getIdStoricoDettaglio());
-        return OggettoAggiunta.builder()
+        return OggettoAggiuntaDto.builder()
                 .unitaDiMisura(unita)
                 .quantitaProdotto(quantitaProdotto)
                 .idProdotto(dettaglio.getProdotto().getIdProdotto())

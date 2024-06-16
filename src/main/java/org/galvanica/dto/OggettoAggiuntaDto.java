@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OggettoAggiunta {
+public class OggettoAggiuntaDto {
     private Double quantitaProdotto;
     private UnitaDiMisura unitaDiMisura;
     private Long idProdotto;

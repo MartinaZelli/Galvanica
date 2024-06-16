@@ -1,6 +1,6 @@
 package org.galvanica.service.storicoService;
 
-import org.galvanica.dto.StoricoSemplificatoDto;
+import org.galvanica.dto.StoricoTotaleDto;
 import org.galvanica.math.ConvertitoreUnitaMisura;
 import org.galvanica.math.UnitaDiMisura;
 import org.galvanica.repository.StoricoDettaglioRepository;
@@ -19,21 +19,21 @@ public class storicoSemplificatoService {
         this.storicoDettaglioRepository = storicoDettaglioRepository;
     }
 
-    public List<StoricoSemplificatoDto> storicoSemplificatoDtoList(int limite) {
-        List<StoricoSemplificatoDto> storicoSemplificatoDtoList = storicoDettaglioRepository.listaStoricoSemplificato(
+    public List<StoricoTotaleDto> storicoSemplificatoDtoList(int limite) {
+        List<StoricoTotaleDto> storicoTotaleDtoList = storicoDettaglioRepository.listaStoricoSemplificato(
                 limite);
 
-        for (StoricoSemplificatoDto storicoSemplificato : storicoSemplificatoDtoList) {
+        for (StoricoTotaleDto storicoSemplificato : storicoTotaleDtoList) {
             UnitaDiMisura unitaDiMisura = convertitore.convertiUnitaMisuraPerDto(
-                    storicoSemplificato.getQuantita().intValue(),
+                    storicoSemplificato.getQuantitaProdotto().intValue(),
                     storicoSemplificato.getUnitaDiMisura().isSonoVolume());
             Double quantita = convertitore.convertiQuantitaGenerico(
-                    storicoSemplificato.getQuantita(),
+                    storicoSemplificato.getQuantitaProdotto(),
                     storicoSemplificato.getUnitaDiMisura(),
                     unitaDiMisura);
             storicoSemplificato.setUnitaDiMisura(unitaDiMisura);
-            storicoSemplificato.setQuantita(quantita);
+            storicoSemplificato.setQuantitaProdotto(quantita);
         }
-        return storicoSemplificatoDtoList;
+        return storicoTotaleDtoList;
     }
 }

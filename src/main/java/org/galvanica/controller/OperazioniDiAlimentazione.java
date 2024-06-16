@@ -2,8 +2,7 @@ package org.galvanica.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
-import org.galvanica.dto.AlimentazioneRisposta;
-import org.galvanica.dto.AlimentazioneSingolaDto;
+import org.galvanica.dto.AlimentazioneRispostaDto;
 import org.galvanica.service.CRUD.AlimentazioneService;
 import org.galvanica.service.CRUD.BagnoService;
 import org.galvanica.service.operazioniBagno.AlimentazioneAScattiService;
@@ -65,11 +64,12 @@ public class OperazioniDiAlimentazione {
     @PostMapping("/scatti")
     public String calcoloAlimentazione(Model model,
                                        @RequestBody Map<Long, Integer> mappaBagnoScatti) {
-        List<AlimentazioneRisposta> alimentazioneRispostaList =
+        List<AlimentazioneRispostaDto> alimentazioneRispostaDtoList =
                 alimentazioneAScattiService.calcolaAlimentazioneList(
                         mappaBagnoScatti);
-        model.addAttribute("alimentazioneRispostaList", alimentazioneRispostaList);
-        System.out.println(alimentazioneRispostaList);
+        model.addAttribute("alimentazioneRispostaList",
+                alimentazioneRispostaDtoList);
+        System.out.println(alimentazioneRispostaDtoList);
         return "operazioniDiAlimentazione/rispostaScatti";
     }
 
@@ -87,22 +87,4 @@ public class OperazioniDiAlimentazione {
         return "";
     }
 
-
-    @PostMapping("/scatti/singola")
-    public String calcoloAlimentazioneSingola(
-            @RequestBody AlimentazioneSingolaDto alimentazione,
-            Model model) {
-        alimentazioneAScattiService.calcolaAlimentazioneNuovo(
-                alimentazione.getIdBagno(),
-                alimentazione.getScatti());
-        return scattiSingola(model);
-    }
-
-
-    @GetMapping("/scattiSingola")
-    public String scattiSingola(Model model) {
-        model.addAttribute("bagnoList",
-                bagnoService.findAllBagnoIfAlimentazioneScattiNotNull());
-        return "operazioniDiAlimentazione/scattiSingola";
-    }
 }

@@ -1,6 +1,6 @@
 package org.galvanica.repository;
 
-import org.galvanica.dto.StoricoSemplificatoDto;
+import org.galvanica.dto.StoricoTotaleDto;
 import org.galvanica.model.StoricoDettaglio;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -50,7 +50,7 @@ public interface StoricoDettaglioRepository extends CrudRepository<StoricoDettag
             "left join bagno b on sg.bagno_id_bagno = b.id_bagno\n" +
             "left join prodotto p on sd.prodotto_id_prodotto = p.id_prodotto\n" +
             "limit ?1", nativeQuery = true)
-    List<StoricoSemplificatoDto> listaStoricoSemplificato(int limite);
+    List<StoricoTotaleDto> listaStoricoSemplificato(int limite);
 
 
 }
