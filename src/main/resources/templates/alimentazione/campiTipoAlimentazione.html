@@ -14,10 +14,10 @@
         <input type="text" id="quantitaScatti" name="scatti"
                th:value="${alimentazione.getScatti()}">
     </div>
-    <div><input th:checked="${alimentazione.getArrotondaValori()==true}"
+    <div><input th:checked="${alimentazione.getValoriArrotondati()==true}"
                 type="checkbox"
-                id="arrotondaValori" name="arrotondaValori" value="true">
-        <label for="arrotondaValori"> spunta se arrotonda i valori</label>
+                id="valoriArrotondati" name="valoriArrotondati" value="true">
+        <label for="valoriArrotondati"> spunta se arrotonda i valori</label>
 
     </div>
 </div>
@@ -38,8 +38,9 @@
         <label for="quantitaScatti">Quantità Scatti</label>
         <input type="text" id="quantitaScatti" name="scatti">
     </div>
-    <div><input type="checkbox" id="arrotondaValori" name="arrotondaValori" value="true">
-        <label for="arrotondaValori"> spunta se arrotonda i valori</label>
+    <div><input type="checkbox" id="valoriArrotondati" name="valoriArrotondati"
+                value="true">
+        <label for="valoriArrotondati"> spunta se arrotonda i valori</label>
 
     </div>
 </div>
@@ -47,7 +48,8 @@
     <div>Giorni di Ricorrenza</div>
 
     <div th:each="giorno:${giorniList}">
-        <input type="checkbox" th:id="${giorno.name()}" name="tempo" th:value="${giorno.name()}">
+        <input type="checkbox" th:id="${giorno.name()}" name="tempo"
+               th:value="${giorno.name()}">
         <label th:for="${giorno.name()}" th:text="${giorno.name()}"> </label>
     </div>
 </div>

@@ -45,8 +45,8 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
             throw new RuntimeException(
                     "può essere valorizzato un solo attributo fra Scatti e Tempo");
         }
-        if (elemento.getArrotondaValori() == null) {
-            elemento.setArrotondaValori(false);
+        if (elemento.getValoriArrotondati() == null) {
+            elemento.setValoriArrotondati(false);
         }
         Optional<Bagno> bagnoOptional = bagnoRepository.findById(elemento.getIdBagno());
         if (bagnoOptional.isEmpty()) {
@@ -69,7 +69,7 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
                 .tempo(elemento.getTempo())
                 .scatti(elemento.getScatti())
                 .descrizione(elemento.getDescrizione())
-                .valoriArrotondati(elemento.getArrotondaValori())
+                .valoriArrotondati(elemento.getValoriArrotondati())
                 .build();
         alimentazione = alimentazioneRepository.save(alimentazione);
         return fromModelToDto(alimentazione);
@@ -105,15 +105,15 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
             throw new RuntimeException(
                     "può essere valorizzato un solo attributo fra Scatti e Tempo");
         }
-        if (elemento.getArrotondaValori() == null) {
-            elemento.setArrotondaValori(false);
+        if (elemento.getValoriArrotondati() == null) {
+            elemento.setValoriArrotondati(false);
         }
         Alimentazione alimentazione = alimentazioneOptional.get();
         alimentazione.setDescrizione(elemento.getDescrizione());
         alimentazione.setTempo(elemento.getTempo());
         alimentazione.setScatti(elemento.getScatti());
         alimentazione.setBagno(bagnoOptional.get());
-        alimentazione.setValoriArrotondati(elemento.getArrotondaValori());
+        alimentazione.setValoriArrotondati(elemento.getValoriArrotondati());
         alimentazione = alimentazioneRepository.save(alimentazione);
 
         return fromModelToDto(alimentazione);
@@ -142,7 +142,7 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
                 .scatti(oggettoDaTrasformare.getScatti())
                 .tempo(oggettoDaTrasformare.getTempo())
                 .descrizione(oggettoDaTrasformare.getDescrizione())
-                .arrotondaValori(oggettoDaTrasformare.getValoriArrotondati())
+                .valoriArrotondati(oggettoDaTrasformare.getValoriArrotondati())
                 .nomeBagno(oggettoDaTrasformare.getBagno().getNome())
                 .tipoAlimentazione(tipoAlimentazione)
                 .build();

@@ -106,8 +106,8 @@ public class StoricoDettaglioService {
                 .nomeProdotto(oggettoDaTrasformare.getProdotto().getNome())
                 .quantita(quantita)
                 .unitaDiMisura(unitaDiMisura)
-                .eseguito(oggettoDaTrasformare.getEseguitoDettaglio())
-                .escluso(oggettoDaTrasformare.getAnnullatoDettaglio())
+                .eseguitoDettaglio(oggettoDaTrasformare.getEseguitoDettaglio())
+                .annullatoDettaglio(oggettoDaTrasformare.getAnnullatoDettaglio())
                 .build();
     }
 }

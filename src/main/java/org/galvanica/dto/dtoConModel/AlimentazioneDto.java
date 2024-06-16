@@ -18,7 +18,7 @@ public class AlimentazioneDto {
     private Integer scatti;
     private List<DayOfWeek> tempo;
     private String descrizione;
-    private Boolean arrotondaValori;
+    private Boolean valoriArrotondati;
 
     public void setTempo(String giorno) {
         this.tempo = List.of(DayOfWeek.valueOf(giorno));

@@ -17,6 +17,6 @@ public class StoricoDettaglioDto {
     private String nomeProdotto;
     private Double quantita;
     private UnitaDiMisura unitaDiMisura;
-    private Boolean eseguito;
-    private Boolean escluso;
+    private Boolean eseguitoDettaglio;
+    private Boolean annullatoDettaglio;
 }

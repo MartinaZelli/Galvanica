@@ -52,11 +52,11 @@ public class BagnoService implements ICRUDService<BagnoDto, Bagno> {
                 .build();
         bagno = repository.save(bagno);
         storicoGeneraleRepository.save(StoricoGenerale.builder().bagno(bagno)
-                .scattiTotali(elemento.getScattiTotali())
-                .restoScatti(elemento.getRestoScatti())
+                .scattiTotaliBagno(elemento.getScattiTotali())
+                .restoScattiBagno(elemento.getRestoScatti())
                 .dataCreazione(LocalDateTime.now())
-                .dataFine(LocalDateTime.now())
-                .concluso(true)
+                .dataEsecuzione(LocalDateTime.now())
+                .annullatoGenerale(true)
                 .tipologiaAggiunta(TipologiaAggiunta.SCATTI)
                 .note("valori bagno iniziali")
                 .build());
@@ -86,11 +86,11 @@ public class BagnoService implements ICRUDService<BagnoDto, Bagno> {
         bagno.setLitri(elemento.getLitri());
         bagno = repository.save(bagno);
         storicoGeneraleRepository.save(StoricoGenerale.builder().bagno(bagno)
-                .scattiTotali(elemento.getScattiTotali())
-                .restoScatti(elemento.getRestoScatti())
+                .scattiTotaliBagno(elemento.getScattiTotali())
+                .restoScattiBagno(elemento.getRestoScatti())
                 .dataCreazione(LocalDateTime.now())
-                .dataFine(LocalDateTime.now())
-                .concluso(true)
+                .dataEsecuzione(LocalDateTime.now())
+                .eseguitoGenerale(true)
                 .tipologiaAggiunta(TipologiaAggiunta.SCATTI)
                 .note("modifica manuale")
                 .build());
