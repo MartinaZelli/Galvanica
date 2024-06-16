@@ -42,7 +42,7 @@ public class StoriciAnnullaOConcludiService {
 
     public void eseguiSingolaAggiunta(Long idStoricoDettaglio) {
         StoricoDettaglio storicoDettaglio = trovaStoricoDettaglio(idStoricoDettaglio);
-        if (storicoDettaglio.getEscluso()) {
+        if (storicoDettaglio.getAnnullatoDettaglio()) {
             throw new RuntimeException(
                     "se il DettaglioStorico è escluso non può essere anche eseguito");
         }
@@ -57,23 +57,23 @@ public class StoriciAnnullaOConcludiService {
 
     //metodi per confermaInteraAlimentazione e eseguiSingolaAggiunta.
     private void eseguiStoricoDettaglio(StoricoDettaglio storicoDettaglio) {
-        if (storicoDettaglio.getEscluso()) {
+        if (storicoDettaglio.getAnnullatoDettaglio()) {
             return;
         }
-        storicoDettaglio.setEseguito(true);
+        storicoDettaglio.setEseguitoDettaglio(true);
         storicoDettaglioRepository.save(storicoDettaglio);
     }
 
     private void concludiStoricoGenerale(StoricoGenerale storicoGenerale) {
-        if (storicoGenerale.getConcluso()) {
+        if (storicoGenerale.getEseguitoGenerale()) {
             throw new RuntimeException("lo storico generale è già concluso");
         }
         if (listaStoricoDettaglioNONCompletata(storicoGenerale)) {
             throw new RuntimeException(
                     "non tutti i Dettagli storico sono eseguiti o esclusi");
         }
-        storicoGenerale.setConcluso(true);
-        storicoGenerale.setDataFine(LocalDateTime.now());
+        storicoGenerale.setEseguitoGenerale(true);
+        storicoGenerale.setDataEsecuzione(LocalDateTime.now());
         storicoGeneraleRepository.save(storicoGenerale);
     }
 
@@ -97,23 +97,23 @@ public class StoriciAnnullaOConcludiService {
             StoricoGenerale storicoGenerale) {
         return storicoGenerale.getStoricoDettaglioList()
                 .stream()
-                .anyMatch(storicoDettaglio -> !storicoDettaglio.getEseguito() && !storicoDettaglio.getEscluso());
+                .anyMatch(storicoDettaglio -> !storicoDettaglio.getEseguitoDettaglio() && !storicoDettaglio.getAnnullatoDettaglio());
     }
 
 
     private void annullaStoricoGenerale(StoricoGenerale storicoGenerale) {
-        if (storicoGenerale.getConcluso()) {
+        if (storicoGenerale.getEseguitoGenerale()) {
             throw new RuntimeException("lo storico generale è già concluso");
         }
-        storicoGenerale.setConcluso(true);
-        storicoGenerale.setAnnullato(true);
-        storicoGenerale.setDataFine(LocalDateTime.now());
+        storicoGenerale.setEseguitoGenerale(true);
+        storicoGenerale.setAnnullatoGenerale(true);
+        storicoGenerale.setDataEsecuzione(LocalDateTime.now());
         storicoGeneraleRepository.save(storicoGenerale);
     }
 
     public void escludiSingolaAggiunta(Long idStoricoDettaglio) {
         StoricoDettaglio storicoDettaglio = trovaStoricoDettaglio(idStoricoDettaglio);
-        if (storicoDettaglio.getEseguito()) {
+        if (storicoDettaglio.getEseguitoDettaglio()) {
             throw new RuntimeException(
                     "se il DettaglioStorico è eseguito, non può essere anche escluso");
         }
@@ -127,10 +127,10 @@ public class StoriciAnnullaOConcludiService {
     }
 
     private void escludiStoricoDettaglio(StoricoDettaglio storicoDettaglio) {
-        if (storicoDettaglio.getEseguito()) {
+        if (storicoDettaglio.getEseguitoDettaglio()) {
             return;
         }
-        storicoDettaglio.setEscluso(true);
+        storicoDettaglio.setAnnullatoDettaglio(true);
         storicoDettaglioRepository.save(storicoDettaglio);
     }
 
@@ -138,10 +138,10 @@ public class StoriciAnnullaOConcludiService {
             StoricoGenerale storicoGenerale) {
         List<StoricoDettaglio> storicoDettaglioList = storicoGenerale.getStoricoDettaglioList();
         long totConclusi = storicoDettaglioList.stream()
-                .filter(dettaglio -> dettaglio.getEseguito() || dettaglio.getEscluso())
+                .filter(dettaglio -> dettaglio.getEseguitoDettaglio() || dettaglio.getAnnullatoDettaglio())
                 .count();
         long totEsclusi = storicoDettaglioList.stream()
-                .filter(StoricoDettaglio::getEscluso)
+                .filter(StoricoDettaglio::getAnnullatoDettaglio)
                 .count();
         if (totEsclusi == storicoDettaglioList.size()) {
             annullaStoricoGenerale(storicoGenerale);
@@ -156,11 +156,11 @@ public class StoriciAnnullaOConcludiService {
         StoricoGenerale storicoGenerale = trovaStoricoGenerale(idStoricoGenerale);
         if (!storicoGenerale.getStoricoDettaglioList().isEmpty()) {
             for (StoricoDettaglio storicoDettaglio : storicoGenerale.getStoricoDettaglioList()) {
-                if (storicoDettaglio.getEseguito()) {
+                if (storicoDettaglio.getEseguitoDettaglio()) {
                     throw new RuntimeException("vi è almeno un aggiunta eseguita. " +
                             "Per annullare l'intera alimentazione nessuna aggiunta deve essere eseguita.");
                 }
-                if (!storicoDettaglio.getEscluso()) {
+                if (!storicoDettaglio.getAnnullatoDettaglio()) {
                     escludiStoricoDettaglio(storicoDettaglio);
                 }
             }

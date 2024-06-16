@@ -69,7 +69,7 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
                 .tempo(elemento.getTempo())
                 .scatti(elemento.getScatti())
                 .descrizione(elemento.getDescrizione())
-                .arrotondaValori(elemento.getArrotondaValori())
+                .valoriArrotondati(elemento.getArrotondaValori())
                 .build();
         alimentazione = alimentazioneRepository.save(alimentazione);
         return fromModelToDto(alimentazione);
@@ -113,7 +113,7 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
         alimentazione.setTempo(elemento.getTempo());
         alimentazione.setScatti(elemento.getScatti());
         alimentazione.setBagno(bagnoOptional.get());
-        alimentazione.setArrotondaValori(elemento.getArrotondaValori());
+        alimentazione.setValoriArrotondati(elemento.getArrotondaValori());
         alimentazione = alimentazioneRepository.save(alimentazione);
 
         return fromModelToDto(alimentazione);
@@ -142,7 +142,7 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
                 .scatti(oggettoDaTrasformare.getScatti())
                 .tempo(oggettoDaTrasformare.getTempo())
                 .descrizione(oggettoDaTrasformare.getDescrizione())
-                .arrotondaValori(oggettoDaTrasformare.getArrotondaValori())
+                .arrotondaValori(oggettoDaTrasformare.getValoriArrotondati())
                 .nomeBagno(oggettoDaTrasformare.getBagno().getNome())
                 .tipoAlimentazione(tipoAlimentazione)
                 .build();

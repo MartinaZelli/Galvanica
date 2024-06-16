@@ -22,7 +22,7 @@ public class Alimentazione {
     @ManyToOne
     private Bagno bagno;
     private Integer scatti;
-    private Boolean arrotondaValori;
+    private Boolean valoriArrotondati;
     @Convert(converter = DayOfWeekConverter.class)
     private List<DayOfWeek> tempo;
     private String descrizione;
@@ -30,6 +30,7 @@ public class Alimentazione {
     private List<DettaglioAlimentazione> dettaglioAlimentazioneList;
     @OneToMany(mappedBy = "alimentazione")
     private List<StoricoGenerale> storicoGeneraleList;
+//todo: mettere un tipologiaAlimentazione da inizializzare a "scatti" o "tempo".
 
 }
 

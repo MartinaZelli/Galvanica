@@ -56,14 +56,14 @@ public class AlimentazioneAScattiService {
         Alimentazione alimentazione = trovaAlimentazioneScatti(bagno);
         StoricoGenerale ultimoStoricoGenerale = storicoGeneraleRepository.ultimoStoricoGeneraleScatti(
                 idBagno);
-        int scattiParziali = ultimoStoricoGenerale.getRestoScatti() + scattiAttuali;
+        int scattiParziali = ultimoStoricoGenerale.getRestoScattiBagno() + scattiAttuali;
         Integer primoValoreVolumetrico = trovaPrimoValoreVolumetrico(alimentazione);
         ScattiMath scattiMath = MetodiArrotondamenti.alimentazioneScattiMath(
                 scattiAttuali,
                 alimentazione.getScatti(),
-                alimentazione.getArrotondaValori(),
+                alimentazione.getValoriArrotondati(),
                 primoValoreVolumetrico);
-        Integer scattiTotali = ultimoStoricoGenerale.getScattiTotali() + scattiAttuali;
+        Integer scattiTotali = ultimoStoricoGenerale.getScattiTotaliBagno() + scattiAttuali;
         double moltiplicatoreAlimentazione = 0D;
         String messaggio = "gli scatti sono inferiori al 90% dell'alimentazione," +
                 "le aggiunte non verranno eseguite ma messe in conto per la prossima chiamata.";
@@ -75,7 +75,7 @@ public class AlimentazioneAScattiService {
             StoricoGenerale storicoGenerale = storicoGeneraleRepository.save(
                     StoricoGenerale.builder()
                             .bagno(bagno)
-                            .scattiTotali(scattiTotali)
+                            .scattiTotaliBagno(scattiTotali)
                             .scattiInseriti(scattiAttuali)
                             .alimentazione(alimentazione)
                             .tipologiaAggiunta(TipologiaAggiunta.SCATTI)
@@ -91,8 +91,8 @@ public class AlimentazioneAScattiService {
             StoricoGenerale storicoGenerale = storicoGeneraleRepository.save(
                     StoricoGenerale.builder()
                             .bagno(bagno)
-                            .scattiTotali(scattiTotali)
-                            .restoScatti((int) scattiMath.getRestoScatti())
+                            .scattiTotaliBagno(scattiTotali)
+                            .restoScattiBagno((int) scattiMath.getRestoScatti())
                             .scattiInseriti(scattiAttuali)
                             .alimentazione(alimentazione)
                             .tipologiaAggiunta(TipologiaAggiunta.SCATTI)
@@ -126,7 +126,7 @@ public class AlimentazioneAScattiService {
                 .scattiAlimentazione(alimentazione.getScatti())
                 .scattiTotali(scattiTotali)
                 .scattiInseriti(scattiAttuali)
-                .scattiParzialiPrecedenti(ultimoStoricoGenerale.getRestoScatti())
+                .scattiParzialiPrecedenti(ultimoStoricoGenerale.getRestoScattiBagno())
                 .idStoricoGenerale(idStoricoGenerale)
                 .messaggio(messaggio)
                 .idStoricoDettaglioList(idDettaglioList)
@@ -201,9 +201,9 @@ public class AlimentazioneAScattiService {
         return AlimentazioneRisposta.builder()
                 .idBagno(idBagno)
                 .nomeBagno(bagno.getNome())
-                .restoScatti(ultimoStoricoGenerale.getRestoScatti())
+                .restoScatti(ultimoStoricoGenerale.getRestoScattiBagno())
                 .scattiAlimentazione(alimentazione.getScatti())
-                .scattiTotali(ultimoStoricoGenerale.getScattiTotali())
+                .scattiTotali(ultimoStoricoGenerale.getScattiTotaliBagno())
                 .scattiInseriti(0)
                 .messaggio(messaggio)
                 .idStoricoDettaglioList(idDettaglioList)
@@ -246,7 +246,7 @@ public class AlimentazioneAScattiService {
                 })
 
                 .flatMap(Collection::parallelStream)
-                .filter(storicoDettaglio -> !storicoDettaglio.getEseguito() && !storicoDettaglio.getEscluso())
+                .filter(storicoDettaglio -> !storicoDettaglio.getEseguitoDettaglio() && !storicoDettaglio.getAnnullatoDettaglio())
                 .toList();
 
 

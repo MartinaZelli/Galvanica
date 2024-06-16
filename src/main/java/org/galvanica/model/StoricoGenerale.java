@@ -23,20 +23,20 @@ public class StoricoGenerale {
     private Long idStorico;
     @ManyToOne
     private Bagno bagno;
-    private Integer scattiTotali;
-    private Integer restoScatti;
-    private Integer scattiInseriti;
 
+    private Integer scattiTotaliBagno;
+    private Integer restoScattiBagno;
+    private Integer scattiInseriti;
     @ManyToOne
     private Alimentazione alimentazione;
     @Builder.Default
     private LocalDateTime dataCreazione = LocalDateTime.now();
-    private LocalDateTime dataFine;
+    private LocalDateTime dataEsecuzione;
     private LocalDate dataControlloTempo;
     @Builder.Default
-    private Boolean concluso = false;
+    private Boolean eseguitoGenerale = false;
     @Builder.Default
-    private Boolean annullato = false;
+    private Boolean annullatoGenerale = false;
     @Enumerated(EnumType.STRING)
     private TipologiaAggiunta tipologiaAggiunta;
     @OneToMany(mappedBy = "storicoGenerale", cascade = CascadeType.REMOVE)

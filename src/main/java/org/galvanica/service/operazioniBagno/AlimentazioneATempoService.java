@@ -215,7 +215,7 @@ public class AlimentazioneATempoService {
                 })
 
                 .flatMap(Collection::parallelStream)
-                .filter(storicoDettaglio -> !storicoDettaglio.getEseguito() && !storicoDettaglio.getEscluso())
+                .filter(storicoDettaglio -> !storicoDettaglio.getEseguitoDettaglio() && !storicoDettaglio.getAnnullatoDettaglio())
                 .toList();
 
 

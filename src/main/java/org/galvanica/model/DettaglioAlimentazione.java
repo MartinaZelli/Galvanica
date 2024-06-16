@@ -10,8 +10,8 @@ import org.galvanica.math.UnitaDiMisura;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"alimentazione_id_alimentazione", "prodotto_id_prodotto"})})
 public class DettaglioAlimentazione {
-    //todo; impostare chiave unica dettaglio alimentazione/prodotto
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idDettaglio;
