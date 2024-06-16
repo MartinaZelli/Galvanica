@@ -1,16 +1,11 @@
 package org.galvanica.service.storicoService;
 
-import org.galvanica.dto.dtoConModel.StoricoGeneraleDto;
-import org.galvanica.model.StoricoDettaglio;
-import org.galvanica.model.StoricoGenerale;
-import org.galvanica.repository.StoricoDettaglioRepository;
-import org.galvanica.repository.StoricoGeneraleRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class StoricoGeneraleService {
+//todo: riprendere metodi buoni e riportarli in nuova classe StoricoTotaleService
+    /*
     private final StoricoGeneraleRepository storicoGeneraleRepository;
     private final StoricoDettaglioRepository storicoDettaglioRepository;
 
@@ -92,4 +87,5 @@ public class StoricoGeneraleService {
                 .note(oggettoDaTrasformare.getNote())
                 .build();
     }
+     */
 }

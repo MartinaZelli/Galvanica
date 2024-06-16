@@ -7,8 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-
-public class ScattiMath {
+public class RisultatoOperazioniAScatti {
     private long restoScatti;
     private double moltiplicatoreAlimentazione;
 

@@ -2,6 +2,7 @@ package org.galvanica.dto;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.galvanica.math.TipologiaAggiunta;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public abstract class StoricoTotaleDto {
     //todo: verificare crud
     private Long idBagno;

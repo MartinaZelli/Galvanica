@@ -1,18 +1,11 @@
 package org.galvanica.service.storicoService;
 
-import org.galvanica.dto.dtoConModel.StoricoDettaglioDto;
-import org.galvanica.math.ConvertitoreUnitaMisura;
-import org.galvanica.math.UnitaDiMisura;
-import org.galvanica.model.StoricoDettaglio;
-import org.galvanica.repository.BagnoRepository;
-import org.galvanica.repository.StoricoDettaglioRepository;
-import org.galvanica.repository.StoricoGeneraleRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class StoricoDettaglioService {
+    //todo: riprendere metodi buoni e riportarli in nuova classe StoricoTotaleService
+    /*
     private final BagnoRepository bagnoRepository;
     private final StoricoGeneraleRepository storicoGeneraleRepository;
     private final StoricoDettaglioRepository storicoDettaglioRepository;
@@ -109,5 +102,5 @@ public class StoricoDettaglioService {
                 .eseguitoDettaglio(oggettoDaTrasformare.getEseguitoDettaglio())
                 .annullatoDettaglio(oggettoDaTrasformare.getAnnullatoDettaglio())
                 .build();
-    }
+    }*/
 }

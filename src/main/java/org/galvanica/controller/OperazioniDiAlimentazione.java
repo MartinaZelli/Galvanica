@@ -2,7 +2,7 @@ package org.galvanica.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
-import org.galvanica.dto.AlimentazioneRispostaDto;
+import org.galvanica.dto.StoricoTotaleSingoloDto;
 import org.galvanica.service.CRUD.AlimentazioneService;
 import org.galvanica.service.CRUD.BagnoService;
 import org.galvanica.service.operazioniBagno.AlimentazioneAScattiService;
@@ -64,7 +64,7 @@ public class OperazioniDiAlimentazione {
     @PostMapping("/scatti")
     public String calcoloAlimentazione(Model model,
                                        @RequestBody Map<Long, Integer> mappaBagnoScatti) {
-        List<AlimentazioneRispostaDto> alimentazioneRispostaDtoList =
+        List<List<StoricoTotaleSingoloDto>> alimentazioneRispostaDtoList =
                 alimentazioneAScattiService.calcolaAlimentazioneList(
                         mappaBagnoScatti);
         model.addAttribute("alimentazioneRispostaList",

@@ -1,8 +1,8 @@
 package org.galvanica.math;
 
 public class ConvertitoreUnitaMisura {
-    public Integer convertiQuantitaToDatabase(Double misura,
-                                              UnitaDiMisura unitaDiMisuraFROM) {
+    public static Integer convertiQuantitaToDatabase(Double misura,
+                                                     UnitaDiMisura unitaDiMisuraFROM) {
         if (unitaDiMisuraFROM == UnitaDiMisura.MG || unitaDiMisuraFROM == UnitaDiMisura.ML) {
             return misura.intValue();
         }
@@ -16,9 +16,9 @@ public class ConvertitoreUnitaMisura {
     }
 
 
-    public Double convertiQuantitaGenerico(Double misura,
-                                           UnitaDiMisura unitaDiMisuraFROM,
-                                           UnitaDiMisura unitaDiMisuraTO) {
+    public static Double convertiQuantitaGenerico(Double misura,
+                                                  UnitaDiMisura unitaDiMisuraFROM,
+                                                  UnitaDiMisura unitaDiMisuraTO) {
         if (unitaDiMisuraFROM.isSonoVolume() != unitaDiMisuraTO.isSonoVolume()) {
             throw new RuntimeException(
                     "non si trasforma il volume in peso e viceversa, la matematica non è un opinione.");
@@ -47,8 +47,8 @@ public class ConvertitoreUnitaMisura {
         return misura / 1000000;
     }
 
-    public UnitaDiMisura convertiUnitaMisuraPerDto(Integer misura,
-                                                   boolean sonoVolume) {
+    public static UnitaDiMisura convertiUnitaMisuraPerDto(Integer misura,
+                                                          boolean sonoVolume) {
         if (sonoVolume) {
             if (misura < 999) {
                 return UnitaDiMisura.ML;

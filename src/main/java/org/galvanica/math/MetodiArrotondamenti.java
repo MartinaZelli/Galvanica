@@ -1,13 +1,13 @@
 package org.galvanica.math;
 
 public class MetodiArrotondamenti {
-    public static ScattiMath alimentazioneScattiMath(int scattiAttuali,
-                                                     int scattiAlimentazione,
-                                                     boolean arrotondaValori,
-                                                     Integer primoValoreVolumetrico) {
+    public static RisultatoOperazioniAScatti operazioniAScatti(int scattiAttuali,
+                                                               int scattiAlimentazione,
+                                                               boolean arrotondaValori,
+                                                               Integer primoValoreVolumetrico) {
         //risposta:  private long restoScatti;
         //           private double moltiplicatoreAlimentazione;
-        ScattiMath risposta = new ScattiMath();
+        RisultatoOperazioniAScatti risposta = new RisultatoOperazioniAScatti();
         double moltiplicatoreReale = ((double) scattiAttuali) / scattiAlimentazione;
 
         //se il rapporto scattiattuali/alimentazione non supera 0.9 allora esci con moltiplicatore 0;

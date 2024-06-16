@@ -1,6 +1,5 @@
 package org.galvanica.controller;
 
-import org.galvanica.dto.AlimentazioneRispostaDto;
 import org.galvanica.dto.dtoConModel.BagnoDto;
 import org.galvanica.service.CRUD.BagnoService;
 import org.galvanica.service.operazioniBagno.AlimentazioneAScattiService;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,21 +77,22 @@ public class BagnoController {
         return service.ricercaId(id);
     }
 
+    /*
 
-    @PutMapping("{id}/alimentazioneScatti/{scattiParziali}")
-    public AlimentazioneRispostaDto alimentazioneScatti(@PathVariable Long id,
-                                                        @PathVariable Integer scattiParziali) {
-        return alimentazioneAScattiService.calcolaAlimentazioneNuovo(id,
-                scattiParziali);
-    }
+        @PutMapping("{id}/alimentazioneScatti/{scattiParziali}")
+        public AlimentazioneRispostaDto alimentazioneScatti(@PathVariable Long id,
+                                                            @PathVariable Integer scattiParziali) {
+            return alimentazioneAScattiService.creaNuovaAlimentazione(id,
+                    scattiParziali);
+        }
 
-    @PutMapping("{id}/alimentazioneTempo/{dataControllo}")
-    public AlimentazioneRispostaDto alimentazioneTempo(@PathVariable Long id,
-                                                       @PathVariable LocalDate dataControllo) {
-        return alimentazioneATempoService.calcolaAlimentazione(id,
-                dataControllo);
-    }
-
+        @PutMapping("{id}/alimentazioneTempo/{dataControllo}")
+        public AlimentazioneRispostaDto alimentazioneTempo(@PathVariable Long id,
+                                                           @PathVariable LocalDate dataControllo) {
+            return alimentazioneATempoService.calcolaAlimentazione(id,
+                    dataControllo);
+        }
+    */
     @PutMapping("eseguiSingolaAggiunta/{idStoricoDettaglio}")
     public void eseguiSingolaAggiunta(@PathVariable Long idStoricoDettaglio) {
         storiciAnnullaOConcludiService.eseguiSingolaAggiunta(idStoricoDettaglio);
