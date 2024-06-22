@@ -268,7 +268,9 @@ public class AlimentazioneAScattiService {
     private void calcolaAlimentazioneControlliApprovati(Long idBagno) {
         //todo:impostare i controlli a monte di tutti i metodi
         Bagno bagno = bagnoService.modelRicercaId(idBagno);
-        if (bagno.getAlimentazioneList().isEmpty()) {
+        if (bagno.getAlimentazioneList()
+                .stream()
+                .noneMatch(alimentazione -> alimentazione.getScatti() != 0)) {
             throw new RuntimeException(
                     "Alimentazione a scatti non trovata per bagno " + idBagno);
         }

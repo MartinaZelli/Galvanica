@@ -16,6 +16,22 @@ public class StoricoTotaleSingoloDto extends StoricoTotaleDto implements Cloneab
     private Long idStoricoDettaglio;
     private Long idStoricoGenerale;
 
+    private Double moltiplicatoreAlimentazione;
+    private Integer restoScattiBagno;
+    private Integer scattiAlimentazione;
+    private Integer scattiTotaliBagno;
+    private Integer scattiInseriti;
+    private Integer restoScattiPrecedenti;
+    private LocalDate dataControlloTempo;
+    private Boolean eseguitoDettaglio;
+    private Boolean annullatoDettaglio;
+    private Boolean eseguitoGenerale;
+    private Boolean annullatoGenerale;
+    private String noteStoricoGenerale;
+
+    private LocalDateTime dataCreazione;
+    private LocalDateTime dataEsecuzione;
+
     @Builder
     public StoricoTotaleSingoloDto(
             Long idStoricoDettaglio,
@@ -24,12 +40,14 @@ public class StoricoTotaleSingoloDto extends StoricoTotaleDto implements Cloneab
             String nomeBagno,
             Double quantitaProdotto,
             UnitaDiMisura unitaDiMisura,
-            Long idProdotto, String nomeProdotto,
+            Long idProdotto,
+            String nomeProdotto,
             Long idAlimentazione,
             Double moltiplicatoreAlimentazione,
             Integer restoScattiBagno,
             Integer scattiAlimentazione,
-            Integer scattiTotaliBagno, Integer scattiInseriti,
+            Integer scattiTotaliBagno,
+            Integer scattiInseriti,
             Integer restoScattiPrecedenti,
             LocalDate dataControlloTempo,
             TipologiaAggiunta tipologiaAggiunta,
@@ -48,24 +66,25 @@ public class StoricoTotaleSingoloDto extends StoricoTotaleDto implements Cloneab
                 idProdotto,
                 nomeProdotto,
                 idAlimentazione,
-                moltiplicatoreAlimentazione,
-                restoScattiBagno,
-                scattiAlimentazione,
-                scattiTotaliBagno,
-                scattiInseriti,
-                restoScattiPrecedenti,
-                dataControlloTempo,
                 tipologiaAggiunta,
-                eseguitoDettaglio,
-                annullatoDettaglio,
-                eseguitoGenerale,
-                annullatoGenerale,
-                noteStoricoGenerale,
-                dataCreazione,
-                dataEsecuzione,
                 rispostaCalcoloFront);
         this.idStoricoDettaglio = idStoricoDettaglio;
         this.idStoricoGenerale = idStoricoGenerale;
+        this.moltiplicatoreAlimentazione = moltiplicatoreAlimentazione;
+        this.restoScattiBagno = restoScattiBagno;
+        this.scattiAlimentazione = scattiAlimentazione;
+        this.scattiTotaliBagno = scattiTotaliBagno;
+        this.scattiInseriti = scattiInseriti;
+        this.restoScattiPrecedenti = restoScattiPrecedenti;
+        this.dataControlloTempo = dataControlloTempo;
+        this.eseguitoDettaglio = eseguitoDettaglio;
+        this.annullatoDettaglio = annullatoDettaglio;
+        this.eseguitoGenerale = eseguitoGenerale;
+        this.annullatoGenerale = annullatoGenerale;
+        this.noteStoricoGenerale = noteStoricoGenerale;
+
+        this.dataCreazione = dataCreazione;
+        this.dataEsecuzione = dataEsecuzione;
     }
 
     @Override
