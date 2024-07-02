@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static org.galvanica.math.ConvertitoreUnitaMisura.convertiQuantitaGenerico;
-import static org.galvanica.math.MetodiArrotondamenti.convertiUnitaMisuraPerDto;
+import static org.galvanica.math.ConvertitoreUnitaMisura.convertiUnitaMisuraPerDto;
 
 @Service
 public class AlimentazioneATempoService {
@@ -44,7 +44,6 @@ public class AlimentazioneATempoService {
 
         this.bagnoService = bagnoService;
     }
-//todo: unire calcola alimentazione con calcolaAggiunteStoricoPerIdBagnoDaDataAData
 
     public void calcolaAlimentazione(
             Long idBagno, LocalDate dataControllo) {

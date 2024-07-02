@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 import static org.galvanica.math.ConvertitoreUnitaMisura.convertiQuantitaGenerico;
-import static org.galvanica.math.MetodiArrotondamenti.convertiUnitaMisuraPerDto;
+import static org.galvanica.math.ConvertitoreUnitaMisura.convertiUnitaMisuraPerDto;
 
 @Service
 public class AlimentazioneAScattiService {

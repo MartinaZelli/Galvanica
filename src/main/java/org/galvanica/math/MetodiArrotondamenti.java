@@ -5,8 +5,8 @@ public class MetodiArrotondamenti {
                                                                int scattiAlimentazione,
                                                                boolean arrotondaValori,
                                                                Integer primoValoreVolumetrico) {
-        //risposta:  private long restoScatti;
-        //           private double moltiplicatoreAlimentazione;
+        //RisultatoOperazioniScatti:  private long restoScatti;
+        //                            private double moltiplicatoreAlimentazione;
         RisultatoOperazioniAScatti risposta = new RisultatoOperazioniAScatti();
         double moltiplicatoreReale = ((double) scattiAttuali) / scattiAlimentazione;
 
@@ -40,7 +40,7 @@ public class MetodiArrotondamenti {
         double aggiunta = moltiplicatoreReale * primoValoreVolumetrico;
         double aggiuntaApprossimata = moltiplicatoreApprossimatoPerAggiunta(aggiunta);
 
-        double moltiplicatoreApprossimato = aggiuntaApprossimata / primoValoreVolumetrico * 1;
+        double moltiplicatoreApprossimato = aggiuntaApprossimata / primoValoreVolumetrico;
         double scattiAggiunti = moltiplicatoreApprossimato * scattiAlimentazione;
         risposta.setRestoScatti(Math.round(scattiAttuali - scattiAggiunti));
         risposta.setMoltiplicatoreAlimentazione(Math.round(moltiplicatoreApprossimato * 100) / 100D);
@@ -75,43 +75,9 @@ public class MetodiArrotondamenti {
             double resto = aggiunta % 50;
             return aggiunta - resto;
         }
-        double resto = aggiunta % 250;
+        double resto = aggiunta % 200;
         return aggiunta - resto;
     }
 
-    public static Double convertiQuantitaPerDto(Integer quantita,
-                                                Boolean sonoVolume) {
-        if (sonoVolume) {
-            if (quantita <= 1000) {
-                return quantita.doubleValue();
-            }
-            return quantita.doubleValue() / 1000;
-        }
-        if (quantita <= 1000) {
-            return quantita.doubleValue();
-        }
-        if (quantita >= 1000000) {
-            return quantita.doubleValue() / 1000000;
-        }
-        return quantita.doubleValue() / 1000;
-    }
-
-    public static UnitaDiMisura convertiUnitaMisuraPerDto(Integer quantita,
-                                                          Boolean sonoVolume) {
-        if (sonoVolume) {
-            if (quantita <= 1000) {
-                return UnitaDiMisura.ML;
-            }
-            return UnitaDiMisura.L;
-        }
-        if (quantita <= 1000) {
-            return UnitaDiMisura.MG;
-        }
-        if (quantita >= 1000000) {
-            return UnitaDiMisura.KG;
-        }
-        return UnitaDiMisura.G;
-
-    }
 
 }

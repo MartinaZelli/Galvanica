@@ -1,7 +1,6 @@
 package org.galvanica.service.CRUD;
 
 import org.galvanica.dto.dtoConModel.DettaglioAlimentazioneDto;
-import org.galvanica.math.ConvertitoreUnitaMisura;
 import org.galvanica.math.UnitaDiMisura;
 import org.galvanica.model.Alimentazione;
 import org.galvanica.model.DettaglioAlimentazione;
@@ -18,8 +17,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.galvanica.math.MetodiArrotondamenti.convertiQuantitaPerDto;
-import static org.galvanica.math.MetodiArrotondamenti.convertiUnitaMisuraPerDto;
+import static org.galvanica.math.ConvertitoreUnitaMisura.*;
+
 
 @Service
 public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlimentazioneDto, DettaglioAlimentazione> {
@@ -27,7 +26,6 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
     private final DettaglioAlimentazioneRepository dettaglioAlimentazioneRepository;
     private final ProdottoRepository prodottoRepository;
     private final AlimentazioneRepository alimentazioneRepository;
-    private ConvertitoreUnitaMisura convertitore;
 
     public DettaglioAlimentazioneService(
             DettaglioAlimentazioneRepository dettaglioAlimentazioneRepository,
@@ -86,7 +84,7 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
         if (elemento.getUnitaDiMisura().isSonoVolume()) {
             unita = UnitaDiMisura.ML;
         }
-        Integer quantita = convertitore.convertiQuantitaToDatabase(elemento.getQuantitaProdotto(),
+        Integer quantita = convertiQuantitaToDatabase(elemento.getQuantitaProdotto(),
                 elemento.getUnitaDiMisura());
         dettaglioAlimentazione.setUnitaDiMisura(unita);
         dettaglioAlimentazione.setQuantitaProdotto(quantita);
@@ -144,7 +142,7 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
         if (elemento.getUnitaDiMisura().isSonoVolume()) {
             unita = UnitaDiMisura.ML;
         }
-        Integer quantita = convertitore.convertiQuantitaToDatabase(elemento.getQuantitaProdotto(),
+        Integer quantita = convertiQuantitaToDatabase(elemento.getQuantitaProdotto(),
                 elemento.getUnitaDiMisura());
         dettaglioAlimentazione.setUnitaDiMisura(unita);
         dettaglioAlimentazione.setQuantitaProdotto(quantita);

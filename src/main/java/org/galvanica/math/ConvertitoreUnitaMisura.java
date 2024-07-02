@@ -1,50 +1,69 @@
 package org.galvanica.math;
 
 public class ConvertitoreUnitaMisura {
+
+
     public static Integer convertiQuantitaToDatabase(Double misura,
-                                                     UnitaDiMisura unitaDiMisuraFROM) {
-        if (unitaDiMisuraFROM == UnitaDiMisura.MG || unitaDiMisuraFROM == UnitaDiMisura.ML) {
-            return misura.intValue();
+                                                     UnitaDiMisura originalUnit) {
+        double convertedValue = switch (originalUnit) {
+            case MG, ML -> misura;
+            case KG -> misura * 1000000;
+            default -> misura * 1000;
+        };
+
+        if (convertedValue > Integer.MAX_VALUE) {
+            throw new ArithmeticException(
+                    "Overflow: Il valore convertito supera la capacità massima di un intero.");
         }
-        if (unitaDiMisuraFROM == UnitaDiMisura.KG) {
-            double misuraCorretta = misura * 1000000;
-            return (int) misuraCorretta;
-        } else {
-            double misuraCorretta = misura * 1000;
-            return (int) misuraCorretta;
-        }
+        return (int) convertedValue;
     }
 
+    public static Double convertiQuantitaGenerico(double misura,
+                                                  UnitaDiMisura originalUnit,
+                                                  UnitaDiMisura targetUnit) {
 
-    public static Double convertiQuantitaGenerico(Double misura,
-                                                  UnitaDiMisura unitaDiMisuraFROM,
-                                                  UnitaDiMisura unitaDiMisuraTO) {
-        if (unitaDiMisuraFROM.isSonoVolume() != unitaDiMisuraTO.isSonoVolume()) {
-            throw new RuntimeException(
-                    "non si trasforma il volume in peso e viceversa, la matematica non è un opinione.");
+        if (!originalUnit.isSonoVolume() == targetUnit.isSonoVolume()) {
+            throw new IllegalArgumentException(
+                    "Impossibile convertire volume in peso e viceversa.");
         }
-        if (unitaDiMisuraFROM == unitaDiMisuraTO) {
-            return misura;
-        }
-        if (unitaDiMisuraFROM.isSonoVolume()) {
-            if (unitaDiMisuraFROM == UnitaDiMisura.L && unitaDiMisuraTO == UnitaDiMisura.ML) {
-                return misura / 1000;
+
+        double convertedValue = misura;
+
+        switch (originalUnit) {
+            case L -> {
+                if (targetUnit == UnitaDiMisura.ML) {
+                    convertedValue *= 1000;
+                }
             }
-            return misura * 1000;
+            case ML -> {
+                if (targetUnit == UnitaDiMisura.L) {
+                    convertedValue /= 1000;
+                }
+            }
+            case G -> convertedValue = switch (targetUnit) {
+                case MG -> misura * 1000;
+                case KG -> misura / 1000;
+                default -> misura;
+            };
+            case MG -> convertedValue = switch (targetUnit) {
+                case G -> misura / 1000;
+                case KG -> misura / 1000000;
+                default -> misura;
+            };
+            case KG -> convertedValue = switch (targetUnit) {
+                case MG -> misura * 1000000;
+                case G -> misura * 1000;
+                default -> misura;
+            };
+            default -> throw new IllegalArgumentException(
+                    "Unità di misura non supportata: " + originalUnit);
         }
-        if ((unitaDiMisuraFROM == UnitaDiMisura.KG && unitaDiMisuraTO == UnitaDiMisura.G) ||
-                (unitaDiMisuraFROM == UnitaDiMisura.G && unitaDiMisuraTO == UnitaDiMisura.MG)) {
-            return misura / 1000;
+
+        if (convertedValue > Integer.MAX_VALUE) {
+            throw new ArithmeticException(
+                    "Overflow: Il valore convertito supera la capacità massima di un intero.");
         }
-        if ((unitaDiMisuraFROM == UnitaDiMisura.MG && unitaDiMisuraTO == UnitaDiMisura.G) ||
-                (unitaDiMisuraFROM == UnitaDiMisura.G && unitaDiMisuraTO == UnitaDiMisura.KG)) {
-            return misura * 1000;
-        }
-        if (unitaDiMisuraFROM == UnitaDiMisura.MG && unitaDiMisuraTO == UnitaDiMisura.KG) {
-            return misura * 1000000;
-        }
-        //if (unitaDiMisuraFROM == UnitaDiMisura.KG && unitaDiMisuraTO == UnitaDiMisura.MG) {
-        return misura / 1000000;
+        return convertedValue;
     }
 
     public static UnitaDiMisura convertiUnitaMisuraPerDto(Integer misura,
@@ -62,5 +81,23 @@ public class ConvertitoreUnitaMisura {
         }
         return UnitaDiMisura.KG;
     }
+
+    public static Double convertiQuantitaPerDto(Integer quantita,
+                                                Boolean sonoVolume) {
+        if (sonoVolume) {
+            if (quantita < 999) {
+                return quantita.doubleValue();
+            }
+            return quantita.doubleValue() / 1000;
+        }
+        if (quantita < 999) {
+            return quantita.doubleValue();
+        }
+        if (quantita < 999999) {
+            return quantita.doubleValue() / 1000;
+        }
+        return quantita.doubleValue() / 1000000;
+    }
+
 
 }
