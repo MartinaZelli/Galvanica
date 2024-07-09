@@ -43,21 +43,11 @@ public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
             throw new RuntimeException(
                     "l'id magazzino deve essere valorizzato");
         }
-        Optional<Magazzino> magazzinoTrovato = magazzinoRepository.findById(elemento.getIdMagazzino());
-        if (magazzinoTrovato.isEmpty()) {
-            throw new RuntimeException(
-                    "l'id del magazzino non esiste, correggere.");
-        }
-        if (elemento.getPh() != null) {
-            if (elemento.getPh() < 0 || elemento.getPh() > 14) {
-                throw new RuntimeException(
-                        "il pH ha valori compresi fra 0 e 14 se inizializzato.");
-            }
-        }
+        Magazzino magazzino = validaProdotto(elemento);
         Prodotto prodotto = Prodotto.builder()
                 .descrizione(elemento.getDescrizione())
                 .nome(elemento.getNome())
-                .magazzino(magazzinoTrovato.get())
+                .magazzino(magazzino)
                 .ph(elemento.getPh())
                 .build();
         prodotto = prodottoRepository.save(prodotto);
@@ -84,6 +74,20 @@ public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
             throw new RuntimeException(
                     "il magazzino non può essere null");
         }
+        Magazzino magazzino = validaProdotto(elemento);
+
+        Prodotto prodotto = prodottoOptional.get();
+        prodotto.setMagazzino(magazzino);
+        prodotto.setNome(elemento.getNome());
+        prodotto.setDescrizione(elemento.getDescrizione());
+        prodotto.setPh(elemento.getPh());
+        prodotto = prodottoRepository.save(prodotto);
+
+        return fromModelToDto(prodotto);
+
+    }
+
+    private Magazzino validaProdotto(ProdottoDto elemento) {
         Optional<Magazzino> magazzinoTrovato = magazzinoRepository.findById(elemento.getIdMagazzino());
         if (magazzinoTrovato.isEmpty()) {
             throw new RuntimeException(
@@ -95,15 +99,7 @@ public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
                         "il pH ha valori compresi fra 0 e 14 se inizializzato.");
             }
         }
-        Prodotto prodotto = prodottoOptional.get();
-        prodotto.setMagazzino(magazzinoTrovato.get());
-        prodotto.setNome(elemento.getNome());
-        prodotto.setDescrizione(elemento.getDescrizione());
-        prodotto.setPh(elemento.getPh());
-        prodotto = prodottoRepository.save(prodotto);
-
-        return fromModelToDto(prodotto);
-
+        return magazzinoTrovato.get();
     }
 
     @Override
@@ -149,7 +145,7 @@ public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
                 .toList();
     }
 
-    public List<ProdottoDto> ricercaProdottiByDettaglioAlimentazione(
+    public List<ProdottoDto> ricercaProdottiInseribiliPerDettaglioAlimentazione(
             Long idDettagioAlimentazione) {
         Optional<DettaglioAlimentazione> dettaglioAlimentazioneOptional =
                 dettaglioAlimentazioneRepository.findById(idDettagioAlimentazione);
@@ -168,7 +164,7 @@ public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
 
     }
 
-    public List<ProdottoDto> ricercaProdottiByAlimentazione(
+    public List<ProdottoDto> ricercaProdottiInseribiliPerAlimentazione(
             Long idAlimentazione) {
         Optional<Alimentazione> alimentazione = alimentazioneRepository.findById(
                 idAlimentazione);

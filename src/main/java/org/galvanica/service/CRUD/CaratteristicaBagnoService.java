@@ -81,6 +81,10 @@ public class CaratteristicaBagnoService implements ICRUDService<CaratteristicaBa
             throw new RuntimeException(
                     "L'id del bagno non esiste. correggere.");
         }
+        if (elemento.getNome() == null) {
+            throw new RuntimeException(
+                    "Il nome deve essere valorizzato");
+        }
         CaratteristicaBagno caratteristicaBagno = caratteristicaOpt.get();
         caratteristicaBagno.setBagno(bagnoTrovato.get());
         caratteristicaBagno.setDescrizione(elemento.getDescrizione());

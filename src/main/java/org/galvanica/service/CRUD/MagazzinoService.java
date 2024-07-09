@@ -14,12 +14,9 @@ import java.util.stream.StreamSupport;
 public class MagazzinoService implements ICRUDService<MagazzinoDto, Magazzino> {
 
     private final MagazzinoRepository magazzinoRepository;
-    private final RelazioneBagnoProdottoService relazioneBagnoProdottoService;
 
-    public MagazzinoService(MagazzinoRepository magazzinoRepository,
-                            RelazioneBagnoProdottoService relazioneBagnoProdottoService) {
+    public MagazzinoService(MagazzinoRepository magazzinoRepository) {
         this.magazzinoRepository = magazzinoRepository;
-        this.relazioneBagnoProdottoService = relazioneBagnoProdottoService;
     }
 
     @Override

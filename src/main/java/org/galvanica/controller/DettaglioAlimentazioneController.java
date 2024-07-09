@@ -69,7 +69,7 @@ public class DettaglioAlimentazioneController {
         model.addAttribute("dettaglioAlimentazione",
                 dettaglioAlimentazioneService.ricercaId(id).orElseThrow());
         model.addAttribute("prodottoList",
-                prodottoService.ricercaProdottiByDettaglioAlimentazione(id));
+                prodottoService.ricercaProdottiInseribiliPerDettaglioAlimentazione(id));
         model.addAttribute("unitaDiMisuraList", mathService.unitaDiMisuraList());
 
         return "dettaglioAlimentazione/dettaglioAlimentazioneAzioni";
@@ -88,7 +88,7 @@ public class DettaglioAlimentazioneController {
     @GetMapping("/new/{id}")
     public String newDettaglioAlimentazione(@PathVariable Long id, Model model) {
         model.addAttribute("prodottoList",
-                prodottoService.ricercaProdottiByAlimentazione(id));
+                prodottoService.ricercaProdottiInseribiliPerAlimentazione(id));
         model.addAttribute("unitaDiMisuraList", mathService.unitaDiMisuraList());
         model.addAttribute("alimentazione",
                 alimentazioneService.ricercaId(id).orElseThrow());
