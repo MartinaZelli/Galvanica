@@ -3,6 +3,7 @@ package org.galvanica.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.galvanica.math.DayOfWeekConverter;
+import org.galvanica.math.TipologiaAggiunta;
 
 import java.time.DayOfWeek;
 import java.util.List;
@@ -22,6 +23,8 @@ public class Alimentazione {
     @ManyToOne
     private Bagno bagno;
     private Integer scatti;
+    @Enumerated(EnumType.STRING)
+    private TipologiaAggiunta tipologiaAggiunta;
     private Boolean valoriArrotondati;
     @Convert(converter = DayOfWeekConverter.class)
     private List<DayOfWeek> tempo;

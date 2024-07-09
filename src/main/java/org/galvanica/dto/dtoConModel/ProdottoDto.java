@@ -10,7 +10,7 @@ import lombok.*;
 public class ProdottoDto {
     private Long idProdotto;
     private Long idMagazzino;
-    private String nomeMagazzino;
+    private String descrizioneMagazzino;
     private String nome;
     private String descrizione;
     private Integer ph;

@@ -1,6 +1,7 @@
 package org.galvanica.service.CRUD;
 
 import org.galvanica.dto.dtoConModel.AlimentazioneDto;
+import org.galvanica.math.TipologiaAggiunta;
 import org.galvanica.model.Alimentazione;
 import org.galvanica.model.Bagno;
 import org.galvanica.repository.AlimentazioneRepository;
@@ -53,7 +54,8 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
             throw new RuntimeException(
                     "l'id del bagno non esiste, correggere.");
         }
-        if (Objects.equals(elemento.getTipoAlimentazione(), "Scatti")) {
+        if (Objects.equals(elemento.getTipologiaAggiunta(),
+                TipologiaAggiunta.SCATTI)) {
             if (bagnoOptional.get().getAlimentazioneList() != null) {
                 if (bagnoOptional.get()
                         .getAlimentazioneList()
@@ -63,6 +65,10 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
                             "esiste già un alimentazione a scatti per questo bagno.");
                 }
             }
+        }
+        if (elemento.getTipologiaAggiunta().equals(TipologiaAggiunta.MANUALE)) {
+            throw new RuntimeException(
+                    "non può essere inizializzata un alimentazione Manuale per il bagno.");
         }
         Alimentazione alimentazione = Alimentazione.builder()
                 .bagno(bagnoOptional.get())
@@ -96,6 +102,11 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
             throw new RuntimeException(
                     "l'id bagno non può essere null");
         }
+        if (!Objects.equals(elemento.getIdBagno(),
+                alimentazioneOptional.get().getBagno().getIdBagno())) {
+            throw new RuntimeException(
+                    "non può essere modificato il bagno relativo all'alimentazione.");
+        }
         Optional<Bagno> bagnoOptional = bagnoRepository.findById(elemento.getIdBagno());
         if (bagnoOptional.isEmpty()) {
             throw new RuntimeException(
@@ -107,6 +118,15 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
         }
         if (elemento.getValoriArrotondati() == null) {
             elemento.setValoriArrotondati(false);
+        }
+        if (!Objects.equals(elemento.getTipologiaAggiunta(),
+                alimentazioneOptional.get().getTipologiaAggiunta())) {
+            throw new RuntimeException(
+                    "non può essere modificata la tipologia di aggiunta di un bagno.");
+        }
+        if (elemento.getTipologiaAggiunta().equals(TipologiaAggiunta.MANUALE)) {
+            throw new RuntimeException(
+                    "non può essere inizializzata un alimentazione Manuale per il bagno.");
         }
         Alimentazione alimentazione = alimentazioneOptional.get();
         alimentazione.setDescrizione(elemento.getDescrizione());
@@ -129,13 +149,6 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
 
     @Override
     public AlimentazioneDto fromModelToDto(Alimentazione oggettoDaTrasformare) {
-        String tipoAlimentazione = "";
-        if (oggettoDaTrasformare.getScatti() != null) {
-            tipoAlimentazione = "Scatti";
-        }
-        if (oggettoDaTrasformare.getTempo() != null) {
-            tipoAlimentazione = "Tempo";
-        }
         return AlimentazioneDto.builder()
                 .idAlimentazione(oggettoDaTrasformare.getIdAlimentazione())
                 .idBagno(oggettoDaTrasformare.getBagno().getIdBagno())
@@ -144,7 +157,7 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
                 .descrizione(oggettoDaTrasformare.getDescrizione())
                 .valoriArrotondati(oggettoDaTrasformare.getValoriArrotondati())
                 .nomeBagno(oggettoDaTrasformare.getBagno().getNome())
-                .tipoAlimentazione(tipoAlimentazione)
+                .tipologiaAggiunta(oggettoDaTrasformare.getTipologiaAggiunta())
                 .build();
     }
 
@@ -162,6 +175,16 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
         return StreamSupport.stream(alimentazioneRepository.findAll().spliterator(),
                 false).map(this::fromModelToDto).collect(
                 Collectors.toList());
+    }
+
+    private void controlloAggiunta(AlimentazioneDto dto, Alimentazione model) {
+//todo: controllare se tipologia aggiunta e scatti/tempo sono corrispondenti (tempo: tempo, scatti: scatti)
+// controllare che tipologia aggiunta non sia manuale,
+// controllare che se tipologia aggiunta di model è x allora deve restare x.
+// controllare che sia valorizzato il tempo se Tip.Agg: Tempo e gli scatti...
+// controllare che se scatti model valorizzati allora non può diventare tempo e viceversa
+// il MODEL fa da verifica a tutti i controlli. l'unica cosa che può variare è o i giorni del tempo o il numero degli scatti..
+
     }
 
 }

@@ -44,7 +44,7 @@
                        hx-swap="innerHTML"
                        type="radio" id="scatti" name="tipoAlimentazione"
                        value="Scatti"
-                       th:checked="${alimentazione.getTipoAlimentazione()=='Scatti'}"/>
+                       th:checked="${alimentazione.getTipologiaAggiunta()=='Scatti'}"/>
                 <label for="scatti">Scatti</label>
 
                 <input th:attr="hx-get=@{'/alimentazione/campiTempo/'+${alimentazione.getIdAlimentazione()}}"
@@ -52,11 +52,11 @@
                        hx-target="#campiTipoAlimentazione"
                        hx-swap="innerHTML"
                        type="radio" id="tempo" name="tipoAlimentazione" value="Tempo"
-                       th:checked="${alimentazione.getTipoAlimentazione()=='Tempo'}"/>
+                       th:checked="${alimentazione.getTipologiaAggiunta()=='Tempo'}"/>
                 <label for="tempo">Tempo</label>
             </div>
         </fieldset>
-        <div th:switch="${alimentazione.getTipoAlimentazione()}"
+        <div th:switch="${alimentazione.getTipologiaAggiunta()}"
              id="campiTipoAlimentazione">
             <div th:case="Scatti">
                 <p th:replace="~{alimentazione/campiTipoAlimentazione :: campiScatti}"
