@@ -175,4 +175,14 @@ public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
         return ricercaProdottiByBagno(alimentazione.get().getBagno().getIdBagno());
 
     }
+
+    public Prodotto modelRicercaId(long id) {
+        Optional<Prodotto> prodottoTrovato = prodottoRepository.findById(id);
+        if (prodottoTrovato.isEmpty()) {
+            throw new RuntimeException(
+                    "non esiste prodotto con questo ID");
+        }
+        return prodottoTrovato.get();
+    }
+
 }

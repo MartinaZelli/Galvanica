@@ -19,5 +19,6 @@ public class Prodotto {
     private String nome;
     private String descrizione;
     private Integer ph;
+    //todo: inserisci porcoddio boolean sonoVolume
 
 }
