@@ -15,58 +15,85 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 -- Dump dei dati della tabella galvanica.alimentazione: ~32 rows (circa)
-INSERT IGNORE INTO `alimentazione` (`id_alimentazione`, `descrizione`, `scatti`, `tempo`, `bagno_id_bagno`, `arrotonda_valori`) VALUES
-	(4, 'Tempo', NULL, 'FRIDAY', 2, b'0'),
-	(5, 'Scatti', 500, NULL, 3, b'1'),
-	(6, 'Scatti', 500, NULL, 4, b'1'),
-	(52, 'Tempo', NULL, 'MONDAY', 3, b'0'),
-	(102, 'Tempo', NULL, 'MONDAY', 4, b'0'),
-	(103, 'Scatti', 1000, NULL, 5, b'1'),
-	(104, 'Scatti', 30000, NULL, 6, b'1'),
-	(105, 'Scatti', 500, NULL, 7, b'1'),
-	(106, 'Scatti', 2500, NULL, 9, b'1'),
-	(107, 'Tempo', NULL, 'MONDAY', 9, b'0'),
-	(108, 'Scatti', 2500, NULL, 10, b'1'),
-	(109, 'Tempo', NULL, 'MONDAY', 10, b'0'),
-	(110, 'Tempo', NULL, 'MONDAY', 11, b'0'),
-	(111, 'Scatti', 1000, NULL, 11, b'1'),
-	(112, 'Scatti', 1000, NULL, 12, b'1'),
-	(113, 'Tempo', NULL, 'MONDAY', 12, b'0'),
-	(114, 'Scatti', 500, NULL, 13, b'0'),
-	(115, 'Tempo', NULL, 'FRIDAY', 13, b'0'),
-	(116, 'Scatti', 700, NULL, 14, b'0'),
-	(117, 'Scatti', 900, NULL, 15, b'0'),
-	(118, 'Scatti', 1500, NULL, 16, b'0'),
-	(119, 'Scatti', 1250, NULL, 17, b'0'),
-	(120, 'Scatti', 500, NULL, 18, b'0'),
-	(121, 'Scatti', 1500, NULL, 19, b'0'),
-	(122, 'Scatti', 1000, NULL, 20, b'0'),
-	(123, 'Scatti', 450, NULL, 21, b'0'),
-	(124, 'Scatti', 1750, NULL, 22, b'0'),
-	(125, 'Scatti', 1250, NULL, 23, b'0'),
-	(152, 'Tempo', NULL, 'FRIDAY', 1, b'0'),
-	(153, 'Scatti', 500, NULL, 1, b'1'),
-	(202, 'Scatti', 1500, NULL, 52, b'1'),
-	(203, 'Scatti', 500, NULL, 2, b'1');
+REPLACE INTO `alimentazione` (`id_alimentazione`, `descrizione`, `scatti`, `tempo`, `bagno_id_bagno`, `valori_arrotondati`, `tipologia_aggiunta`) VALUES
+	(4, 'Tempo', NULL, 'FRIDAY', 2, b'0', NULL),
+	(5, 'Scatti', 500, NULL, 3, b'1', NULL),
+	(6, 'Scatti', 500, NULL, 4, b'1', NULL),
+	(52, 'Tempo', NULL, 'MONDAY', 3, b'0', NULL),
+	(102, 'Tempo', NULL, 'MONDAY', 4, b'0', NULL),
+	(103, 'Scatti', 1000, NULL, 5, b'1', NULL),
+	(104, 'Scatti', 30000, NULL, 6, b'1', NULL),
+	(105, 'Scatti', 500, NULL, 7, b'1', NULL),
+	(106, 'Scatti', 2500, NULL, 9, b'1', NULL),
+	(107, 'Tempo', NULL, 'MONDAY', 9, b'0', NULL),
+	(108, 'Scatti', 2500, NULL, 10, b'1', NULL),
+	(109, 'Tempo', NULL, 'MONDAY', 10, b'0', NULL),
+	(110, 'Tempo', NULL, 'MONDAY', 11, b'0', NULL),
+	(111, 'Scatti', 1000, NULL, 11, b'1', NULL),
+	(112, 'Scatti', 1000, NULL, 12, b'1', NULL),
+	(113, 'Tempo', NULL, 'MONDAY', 12, b'0', NULL),
+	(114, 'Scatti', 500, NULL, 13, b'0', NULL),
+	(115, 'Tempo', NULL, 'FRIDAY', 13, b'0', NULL),
+	(116, 'Scatti', 700, NULL, 14, b'0', NULL),
+	(117, 'Scatti', 900, NULL, 15, b'0', NULL),
+	(118, 'Scatti', 1500, NULL, 16, b'0', NULL),
+	(119, 'Scatti', 1250, NULL, 17, b'0', NULL),
+	(120, 'Scatti', 500, NULL, 18, b'0', NULL),
+	(121, 'Scatti', 1500, NULL, 19, b'0', NULL),
+	(122, 'Scatti', 1000, NULL, 20, b'0', NULL),
+	(123, 'Scatti', 450, NULL, 21, b'0', NULL),
+	(124, 'Scatti', 1750, NULL, 22, b'0', NULL),
+	(125, 'Scatti', 1250, NULL, 23, b'0', NULL),
+	(152, 'Tempo', NULL, 'FRIDAY', 1, b'0', NULL),
+	(153, 'Scatti', 500, NULL, 1, b'1', NULL),
+	(202, 'Scatti', 1500, NULL, 52, b'1', NULL),
+	(203, 'Scatti', 500, NULL, 2, b'1', NULL);
 
--- Dump dei dati della tabella galvanica.alimentazione_seq: ~1 rows (circa)
-INSERT IGNORE INTO `alimentazione_seq` (`next_val`) VALUES
+-- Dump dei dati della tabella galvanica.alimentazione_seq: ~24 rows (circa)
+REPLACE INTO `alimentazione_seq` (`next_val`) VALUES
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
+	(301),
 	(301);
 
 -- Dump dei dati della tabella galvanica.bagno: ~24 rows (circa)
-INSERT IGNORE INTO `bagno` (`id_bagno`, `data_fine`, `data_inizio`, `litri`, `nome`, `resto_scatti`, `scatti_totali`) VALUES
+REPLACE INTO `bagno` (`id_bagno`, `data_fine`, `data_inizio`, `litri`, `nome`, `resto_scatti`, `scatti_totali`) VALUES
 	(1, NULL, '2024-05-02', 980, 'RAME ALCALINO 220 1', 4, 4),
 	(2, NULL, '2024-05-02', 980, 'RAME ALCALINO 220 2', 8, 8),
-	(3, NULL, '2024-05-02', 1380, 'RAME ACIDO 250 1', 109, 3109),
+	(3, NULL, '2024-05-02', 1380, 'RAME ACIDO 250 1', 109, 8109),
 	(4, NULL, '2024-05-02', 1380, 'RAME ACIDO 250 2', 16, 16),
-	(5, NULL, '2024-05-02', 1380, '3000', 20, 20),
+	(5, NULL, '2024-05-02', 1380, '3000', 21, 2021),
 	(6, NULL, '2024-05-02', 520, 'NICHELINOX', 24, 24),
 	(7, NULL, '2024-05-02', 520, 'PHOSBENT', 28, 28),
 	(8, NULL, '2024-05-02', 210, 'NICHEL WOOD', 0, 0),
 	(9, NULL, '2024-05-02', 520, 'BRINOX HT', 1716, 1716),
 	(10, NULL, '2024-05-02', 520, 'WHITEBRONZE HS 1', 30, 30),
 	(11, NULL, '2024-05-02', 520, 'WHITEBRONZE 2', 533, 533),
-	(12, NULL, '2024-05-02', 520, 'BRONZINOX 3', 36, 36),
+	(12, NULL, '2024-05-02', 520, 'BRONZINOX 3', 36, 2536),
 	(13, NULL, '2024-05-02', 210, 'DORATURA MC0', 39, 39),
 	(14, NULL, '2024-05-02', 210, '720 PDFE', 42, 42),
 	(15, NULL, '2024-05-02', 210, '1811 PDNI', 45, 45),
@@ -80,18 +107,72 @@ INSERT IGNORE INTO `bagno` (`id_bagno`, `data_fine`, `data_inizio`, `litri`, `no
 	(23, NULL, '2024-05-02', 210, 'GG0820', 69, 69),
 	(52, NULL, '2024-05-02', 210, 'BLACKCLAD', 156, 156);
 
--- Dump dei dati della tabella galvanica.bagno_seq: ~1 rows (circa)
-INSERT IGNORE INTO `bagno_seq` (`next_val`) VALUES
+-- Dump dei dati della tabella galvanica.bagno_seq: ~24 rows (circa)
+REPLACE INTO `bagno_seq` (`next_val`) VALUES
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
+	(151),
 	(151);
 
--- Dump dei dati della tabella galvanica.caratteristica_bagno: ~0 rows (circa)
+-- Dump dei dati della tabella galvanica.caratteristica_bagno: ~1 rows (circa)
 
--- Dump dei dati della tabella galvanica.caratteristica_bagno_seq: ~1 rows (circa)
-INSERT IGNORE INTO `caratteristica_bagno_seq` (`next_val`) VALUES
+-- Dump dei dati della tabella galvanica.caratteristica_bagno_seq: ~24 rows (circa)
+REPLACE INTO `caratteristica_bagno_seq` (`next_val`) VALUES
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
+	(1),
 	(1);
 
 -- Dump dei dati della tabella galvanica.dettaglio_alimentazione: ~73 rows (circa)
-INSERT IGNORE INTO `dettaglio_alimentazione` (`id_dettaglio`, `note`, `unita_di_misura`, `alimentazione_id_alimentazione`, `prodotto_id_prodotto`, `quantita_prodotto`) VALUES
+REPLACE INTO `dettaglio_alimentazione` (`id_dettaglio`, `note`, `unita_di_misura`, `alimentazione_id_alimentazione`, `prodotto_id_prodotto`, `quantita_prodotto`) VALUES
 	(202, '', 'ML', 5, 7, 100),
 	(203, '', 'MG', 4, 4, 500000),
 	(453, '', 'ML', 6, 7, 100),
@@ -166,23 +247,77 @@ INSERT IGNORE INTO `dettaglio_alimentazione` (`id_dettaglio`, `note`, `unita_di_
 	(570, '', 'ML', 203, 2, 700),
 	(571, '', 'ML', 203, 3, 150);
 
--- Dump dei dati della tabella galvanica.dettaglio_alimentazione_seq: ~1 rows (circa)
-INSERT IGNORE INTO `dettaglio_alimentazione_seq` (`next_val`) VALUES
+-- Dump dei dati della tabella galvanica.dettaglio_alimentazione_seq: ~24 rows (circa)
+REPLACE INTO `dettaglio_alimentazione_seq` (`next_val`) VALUES
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
+	(651),
 	(651);
 
 -- Dump dei dati della tabella galvanica.magazzino: ~4 rows (circa)
-INSERT IGNORE INTO `magazzino` (`id_magazzino`, `descrizione`) VALUES
+REPLACE INTO `magazzino` (`id_magazzino`, `descrizione`) VALUES
 	(1, 'Magazzino Acidi'),
 	(2, 'Magazzino Alcalini'),
 	(52, 'Cassaforte'),
 	(53, 'Senza Magazzino');
 
--- Dump dei dati della tabella galvanica.magazzino_seq: ~1 rows (circa)
-INSERT IGNORE INTO `magazzino_seq` (`next_val`) VALUES
+-- Dump dei dati della tabella galvanica.magazzino_seq: ~24 rows (circa)
+REPLACE INTO `magazzino_seq` (`next_val`) VALUES
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
 	(201);
 
--- Dump dei dati della tabella galvanica.prodotto: ~109 rows (circa)
-INSERT IGNORE INTO `prodotto` (`id_prodotto`, `nome`, `descrizione`, `ph`, `magazzino_id_magazzino`) VALUES
+-- Dump dei dati della tabella galvanica.prodotto: ~105 rows (circa)
+REPLACE INTO `prodotto` (`id_prodotto`, `nome`, `descrizione`, `ph`, `magazzino_id_magazzino`) VALUES
 	(1, '220 BRI', 'Brillantante 220', NULL, 2),
 	(2, '220 COND', '', NULL, 2),
 	(3, '220 WAG', '', NULL, 2),
@@ -293,12 +428,39 @@ INSERT IGNORE INTO `prodotto` (`id_prodotto`, `nome`, `descrizione`, `ph`, `maga
 	(140, 'PH30', '', NULL, 1),
 	(141, 'PH20', '', NULL, 1);
 
--- Dump dei dati della tabella galvanica.prodotto_seq: ~1 rows (circa)
-INSERT IGNORE INTO `prodotto_seq` (`next_val`) VALUES
+-- Dump dei dati della tabella galvanica.prodotto_seq: ~24 rows (circa)
+REPLACE INTO `prodotto_seq` (`next_val`) VALUES
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
+	(201),
 	(201);
 
--- Dump dei dati della tabella galvanica.relazione_bagno_prodotto: ~151 rows (circa)
-INSERT IGNORE INTO `relazione_bagno_prodotto` (`note`, `prodotto_id_prodotto`, `bagno_id_bagno`, `id_relazione`) VALUES
+-- Dump dei dati della tabella galvanica.relazione_bagno_prodotto: ~138 rows (circa)
+REPLACE INTO `relazione_bagno_prodotto` (`note`, `prodotto_id_prodotto`, `bagno_id_bagno`, `id_relazione`) VALUES
 	('', 1, 1, 1),
 	('', 2, 1, 2),
 	('', 3, 1, 3),
@@ -451,9 +613,90 @@ INSERT IGNORE INTO `relazione_bagno_prodotto` (`note`, `prodotto_id_prodotto`, `
 	('', 139, 52, 142),
 	('', 140, 52, 141);
 
--- Dump dei dati della tabella galvanica.relazione_bagno_prodotto_seq: ~1 rows (circa)
-INSERT IGNORE INTO `relazione_bagno_prodotto_seq` (`next_val`) VALUES
+-- Dump dei dati della tabella galvanica.relazione_bagno_prodotto_seq: ~24 rows (circa)
+REPLACE INTO `relazione_bagno_prodotto_seq` (`next_val`) VALUES
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
+	(351),
 	(351);
+
+-- Dump dei dati della tabella galvanica.storico_dettaglio: ~11 rows (circa)
+REPLACE INTO `storico_dettaglio` (`id_storico_dettaglio`, `quantita`, `unita_di_misura`, `prodotto_id_prodotto`, `storico_generale_id_storico`, `annullato_dettaglio`, `eseguito_dettaglio`) VALUES
+	(1602, 100, 'ML', 7, 1552, b'0', b'0'),
+	(1603, 370, 'ML', 17, 1553, b'0', b'0'),
+	(1604, 220, 'ML', 18, 1553, b'0', b'0'),
+	(1605, 250, 'ML', 19, 1553, b'0', b'0'),
+	(1606, 120, 'ML', 52, 1553, b'0', b'0'),
+	(1607, 370, 'ML', 53, 1553, b'0', b'0'),
+	(1608, 100, 'ML', 7, 1554, b'0', b'0'),
+	(1609, 2250, 'ML', 71, 1555, b'0', b'0'),
+	(1652, 700, 'ML', 1, 1602, b'0', b'0'),
+	(1653, 700, 'ML', 2, 1602, b'0', b'0'),
+	(1654, 150, 'ML', 3, 1602, b'0', b'0');
+
+-- Dump dei dati della tabella galvanica.storico_dettaglio_seq: ~0 rows (circa)
+REPLACE INTO `storico_dettaglio_seq` (`next_val`) VALUES
+	(1751);
+
+-- Dump dei dati della tabella galvanica.storico_generale: ~28 rows (circa)
+REPLACE INTO `storico_generale` (`id_storico`, `data_creazione`, `moltiplicatore_alimentazione`, `alimentazione_id_alimentazione`, `bagno_id_bagno`, `sono_scatti`, `data_controllo_tempo`, `note`, `scatti_inseriti`, `tipologia_aggiunta`, `annullato_generale`, `data_esecuzione`, `eseguito_generale`, `resto_scatti_bagno`, `scatti_totali_bagno`) VALUES
+	(1, '2024-06-04 20:50:42.000000', NULL, NULL, 1, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(2, '2024-06-04 20:50:42.000000', NULL, NULL, 2, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(3, '2024-06-04 20:50:42.000000', NULL, NULL, 3, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(4, '2024-06-04 20:50:42.000000', NULL, NULL, 4, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(5, '2024-06-04 20:50:42.000000', NULL, NULL, 5, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(6, '2024-06-04 20:50:42.000000', NULL, NULL, 6, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(7, '2024-06-04 20:50:42.000000', NULL, NULL, 7, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(8, '2024-06-04 20:50:42.000000', NULL, NULL, 8, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(9, '2024-06-04 20:50:42.000000', NULL, NULL, 9, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(10, '2024-06-04 20:50:42.000000', NULL, NULL, 10, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(11, '2024-06-04 20:50:42.000000', NULL, NULL, 11, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(12, '2024-06-04 20:50:42.000000', NULL, NULL, 12, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(13, '2024-06-04 20:50:42.000000', NULL, NULL, 13, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(14, '2024-06-04 20:50:42.000000', NULL, NULL, 14, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(15, '2024-06-04 20:50:42.000000', NULL, NULL, 15, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(16, '2024-06-04 20:50:42.000000', NULL, NULL, 16, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(17, '2024-06-04 20:50:42.000000', NULL, NULL, 17, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(18, '2024-06-04 20:50:42.000000', NULL, NULL, 18, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(19, '2024-06-04 20:50:42.000000', NULL, NULL, 19, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(20, '2024-06-04 20:50:42.000000', NULL, NULL, 20, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(21, '2024-06-04 20:50:42.000000', NULL, NULL, 21, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(22, '2024-06-04 20:50:42.000000', NULL, NULL, 22, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(23, '2024-06-04 20:50:42.000000', NULL, NULL, 23, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(52, '2024-06-04 20:50:42.000000', NULL, NULL, 52, NULL, NULL, 'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000', b'1', 0, 0),
+	(1552, '2024-06-04 21:25:29.398272', 1, 5, 3, NULL, NULL, NULL, 500, 'SCATTI', b'0', NULL, b'0', 0, 500),
+	(1553, '2024-06-04 21:25:29.495265', 2.5, 111, 11, NULL, NULL, NULL, 2500, 'SCATTI', b'0', NULL, b'0', 0, 2500),
+	(1554, '2024-06-04 21:27:04.546501', 1, 5, 3, NULL, NULL, NULL, 500, 'SCATTI', b'0', NULL, b'0', 0, 1000),
+	(1555, '2024-06-04 21:27:04.575479', 3, 103, 5, NULL, NULL, NULL, 3000, 'SCATTI', b'0', NULL, b'0', 0, 3000),
+	(1602, '2024-06-16 12:58:15.046919', 1, 153, 1, NULL, NULL, NULL, 500, 'SCATTI', b'0', NULL, b'0', 0, 500);
+
+-- Dump dei dati della tabella galvanica.storico_generale_seq: ~0 rows (circa)
+REPLACE INTO `storico_generale_seq` (`next_val`) VALUES
+	(1701);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
