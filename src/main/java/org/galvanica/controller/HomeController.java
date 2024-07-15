@@ -7,20 +7,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-    @GetMapping("/home")
-    public String home(Model model) {
+	@GetMapping("/home")
+	public String home(Model model) {
 
-        return "home";
-    }
+		return "home";
+	}
 
-    @GetMapping("/alimentazioni/home")
-    public String operazioniDiAlimentazioneHome(Model model) {
-        return "operazioniDiAlimentazione/home";
-    }
+	@GetMapping("/alimentazioni/home")
+	public String operazioniDiAlimentazioneHome(Model model) {
+		return "operazioniDiAlimentazione/home";
+	}
 
-    @GetMapping("/storico/home")
-    public String storico(Model model) {
-        return "storico/home";
-    }
+	@GetMapping("/storico/home")
+	public String storico(Model model) {
+		return "storico/home";
+	}
 
 }

@@ -3,14 +3,14 @@ package org.galvanica.service.CRUD;
 import java.util.Optional;
 
 public interface ICRUDService<DTO, MODEL> {
-    DTO inserisci(DTO elemento);
+	DTO inserisci(DTO elemento);
 
-    Boolean elimina(long id);
+	Boolean elimina(long id);
 
-    DTO aggiorna(DTO elemento);
+	DTO aggiorna(DTO elemento);
 
-    Optional<DTO> ricercaId(long id);
+	Optional<DTO> ricercaId(long id);
 
-    DTO fromModelToDto(MODEL oggettoDaTrasformare);
+	DTO fromModelToDto(MODEL oggettoDaTrasformare);
 
 }

@@ -1,39 +1,39 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="https://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/main_layout}">
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+		layout:decorate="~{layout/main_layout}">
 
 <head>
-    <title>Azioni in Magazzino</title>
+	<title>Azioni in Magazzino</title>
 </head>
 
 <body>
 <div layout:fragment="content">
-    <form th:attr="hx-put=@{'/magazzino/'+${magazzino.getIdMagazzino()}}"
-          hx-ext="json-enc"
-          hx-target="body"
-          hx-swap="outerHTML"
-          hx-replace-url="true">
-        <div>
-            <label for="id">Id Magazzino</label>
-            <input type="text" disabled id="id" name="idMagazzino" th:value="${magazzino.getIdMagazzino()}">
-        </div>
-        <div>
-            <label for="descrizione">Descrizione</label>
-            <input type="text" id="descrizione" name="descrizione" th:value="${magazzino.getDescrizione()}">
-        </div>
-        <button class="btn btn-outline-primary" type="submit">
-            Salva
-        </button>
-    </form>
-    <button class="btn btn-outline-primary" type="button"
-            th:attr="hx-delete=@{'/magazzino/'+${magazzino.getIdMagazzino()}}"
-            hx-ext="json-enc"
-            hx-target="body"
-            hx-swap="outerHTML"
-            hx-replace-url="true">
-        Elimina l'intero oggetto
-    </button>
+	<form th:attr="hx-put=@{'/magazzino/'+${magazzino.getIdMagazzino()}}"
+			hx-ext="json-enc"
+			hx-target="body"
+			hx-swap="outerHTML"
+			hx-replace-url="true">
+		<div>
+			<label for="id">Id Magazzino</label>
+			<input type="text" disabled id="id" name="idMagazzino" th:value="${magazzino.getIdMagazzino()}">
+		</div>
+		<div>
+			<label for="descrizione">Descrizione</label>
+			<input type="text" id="descrizione" name="descrizione" th:value="${magazzino.getDescrizione()}">
+		</div>
+		<button class="btn btn-outline-primary" type="submit">
+			Salva
+		</button>
+	</form>
+	<button class="btn btn-outline-primary" type="button"
+			th:attr="hx-delete=@{'/magazzino/'+${magazzino.getIdMagazzino()}}"
+			hx-ext="json-enc"
+			hx-target="body"
+			hx-swap="outerHTML"
+			hx-replace-url="true">
+		Elimina l'intero oggetto
+	</button>
 </div>
 </body>
 

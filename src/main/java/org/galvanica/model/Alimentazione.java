@@ -17,23 +17,23 @@ import java.util.List;
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"bagno_id_bagno", "scatti"})})
 public class Alimentazione {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idAlimentazione;
-    @ManyToOne
-    private Bagno bagno;
-    private Integer scatti;
-    @Enumerated(EnumType.STRING)
-    private TipologiaAggiunta tipologiaAggiunta;
-    private Boolean valoriArrotondati;
-    @Convert(converter = DayOfWeekConverter.class)
-    private List<DayOfWeek> tempo;
-    private String descrizione;
-    @OneToMany(mappedBy = "alimentazione", cascade = CascadeType.REMOVE)
-    private List<DettaglioAlimentazione> dettaglioAlimentazioneList;
-    @OneToMany(mappedBy = "alimentazione")
-    private List<StoricoGenerale> storicoGeneraleList;
-//todo: mettere un tipologiaAlimentazione da inizializzare a "scatti" o "tempo".
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long idAlimentazione;
+	@ManyToOne
+	private Bagno bagno;
+	private Integer scatti;
+	@Enumerated(EnumType.STRING)
+	private TipologiaAggiunta tipologiaAggiunta;
+	private Boolean valoriArrotondati;
+	@Convert(converter = DayOfWeekConverter.class)
+	private List<DayOfWeek> tempo;
+	private String descrizione;
+	@OneToMany(mappedBy = "alimentazione", cascade = CascadeType.REMOVE)
+	private List<DettaglioAlimentazione> dettaglioAlimentazioneList;
+	@OneToMany(mappedBy = "alimentazione")
+	private List<StoricoGenerale> storicoGeneraleList;
+	// todo: mettere un tipologiaAlimentazione da inizializzare a "scatti" o
+	// "tempo".
 
 }
-

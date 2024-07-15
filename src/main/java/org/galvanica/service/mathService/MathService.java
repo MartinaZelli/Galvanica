@@ -9,11 +9,11 @@ import java.util.List;
 
 @Service
 public class MathService {
-    public List<DayOfWeek> dayOfWeekList() {
-        return Arrays.stream(DayOfWeek.values()).toList();
-    }
+	public List<DayOfWeek> dayOfWeekList() {
+		return Arrays.stream(DayOfWeek.values()).toList();
+	}
 
-    public List<UnitaDiMisura> unitaDiMisuraList() {
-        return Arrays.stream(UnitaDiMisura.values()).toList();
-    }
+	public List<UnitaDiMisura> unitaDiMisuraList() {
+		return Arrays.stream(UnitaDiMisura.values()).toList();
+	}
 }

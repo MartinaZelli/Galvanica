@@ -12,16 +12,17 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AlimentazioneDto {
-    private Long idAlimentazione;
-    private Long idBagno;
-    private String nomeBagno;
-    private TipologiaAggiunta tipologiaAggiunta;
-    private Integer scatti;
-    private List<DayOfWeek> tempo;
-    private String descrizione;
-    private Boolean valoriArrotondati;
 
-    public void setTempo(String giorno) {
-        this.tempo = List.of(DayOfWeek.valueOf(giorno));
-    }
+	private Long idAlimentazione;
+	private Long idBagno;
+	private String nomeBagno;
+	private TipologiaAggiunta tipologiaAggiunta;
+	private Integer scatti;
+	private List<DayOfWeek> tempo;
+	private String descrizione;
+	private Boolean valoriArrotondati;
+
+	public void setTempo(String giorno) {
+		this.tempo = List.of(DayOfWeek.valueOf(giorno));
+	}
 }

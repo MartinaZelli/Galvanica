@@ -1,65 +1,62 @@
 <!DOCTYPE html>
-<html lang="it" xmlns:th="https://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/main_layout}">
+<html lang="it" xmlns:th="https://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+		layout:decorate="~{layout/main_layout}">
 
 <head>
-    <title>Nuovo Dettaglio alimentazione</title>
+	<title>Nuovo Dettaglio alimentazione</title>
 </head>
 
 <body>
 <div layout:fragment="content">
 
-    <form th:attr="hx-post=@{'/dettaglioAlimentazione'}"
-          hx-ext="json-enc"
-          hx-target="body"
-          hx-swap="outerHTML"
-          hx-replace-url="true">
-        <div>
-            Bagno: <span th:text="${alimentazione.getNomeBagno()}"></span>
-        </div>
-        <div>
-            Tipo Alimentazione: <span
-                th:text="${alimentazione.getTipologiaAggiunta()}"></span>
-        </div>
+	<form th:attr="hx-post=@{'/dettaglioAlimentazione'}"
+			hx-ext="json-enc"
+			hx-target="body"
+			hx-swap="outerHTML"
+			hx-replace-url="true">
+		<div>
+			Bagno: <span th:text="${alimentazione.getNomeBagno()}"></span>
+		</div>
+		<div>
+			Tipo Alimentazione: <span th:text="${alimentazione.getTipologiaAggiunta()}"></span>
+		</div>
 
-        <input type="hidden" id="idAlimentazione" name="idAlimentazione"
-               th:value="${alimentazione.getIdAlimentazione()}">
+		<input type="hidden"
+				id="idAlimentazione"
+				name="idAlimentazione"
+				th:value="${alimentazione.getIdAlimentazione()}">
 
-        <div>
-            <label for="idProdotto">Nome Prodotto </label>
-            <select name="idProdotto" id="idProdotto">
-                <option></option>
-                <option th:each="prodotto: ${prodottoList}"
-                        th:value="${prodotto.getIdProdotto()}"
-                        th:text="${prodotto.getNome()}">
-                </option>
-            </select>
-        </div>
-        <div>
-            <label for="quantita">Quantità prodotto</label>
-            <input type="text" id="quantita" name="quantitaProdotto">
-        </div>
-        <div>
-            <label for="unitaDiMisura">Unità di Misura </label>
-            <select name="unitaDiMisura" id="unitaDiMisura">
-                <option></option>
-                <option th:each="unita: ${unitaDiMisuraList}"
-                        th:value="${unita.name()}"
-                        th:text="${unita.name()}">
-                </option>
-            </select>
-        </div>
-        <div>
-            <label for="note">Note</label>
-            <input type="text" id="note" name="note">
-        </div>
+		<div>
+			<label for="idProdotto">Nome Prodotto </label>
+			<select name="idProdotto" id="idProdotto">
+				<option></option>
+				<option th:each="prodotto: ${prodottoList}"
+						th:value="${prodotto.getIdProdotto()}"
+						th:text="${prodotto.getNome()}">
+				</option>
+			</select>
+		</div>
+		<div>
+			<label for="quantita">Quantità prodotto</label>
+			<input type="text" id="quantita" name="quantitaProdotto">
+		</div>
+		<div>
+			<label for="unitaDiMisura">Unità di Misura </label>
+			<select name="unitaDiMisura" id="unitaDiMisura">
+				<option></option>
+				<option th:each="unita: ${unitaDiMisuraList}" th:value="${unita.name()}" th:text="${unita.name()}">
+				</option>
+			</select>
+		</div>
+		<div>
+			<label for="note">Note</label>
+			<input type="text" id="note" name="note">
+		</div>
 
-        <button class="btn btn-outline-primary"
-                type="submit">
-            Crea
-        </button>
-    </form>
+		<button class="btn btn-outline-primary" type="submit">
+			Crea
+		</button>
+	</form>
 
 </div>
 

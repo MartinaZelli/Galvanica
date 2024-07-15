@@ -9,35 +9,33 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/caratteristicaBagno")
 public class CaratteristicaBagnoController {
-    private final CaratteristicaBagnoService caratteristicaBagnoService;
 
-    public CaratteristicaBagnoController(
-            CaratteristicaBagnoService caratteristicaBagnoService) {
-        this.caratteristicaBagnoService = caratteristicaBagnoService;
-    }
+	private final CaratteristicaBagnoService caratteristicaBagnoService;
 
-    @PostMapping
-    public CaratteristicaBagnoDto inserisciCaratteristicaBagno(
-            @RequestBody CaratteristicaBagnoDto caratteristicaBagnoDto) {
-        return caratteristicaBagnoService.inserisci(caratteristicaBagnoDto);
-    }
+	public CaratteristicaBagnoController(CaratteristicaBagnoService caratteristicaBagnoService) {
+		this.caratteristicaBagnoService = caratteristicaBagnoService;
+	}
 
-    @PutMapping("{id}")
-    public CaratteristicaBagnoDto aggiornaCaratteristicaBagno(
-            @RequestBody CaratteristicaBagnoDto caratteristicaBagnoDto,
-            @PathVariable Long id) {
-        caratteristicaBagnoDto.setIdCaratteristica(id);
-        return caratteristicaBagnoService.aggiorna(caratteristicaBagnoDto);
-    }
+	@PostMapping
+	public CaratteristicaBagnoDto inserisciCaratteristicaBagno(
+		@RequestBody CaratteristicaBagnoDto caratteristicaBagnoDto) {
+		return caratteristicaBagnoService.inserisci(caratteristicaBagnoDto);
+	}
 
-    @GetMapping("{id}")
-    public Optional<CaratteristicaBagnoDto> ricercaCaratteristicaPerId(
-            @PathVariable Long id) {
-        return caratteristicaBagnoService.ricercaId(id);
-    }
+	@PutMapping("{id}")
+	public CaratteristicaBagnoDto aggiornaCaratteristicaBagno(
+		@RequestBody CaratteristicaBagnoDto caratteristicaBagnoDto, @PathVariable Long id) {
+		caratteristicaBagnoDto.setIdCaratteristica(id);
+		return caratteristicaBagnoService.aggiorna(caratteristicaBagnoDto);
+	}
 
-    @DeleteMapping("{id}")
-    public void eliminaCaratteristicaBagno(@PathVariable Long id) {
-        caratteristicaBagnoService.elimina(id);
-    }
+	@GetMapping("{id}")
+	public Optional<CaratteristicaBagnoDto> ricercaCaratteristicaPerId(@PathVariable Long id) {
+		return caratteristicaBagnoService.ricercaId(id);
+	}
+
+	@DeleteMapping("{id}")
+	public void eliminaCaratteristicaBagno(@PathVariable Long id) {
+		caratteristicaBagnoService.elimina(id);
+	}
 }

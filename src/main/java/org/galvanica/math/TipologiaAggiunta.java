@@ -2,7 +2,5 @@ package org.galvanica.math;
 
 public enum TipologiaAggiunta {
 
-    SCATTI,
-    TEMPO,
-    MANUALE
+	SCATTI, TEMPO, MANUALE
 }

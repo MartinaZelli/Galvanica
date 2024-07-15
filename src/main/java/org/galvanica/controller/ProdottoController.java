@@ -13,64 +13,62 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/prodotto")
 public class ProdottoController {
-    private final ProdottoService service;
-    private final ProdottoService prodottoService;
-    private final MagazzinoService magazzinoService;
 
-    public ProdottoController(ProdottoService service,
-                              ProdottoService prodottoService,
-                              MagazzinoService magazzinoService) {
-        this.service = service;
-        this.prodottoService = prodottoService;
-        this.magazzinoService = magazzinoService;
-    }
+	private final ProdottoService service;
+	private final ProdottoService prodottoService;
+	private final MagazzinoService magazzinoService;
 
-    @PostMapping
-    public String inserisciProdotto(@RequestBody ProdottoDto prodottoDto,
-                                    Model model) {
-        service.inserisci(prodottoDto);
-        return listaProdotti(model);
-    }
+	public ProdottoController(ProdottoService service, ProdottoService prodottoService,
+		MagazzinoService magazzinoService) {
+		this.service = service;
+		this.prodottoService = prodottoService;
+		this.magazzinoService = magazzinoService;
+	}
 
-    @GetMapping("/new")
-    public String newProdotto(Model model) {
-        model.addAttribute("magazzinoList", magazzinoService.findAllMagazzino());
-        return "prodotto/prodottoNuovo";
-    }
+	@PostMapping
+	public String inserisciProdotto(@RequestBody ProdottoDto prodottoDto, Model model) {
+		service.inserisci(prodottoDto);
+		return listaProdotti(model);
+	}
 
-    @GetMapping("/list")
-    public String listaProdotti(Model model) {
-        List<ProdottoDto> prodottoDtoList = prodottoService.findAllProdotto();
-        model.addAttribute("prodottoList", prodottoDtoList);
-        return "prodotto/prodottoList";
-    }
+	@GetMapping("/new")
+	public String newProdotto(Model model) {
+		model.addAttribute("magazzinoList", magazzinoService.findAllMagazzino());
+		return "prodotto/prodottoNuovo";
+	}
 
-    @GetMapping("/azioni/{id}")
-    public String prodottoAzioni(@PathVariable Long id, Model model) {
-        ProdottoDto prodottoDto = prodottoService.ricercaId(id).orElseThrow();
-        model.addAttribute("prodotto", prodottoDto);
-        model.addAttribute("magazzinoList", magazzinoService.findAllMagazzino());
-        return "prodotto/prodottoAzioni";
-    }
+	@GetMapping("/list")
+	public String listaProdotti(Model model) {
+		List<ProdottoDto> prodottoDtoList = prodottoService.findAllProdotto();
+		model.addAttribute("prodottoList", prodottoDtoList);
+		return "prodotto/prodottoList";
+	}
 
-    @PutMapping("{id}")
-    public String aggiornaProdotto(@RequestBody ProdottoDto prodottoDto,
-                                   @PathVariable Long id, Model model) {
-        prodottoDto.setIdProdotto(id);
-        service.aggiorna(prodottoDto);
-        return listaProdotti(model);
-    }
+	@GetMapping("/azioni/{id}")
+	public String prodottoAzioni(@PathVariable Long id, Model model) {
+		ProdottoDto prodottoDto = prodottoService.ricercaId(id).orElseThrow();
+		model.addAttribute("prodotto", prodottoDto);
+		model.addAttribute("magazzinoList", magazzinoService.findAllMagazzino());
+		return "prodotto/prodottoAzioni";
+	}
 
-    @DeleteMapping("{id}")
-    public String eliminaProdotto(@PathVariable Long id, Model model) {
-        service.elimina(id);
-        return listaProdotti(model);
-    }
+	@PutMapping("{id}")
+	public String aggiornaProdotto(@RequestBody ProdottoDto prodottoDto, @PathVariable Long id,
+		Model model) {
+		prodottoDto.setIdProdotto(id);
+		service.aggiorna(prodottoDto);
+		return listaProdotti(model);
+	}
 
-    @GetMapping("{id}")
-    public Optional<ProdottoDto> ricercaId(@PathVariable Long id) {
-        return service.ricercaId(id);
-    }
+	@DeleteMapping("{id}")
+	public String eliminaProdotto(@PathVariable Long id, Model model) {
+		service.elimina(id);
+		return listaProdotti(model);
+	}
 
+	@GetMapping("{id}")
+	public Optional<ProdottoDto> ricercaId(@PathVariable Long id) {
+		return service.ricercaId(id);
+	}
 
 }

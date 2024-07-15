@@ -14,56 +14,54 @@ import java.util.Optional;
 @RequestMapping("/magazzino")
 public class MagazzinoController {
 
-    private final MagazzinoService magazzinoService;
+	private final MagazzinoService magazzinoService;
 
-    public MagazzinoController(MagazzinoService magazzinoService) {
-        this.magazzinoService = magazzinoService;
-    }
+	public MagazzinoController(MagazzinoService magazzinoService) {
+		this.magazzinoService = magazzinoService;
+	}
 
-    @PostMapping
-    public void aggiungiMagazzinoDto(HttpServletResponse httpServletResponse,
-                                     @RequestBody MagazzinoDto magazzinoDto) {
-        magazzinoService.inserisci(magazzinoDto);
-        httpServletResponse.setHeader("Location", "/magazzino/list");
-        httpServletResponse.setStatus(302);
-    }
+	@PostMapping
+	public void aggiungiMagazzinoDto(HttpServletResponse httpServletResponse,
+		@RequestBody MagazzinoDto magazzinoDto) {
+		magazzinoService.inserisci(magazzinoDto);
+		httpServletResponse.setHeader("Location", "/magazzino/list");
+		httpServletResponse.setStatus(302);
+	}
 
+	@GetMapping("/new")
+	public String newMagazzinoDto(Model model) {
+		return "magazzino/magazzinoNuovo";
+	}
 
-    @GetMapping("/new")
-    public String newMagazzinoDto(Model model) {
-        return "magazzino/magazzinoNuovo";
-    }
+	@GetMapping("{id}")
+	public Optional<MagazzinoDto> ricercaMagazzinoId(@PathVariable Long id) {
+		return magazzinoService.ricercaId(id);
+	}
 
-    @GetMapping("{id}")
-    public Optional<MagazzinoDto> ricercaMagazzinoId(@PathVariable Long id) {
-        return magazzinoService.ricercaId(id);
-    }
+	@DeleteMapping("{id}")
+	public String eliminaMagazzino(@PathVariable Long id, Model model) {
+		magazzinoService.elimina(id);
+		return listaMagazzini(model);
+	}
 
-    @DeleteMapping("{id}")
-    public String eliminaMagazzino(@PathVariable Long id, Model model) {
-        magazzinoService.elimina(id);
-        return listaMagazzini(model);
-    }
+	@PutMapping("{id}")
+	public String aggiornaMagazzino(@RequestBody MagazzinoDto magazzinoDto, @PathVariable Long id) {
+		magazzinoDto.setIdMagazzino(id);
+		magazzinoService.aggiorna(magazzinoDto);
+		return "redirect:/magazzino/list";
+	}
 
-    @PutMapping("{id}")
-    public String aggiornaMagazzino(@RequestBody MagazzinoDto magazzinoDto,
-                                    @PathVariable Long id) {
-        magazzinoDto.setIdMagazzino(id);
-        magazzinoService.aggiorna(magazzinoDto);
-        return "redirect:/magazzino/list";
-    }
+	@RequestMapping(value = "/list", method = {RequestMethod.GET, RequestMethod.PUT})
+	public String listaMagazzini(Model model) {
+		List<MagazzinoDto> magazzinoDtoList = magazzinoService.findAllMagazzino();
+		model.addAttribute("magazzinoList", magazzinoDtoList);
+		return "magazzino/magazzinoList";
+	}
 
-    @RequestMapping(value = "/list", method = {RequestMethod.GET, RequestMethod.PUT})
-    public String listaMagazzini(Model model) {
-        List<MagazzinoDto> magazzinoDtoList = magazzinoService.findAllMagazzino();
-        model.addAttribute("magazzinoList", magazzinoDtoList);
-        return "magazzino/magazzinoList";
-    }
-
-    @GetMapping("/azioni/{id}")
-    public String listaMagazzini(@PathVariable Long id, Model model) {
-        MagazzinoDto magazzinoDto = magazzinoService.ricercaId(id).orElseThrow();
-        model.addAttribute("magazzino", magazzinoDto);
-        return "magazzino/magazzinoAzioni";
-    }
+	@GetMapping("/azioni/{id}")
+	public String listaMagazzini(@PathVariable Long id, Model model) {
+		MagazzinoDto magazzinoDto = magazzinoService.ricercaId(id).orElseThrow();
+		model.addAttribute("magazzino", magazzinoDto);
+		return "magazzino/magazzinoAzioni";
+	}
 }

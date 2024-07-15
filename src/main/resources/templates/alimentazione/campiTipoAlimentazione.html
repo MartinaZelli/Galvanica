@@ -2,56 +2,57 @@
 <html lang="it" xmlns:th="https://www.thymeleaf.org">
 
 <head>
-    <title>Azioni su Alimentazione</title>
+	<title>Azioni su Alimentazione</title>
 </head>
 
 <body>
 <!--/*@thymesVar id="giorniList" type="java.util.List<java.time.DayOfWeek>"*/-->
 <!--/*@thymesVar id="alimentazione" type="org.galvanica.dto.dtoConModel.AlimentazioneDto"*/-->
 <div th:fragment="campiScatti">
-    <div>
-        <label for="quantitaScatti">Quantità Scatti</label>
-        <input type="text" id="quantitaScatti" name="scatti"
-               th:value="${alimentazione.getScatti()}">
-    </div>
-    <div><input th:checked="${alimentazione.getValoriArrotondati()==true}"
-                type="checkbox"
-                id="valoriArrotondati" name="valoriArrotondati" value="true">
-        <label for="valoriArrotondati"> spunta se arrotonda i valori</label>
+	<div>
+		<label for="quantitaScatti">Quantità Scatti</label>
+		<input type="text" id="quantitaScatti" name="scatti" th:value="${alimentazione.getScatti()}">
+	</div>
+	<div><input th:checked="${alimentazione.getValoriArrotondati()==true}"
+			type="checkbox"
+			id="valoriArrotondati"
+			name="valoriArrotondati"
+			value="true">
+		<label for="valoriArrotondati"> spunta se arrotonda i valori</label>
 
-    </div>
+	</div>
 </div>
 <div th:fragment="campiTempo">
-    <div>Giorni di Ricorrenza</div>
-    <div th:each="giorno:${giorniList}">
+	<div>Giorni di Ricorrenza</div>
+	<div th:each="giorno:${giorniList}">
 
-        <input th:checked="${alimentazione.getTempo() != null ? #lists.contains(alimentazione.getTempo(), giorno)==true : false}"
-               type="checkbox"
-               th:id="${giorno.name()}" name="tempo" th:value="${giorno.name()}">
-        <label th:for="${giorno.name()}" th:text="${giorno.name()}"> </label>
-    </div>
+		<input th:checked="${alimentazione.getTempo() != null ? #lists.contains(alimentazione.getTempo(), giorno)==true : false}"
+				type="checkbox"
+				th:id="${giorno.name()}"
+				name="tempo"
+				th:value="${giorno.name()}">
+		<label th:for="${giorno.name()}" th:text="${giorno.name()}"> </label>
+	</div>
 </div>
 
 
 <div th:fragment="campiScattiNuovo">
-    <div>
-        <label for="quantitaScatti">Quantità Scatti</label>
-        <input type="text" id="quantitaScatti" name="scatti">
-    </div>
-    <div><input type="checkbox" id="valoriArrotondati" name="valoriArrotondati"
-                value="true">
-        <label for="valoriArrotondati"> spunta se arrotonda i valori</label>
+	<div>
+		<label for="quantitaScatti">Quantità Scatti</label>
+		<input type="text" id="quantitaScatti" name="scatti">
+	</div>
+	<div><input type="checkbox" id="valoriArrotondati" name="valoriArrotondati" value="true">
+		<label for="valoriArrotondati"> spunta se arrotonda i valori</label>
 
-    </div>
+	</div>
 </div>
 <div th:fragment="campiTempoNuovo">
-    <div>Giorni di Ricorrenza</div>
+	<div>Giorni di Ricorrenza</div>
 
-    <div th:each="giorno:${giorniList}">
-        <input type="checkbox" th:id="${giorno.name()}" name="tempo"
-               th:value="${giorno.name()}">
-        <label th:for="${giorno.name()}" th:text="${giorno.name()}"> </label>
-    </div>
+	<div th:each="giorno:${giorniList}">
+		<input type="checkbox" th:id="${giorno.name()}" name="tempo" th:value="${giorno.name()}">
+		<label th:for="${giorno.name()}" th:text="${giorno.name()}"> </label>
+	</div>
 </div>
 </body>
 

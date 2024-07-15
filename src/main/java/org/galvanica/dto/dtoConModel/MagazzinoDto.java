@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 public class MagazzinoDto {
 
-    private Long idMagazzino;
-    private String descrizione;
+	private Long idMagazzino;
+	private String descrizione;
 
 }

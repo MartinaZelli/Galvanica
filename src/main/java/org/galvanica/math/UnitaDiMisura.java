@@ -5,16 +5,12 @@ import lombok.Getter;
 @Getter
 public enum UnitaDiMisura {
 
-    ML(true),
-    L(true),
-    MG(false),
-    G(false),
-    KG(false);
+	ML(true), L(true), MG(false), G(false), KG(false);
 
-    private final boolean sonoVolume;
+	private final boolean sonoVolume;
 
-    UnitaDiMisura(boolean sonoVolume) {
-        this.sonoVolume = sonoVolume;
-    }
+	UnitaDiMisura(boolean sonoVolume) {
+		this.sonoVolume = sonoVolume;
+	}
 
 }

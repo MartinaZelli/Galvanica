@@ -10,11 +10,11 @@ import lombok.*;
 
 public class BagnoDto {
 
-    private Long idBagno;
-    private String nome;
-    //da prendere nello storico più recente.
-    private Integer scattiTotali;
-    //da prendere nello storico più recente.
-    private Integer restoScatti;
-    private Integer litri;
+	private Long idBagno;
+	private String nome;
+	// da prendere nello storico più recente.
+	private Integer scattiTotali;
+	// da prendere nello storico più recente.
+	private Integer restoScatti;
+	private Integer litri;
 }

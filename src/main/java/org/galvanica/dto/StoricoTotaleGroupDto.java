@@ -12,32 +12,19 @@ import java.util.List;
 @Setter
 public class StoricoTotaleGroupDto extends StoricoTotaleDto {
 
-    private List<Long> idStoricoDettaglioList;
+	private List<Long> idStoricoDettaglioList;
 
-    @Builder
-    public StoricoTotaleGroupDto(
-            List<Long> idStoricoDettaglioList,
-            Long idBagno,
-            String nomeBagno,
-            Double quantitaProdotto,
-            UnitaDiMisura unitaDiMisura,
-            Long idProdotto,
-            String nomeProdotto,
-            Long idAlimentazione,
+	@Builder
+	public StoricoTotaleGroupDto(List<Long> idStoricoDettaglioList, Long idBagno, String nomeBagno,
+		Double quantitaProdotto, UnitaDiMisura unitaDiMisura, Long idProdotto, String nomeProdotto,
+		Long idAlimentazione,
 
-            TipologiaAggiunta tipologiaAggiunta,
+		TipologiaAggiunta tipologiaAggiunta,
 
-            String rispostaCalcoloFront) {
-        super(idBagno,
-                nomeBagno,
-                quantitaProdotto,
-                unitaDiMisura,
-                idProdotto,
-                nomeProdotto,
-                idAlimentazione,
-                tipologiaAggiunta,
-                rispostaCalcoloFront);
+		String rispostaCalcoloFront) {
+		super(idBagno, nomeBagno, quantitaProdotto, unitaDiMisura, idProdotto, nomeProdotto,
+			idAlimentazione, tipologiaAggiunta, rispostaCalcoloFront);
 
-        this.idStoricoDettaglioList = idStoricoDettaglioList;
-    }
+		this.idStoricoDettaglioList = idStoricoDettaglioList;
+	}
 }

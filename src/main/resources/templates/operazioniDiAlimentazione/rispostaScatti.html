@@ -1,58 +1,59 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="https://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/main_layout}">
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+		layout:decorate="~{layout/main_layout}">
 
 <head>
-    <title>Aggiunta a scatti</title>
+	<title>Aggiunta a scatti</title>
 </head>
 
 <body>
 <div layout:fragment="content">
-    <form th:attr="hx-post=@{'/operazioni/alimentazioni/confermaTutto'}"
-          hx-target="body" hx-swap="outerHTML">
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">Bagno</th>
-                <th scope="col">Moltiplicatore</th>
-                <th scope="col">Resto Scatti</th>
-                <th scope="col">Aggiunta</th>
-                <th scope="col">Messaggio</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="risposta: ${alimentazioneRispostaDtoList}">
-                <td><span th:text="${risposta.getNomeBagno()}"></span></td>
-                <td><span
-                        th:text="${risposta.getMoltiplicatoreAlimentazione()}"></span>
-                </td>
-                <td><span th:text="${risposta.getRestoScatti()}"></span></td>
-                <td>
-                    <div th:each="aggiunta:${risposta.getOggettoAggiuntaList()}">
-                        <span th:text="${aggiunta.getNomeProdotto()}"></span>-->
-                        <span th:text="${aggiunta.getQuantitaProdotto()}"></span>
-                        <span th:text="${aggiunta.getUnitaDiMisura()}"></span>
-                    </div>
-                </td>
-                <td>
-                    <span th:text="${risposta.getMessaggio()}"></span>
-                    <input th:each="id:${risposta.getIdStoricoDettaglioList()}"
-                           type="hidden"
-                           name="idDettaglioList" th:value="${id}">
-                </td>
+	<form th:attr="hx-post=@{'/operazioni/alimentazioni/confermaTutto'}"
+			hx-target="body" hx-swap="outerHTML">
+		<table class="table">
+			<thead>
+			<tr>
+				<th scope="col">Bagno</th>
+				<th scope="col">Moltiplicatore</th>
+				<th scope="col">Resto Scatti</th>
+				<th scope="col">Aggiunta</th>
+				<th scope="col">Messaggio</th>
+			</tr>
+			
+			</thead>
+			<tbody>
+			<tr th:each="risposta: ${alimentazioneRispostaDtoList}">
+				<td><span th:text="${risposta.getNomeBagno()}"></span></td>
+				<td><span
+						th:text="${risposta.getMoltiplicatoreAlimentazione()}"></span>
+				</td>
+				<td><span th:text="${risposta.getRestoScatti()}"></span></td>
+				<td>
+					<div th:each="aggiunta:${risposta.getOggettoAggiuntaList()}">
+						<span th:text="${aggiunta.getNomeProdotto()}"></span>-->
+						<span th:text="${aggiunta.getQuantitaProdotto()}"></span>
+						<span th:text="${aggiunta.getUnitaDiMisura()}"></span>
+					</div>
+				</td>
+				<td>
+					<span th:text="${risposta.getMessaggio()}"></span>
+					<input th:each="id:${risposta.getIdStoricoDettaglioList()}"
+							type="hidden"
+							name="idDettaglioList" th:value="${id}">
+				</td>
 
-            </tr>
-            </tbody>
-        </table>
+			</tr>
+			</tbody>
+		</table>
 
 
-        <button class="btn btn-outline-primary" type="submit">
-            Conferma tutte le alimentazioni
-        </button>
-    </form>
+		<button class="btn btn-outline-primary" type="submit">
+			Conferma tutte le alimentazioni
+		</button>
+	</form>
 
-    <a href="/alimentazioni/home">Torna alla Home di Alimentazioni</a>
+	<a href="/alimentazioni/home">Torna alla Home di Alimentazioni</a>
 
 </div>
 </body>

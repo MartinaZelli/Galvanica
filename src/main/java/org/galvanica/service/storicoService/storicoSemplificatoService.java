@@ -10,30 +10,31 @@ import java.util.List;
 
 @Service
 public class storicoSemplificatoService {
-    private final StoricoDettaglioRepository storicoDettaglioRepository;
-    private ConvertitoreUnitaMisura convertitore;
+	private final StoricoDettaglioRepository storicoDettaglioRepository;
 
+	public storicoSemplificatoService(StoricoDettaglioRepository storicoDettaglioRepository) {
+		this.storicoDettaglioRepository = storicoDettaglioRepository;
+	}
 
-    public storicoSemplificatoService(
-            StoricoDettaglioRepository storicoDettaglioRepository) {
-        this.storicoDettaglioRepository = storicoDettaglioRepository;
-    }
+	public List<StoricoTotaleDto> storicoSemplificatoDtoList(int limite) {
+		List<StoricoTotaleDto>
+			storicoTotaleDtoList =
+			storicoDettaglioRepository.listaStoricoSemplificato(limite);
 
-    public List<StoricoTotaleDto> storicoSemplificatoDtoList(int limite) {
-        List<StoricoTotaleDto> storicoTotaleDtoList = storicoDettaglioRepository.listaStoricoSemplificato(
-                limite);
-
-        for (StoricoTotaleDto storicoSemplificato : storicoTotaleDtoList) {
-            UnitaDiMisura unitaDiMisura = convertitore.convertiUnitaMisuraPerDto(
-                    storicoSemplificato.getQuantitaProdotto().intValue(),
-                    storicoSemplificato.getUnitaDiMisura().isSonoVolume());
-            Double quantita = convertitore.convertiQuantitaGenerico(
-                    storicoSemplificato.getQuantitaProdotto(),
-                    storicoSemplificato.getUnitaDiMisura(),
-                    unitaDiMisura);
-            storicoSemplificato.setUnitaDiMisura(unitaDiMisura);
-            storicoSemplificato.setQuantitaProdotto(quantita);
-        }
-        return storicoTotaleDtoList;
-    }
+		for (StoricoTotaleDto storicoSemplificato : storicoTotaleDtoList) {
+			UnitaDiMisura
+				unitaDiMisura =
+				ConvertitoreUnitaMisura.convertiUnitaMisuraPerDto(
+					storicoSemplificato.getQuantitaProdotto().intValue(),
+					storicoSemplificato.getUnitaDiMisura().isSonoVolume());
+			Double
+				quantita =
+				ConvertitoreUnitaMisura.convertiQuantitaGenerico(
+					storicoSemplificato.getQuantitaProdotto(),
+					storicoSemplificato.getUnitaDiMisura(), unitaDiMisura);
+			storicoSemplificato.setUnitaDiMisura(unitaDiMisura);
+			storicoSemplificato.setQuantitaProdotto(quantita);
+		}
+		return storicoTotaleDtoList;
+	}
 }

@@ -8,10 +8,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProdottoDto {
-    private Long idProdotto;
-    private Long idMagazzino;
-    private String descrizioneMagazzino;
-    private String nome;
-    private String descrizione;
-    private Integer ph;
+	private Long idProdotto;
+	private Long idMagazzino;
+	private String descrizioneMagazzino;
+	private String nome;
+	private String descrizione;
+	private Integer ph;
 }

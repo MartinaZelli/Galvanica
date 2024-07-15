@@ -11,14 +11,14 @@ import lombok.*;
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"nome"})})
 public class Prodotto {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idProdotto;
-    @ManyToOne
-    private Magazzino magazzino;
-    private String nome;
-    private String descrizione;
-    private Integer ph;
-    //todo: inserisci porcoddio boolean sonoVolume
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long idProdotto;
+	@ManyToOne
+	private Magazzino magazzino;
+	private String nome;
+	private String descrizione;
+	private Integer ph;
+	// todo: inserisci porcoddio boolean sonoVolume
 
 }

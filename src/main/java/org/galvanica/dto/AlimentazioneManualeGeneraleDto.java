@@ -12,18 +12,17 @@ import java.util.List;
 @AllArgsConstructor
 public class AlimentazioneManualeGeneraleDto {
 
+	private Long idStorico;
 
-    private Long idStorico;
-
-    private Long idBagno;
-    private String nomeBagno;
-    private Integer scattiTotaliBagno;
-    private Integer restoScattiBagno;
-    private Integer scattiInseriti;
-    private Boolean eseguitoGenerale;
-    private Boolean annullatoGenerale;
-    private TipologiaAggiunta tipologiaAggiunta;
-    private List<AlimentazioneManualeDettaglioDto> dettaglioList;
-    private String note;
+	private Long idBagno;
+	private String nomeBagno;
+	private Integer scattiTotaliBagno;
+	private Integer restoScattiBagno;
+	private Integer scattiInseriti;
+	private Boolean eseguitoGenerale;
+	private Boolean annullatoGenerale;
+	private TipologiaAggiunta tipologiaAggiunta;
+	private List<AlimentazioneManualeDettaglioDto> dettaglioList;
+	private String note;
 
 }

@@ -14,100 +14,94 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/dettaglioAlimentazione")
 public class DettaglioAlimentazioneController {
-    private final DettaglioAlimentazioneService dettaglioAlimentazioneService;
-    private final AlimentazioneService alimentazioneService;
-    private final ProdottoService prodottoService;
-    private final MathService mathService;
 
-    public DettaglioAlimentazioneController(
-            DettaglioAlimentazioneService dettaglioAlimentazioneService,
-            AlimentazioneService alimentazioneService,
-            ProdottoService prodottoService, MathService mathService) {
-        this.dettaglioAlimentazioneService = dettaglioAlimentazioneService;
-        this.alimentazioneService = alimentazioneService;
-        this.prodottoService = prodottoService;
-        this.mathService = mathService;
-    }
+	private final DettaglioAlimentazioneService dettaglioAlimentazioneService;
+	private final AlimentazioneService alimentazioneService;
+	private final ProdottoService prodottoService;
+	private final MathService mathService;
 
-    @GetMapping("/list")
-    public String listaDettaglioAlimentazione(Model model) {
-        model.addAttribute("alimentazioneList",
-                alimentazioneService.findAllAlimentazione());
-        return "dettaglioAlimentazione/dettaglioAlimentazioneList";
-    }
+	public DettaglioAlimentazioneController(
+		DettaglioAlimentazioneService dettaglioAlimentazioneService,
+		AlimentazioneService alimentazioneService, ProdottoService prodottoService,
+		MathService mathService) {
+		this.dettaglioAlimentazioneService = dettaglioAlimentazioneService;
+		this.alimentazioneService = alimentazioneService;
+		this.prodottoService = prodottoService;
+		this.mathService = mathService;
+	}
 
-    @GetMapping("/dettaglioAlimentazioneList/{id}")
-    public String dettaglioAlimentazioneList(@PathVariable Long id, Model model) {
-        model.addAttribute("dettaglioAlimentazioneList",
-                dettaglioAlimentazioneService.ricercaDettaglioAlimentazioneByAlimentazione(
-                        id));
-        return "dettaglioAlimentazione/dettaglioAlimentazioneFragment :: dettaglioAlimentazioneFragment";
-    }
+	@GetMapping("/list")
+	public String listaDettaglioAlimentazione(Model model) {
+		model.addAttribute("alimentazioneList", alimentazioneService.findAllAlimentazione());
+		return "dettaglioAlimentazione/dettaglioAlimentazioneList";
+	}
 
-    @RequestMapping(value = "/vistaAzioni/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
-    public String dettaglioAlimentazioneVistaAzioni(@PathVariable Long id,
-                                                    Model model) {
-        model.addAttribute("alimentazione",
-                alimentazioneService.ricercaId(id).orElseThrow());
-        model.addAttribute("dettaglioAlimentazioneList",
-                dettaglioAlimentazioneService.ricercaDettaglioAlimentazioneByAlimentazione(
-                        id));
-        return "dettaglioAlimentazione/dettaglioAlimentazioneVistaAzioni";
-    }
+	@GetMapping("/dettaglioAlimentazioneList/{id}")
+	public String dettaglioAlimentazioneList(@PathVariable Long id, Model model) {
+		model.addAttribute("dettaglioAlimentazioneList",
+			dettaglioAlimentazioneService.ricercaDettaglioAlimentazioneByAlimentazione(id));
+		return "dettaglioAlimentazione/dettaglioAlimentazioneFragment :: dettaglioAlimentazioneFragment";
+	}
 
-    @DeleteMapping("{id}")
-    public String eliminaDettaglioAlimentazione(@PathVariable Long id, Model model) {
-        Long idRedirect = dettaglioAlimentazioneService.ricercaId(id)
-                .orElseThrow()
-                .getIdAlimentazione();
-        dettaglioAlimentazioneService.elimina(id);
-        return dettaglioAlimentazioneVistaAzioni(idRedirect, model);
-    }
+	@RequestMapping(value = "/vistaAzioni/{id}", method = {RequestMethod.GET, RequestMethod.PUT})
+	public String dettaglioAlimentazioneVistaAzioni(@PathVariable Long id, Model model) {
+		model.addAttribute("alimentazione", alimentazioneService.ricercaId(id).orElseThrow());
+		model.addAttribute("dettaglioAlimentazioneList",
+			dettaglioAlimentazioneService.ricercaDettaglioAlimentazioneByAlimentazione(id));
+		return "dettaglioAlimentazione/dettaglioAlimentazioneVistaAzioni";
+	}
 
-    @GetMapping("/azioni/{id}")
-    public String relazioneAzioni(@PathVariable Long id, Model model) {
-        model.addAttribute("dettaglioAlimentazione",
-                dettaglioAlimentazioneService.ricercaId(id).orElseThrow());
-        model.addAttribute("prodottoList",
-                prodottoService.ricercaProdottiInseribiliPerDettaglioAlimentazione(id));
-        model.addAttribute("unitaDiMisuraList", mathService.unitaDiMisuraList());
+	@DeleteMapping("{id}")
+	public String eliminaDettaglioAlimentazione(@PathVariable Long id, Model model) {
+		Long
+			idRedirect =
+			dettaglioAlimentazioneService.ricercaId(id).orElseThrow().getIdAlimentazione();
+		dettaglioAlimentazioneService.elimina(id);
+		return dettaglioAlimentazioneVistaAzioni(idRedirect, model);
+	}
 
-        return "dettaglioAlimentazione/dettaglioAlimentazioneAzioni";
-    }
+	@GetMapping("/azioni/{id}")
+	public String relazioneAzioni(@PathVariable Long id, Model model) {
+		model.addAttribute("dettaglioAlimentazione",
+			dettaglioAlimentazioneService.ricercaId(id).orElseThrow());
+		model.addAttribute("prodottoList",
+			prodottoService.ricercaProdottiInseribiliPerDettaglioAlimentazione(id));
+		model.addAttribute("unitaDiMisuraList", mathService.unitaDiMisuraList());
 
-    @PutMapping("{id}")
-    public String aggiornaDettaglioAlimentazione(
-            @RequestBody DettaglioAlimentazioneDto dettaglioAlimentazioneDto,
-            @PathVariable Long id) {
-        dettaglioAlimentazioneDto.setIdAlimentazione(id);
-        DettaglioAlimentazioneDto dettaglio = dettaglioAlimentazioneService.aggiorna(
-                dettaglioAlimentazioneDto);
-        return "redirect:/dettaglioAlimentazione/vistaAzioni/" + dettaglio.getIdAlimentazione();
-    }
+		return "dettaglioAlimentazione/dettaglioAlimentazioneAzioni";
+	}
 
-    @GetMapping("/new/{id}")
-    public String newDettaglioAlimentazione(@PathVariable Long id, Model model) {
-        model.addAttribute("prodottoList",
-                prodottoService.ricercaProdottiInseribiliPerAlimentazione(id));
-        model.addAttribute("unitaDiMisuraList", mathService.unitaDiMisuraList());
-        model.addAttribute("alimentazione",
-                alimentazioneService.ricercaId(id).orElseThrow());
-        return "dettaglioAlimentazione/dettaglioAlimentazioneNuovo";
-    }
+	@PutMapping("{id}")
+	public String aggiornaDettaglioAlimentazione(
+		@RequestBody DettaglioAlimentazioneDto dettaglioAlimentazioneDto, @PathVariable Long id) {
+		dettaglioAlimentazioneDto.setIdAlimentazione(id);
+		DettaglioAlimentazioneDto
+			dettaglio =
+			dettaglioAlimentazioneService.aggiorna(dettaglioAlimentazioneDto);
+		return "redirect:/dettaglioAlimentazione/vistaAzioni/" + dettaglio.getIdAlimentazione();
+	}
 
-    @PostMapping
-    public String inserisciDettaglioAlimentazione(
-            @RequestBody DettaglioAlimentazioneDto dettaglioAlimentazioneDto) {
-        DettaglioAlimentazioneDto dettaglio = dettaglioAlimentazioneService.inserisci(
-                dettaglioAlimentazioneDto);
-        return "redirect:/dettaglioAlimentazione/vistaAzioni/" + dettaglio.getIdAlimentazione();
-    }
+	@GetMapping("/new/{id}")
+	public String newDettaglioAlimentazione(@PathVariable Long id, Model model) {
+		model.addAttribute("prodottoList",
+			prodottoService.ricercaProdottiInseribiliPerAlimentazione(id));
+		model.addAttribute("unitaDiMisuraList", mathService.unitaDiMisuraList());
+		model.addAttribute("alimentazione", alimentazioneService.ricercaId(id).orElseThrow());
+		return "dettaglioAlimentazione/dettaglioAlimentazioneNuovo";
+	}
 
+	@PostMapping
+	public String inserisciDettaglioAlimentazione(
+		@RequestBody DettaglioAlimentazioneDto dettaglioAlimentazioneDto) {
+		DettaglioAlimentazioneDto
+			dettaglio =
+			dettaglioAlimentazioneService.inserisci(dettaglioAlimentazioneDto);
+		return "redirect:/dettaglioAlimentazione/vistaAzioni/" + dettaglio.getIdAlimentazione();
+	}
 
-    @GetMapping("{id}")
-    public Optional<DettaglioAlimentazioneDto> ricercaId(@PathVariable Long id) {
-        return dettaglioAlimentazioneService.ricercaId(id);
-    }
-
+	@GetMapping("{id}")
+	public Optional<DettaglioAlimentazioneDto> ricercaId(@PathVariable Long id) {
+		return dettaglioAlimentazioneService.ricercaId(id);
+	}
 
 }

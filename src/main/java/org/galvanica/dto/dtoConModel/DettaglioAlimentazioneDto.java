@@ -9,12 +9,12 @@ import org.galvanica.math.UnitaDiMisura;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DettaglioAlimentazioneDto {
-    private Long idDettaglio;
-    private String note;
-    private Double quantitaProdotto;
-    private UnitaDiMisura unitaDiMisura;
-    private Long idProdotto;
-    private String nomeProdotto;
-    private Long idAlimentazione;
-    private String nomeBagno;
+	private Long idDettaglio;
+	private String note;
+	private Double quantitaProdotto;
+	private UnitaDiMisura unitaDiMisura;
+	private Long idProdotto;
+	private String nomeProdotto;
+	private Long idAlimentazione;
+	private String nomeBagno;
 }

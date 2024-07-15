@@ -2,20 +2,17 @@
 <html lang="it" xmlns:th="https://www.thymeleaf.org">
 
 <head>
-    <title>Lista Relazioni </title>
+	<title>Lista Relazioni </title>
 </head>
 
 <body>
 
 <div th:fragment="dettaglioAlimentazioneFragment">
-    <div th:each="dettaglio:${dettaglioAlimentazioneList}">
-        <span th:text="${dettaglio.getNomeProdotto()}">
-        </span> -->
-        <span th:text="${dettaglio.getQuantitaProdotto()}">
-        </span>
-        <span th:text="${dettaglio.getUnitaDiMisura()}">
-        </span>
-    </div>
+	<div th:each="dettaglio:${dettaglioAlimentazioneList}">
+		<span th:text="${dettaglio.getNomeProdotto()}"></span> -->
+		<span th:text="${dettaglio.getQuantitaProdotto()}"></span>
+		<span th:text="${dettaglio.getUnitaDiMisura()}"></span>
+	</div>
 </div>
 
 </body>

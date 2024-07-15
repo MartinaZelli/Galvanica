@@ -1,41 +1,35 @@
 <!DOCTYPE html>
-<html lang="it" xmlns:th="https://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/main_layout}">
+<html lang="it" xmlns:th="https://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+		layout:decorate="~{layout/main_layout}">
 
 <head>
-    <title>Nuovo Bagno</title>
+	<title>Nuovo Bagno</title>
 </head>
 
 <body>
 <div layout:fragment="content">
 
-    <form th:attr="hx-post=@{'/bagno'}"
-          hx-ext="json-enc"
-          hx-target="body"
-          hx-swap="outerHTML">
-        <div>
-            <label for="nome">Nome</label>
-            <input type="text" id="nome" name="nome">
-        </div>
-        <div>
-            <label for="scattiTotali">Scatti Totali</label>
-            <input type="text" id="scattiTotali" name="scattiTotali">
-        </div>
-        <div>
-            <label for="restoScatti">Scatti Parziali</label>
-            <input type="text" id="restoScatti" name="restoScatti">
-        </div>
-        <div>
-            <label for="litri">Litri</label>
-            <input type="text" id="litri" name="litri">
-        </div>
-        <button class="btn btn-outline-primary"
-                type="submit">
-            Salva
-        </button>
-
-    </form>
+	<form th:attr="hx-post=@{'/bagno'}" hx-ext="json-enc" hx-target="body" hx-swap="outerHTML">
+		<div>
+			<label for="nome">Nome</label>
+			<input type="text" id="nome" name="nome">
+		</div>
+		<div>
+			<label for="scattiTotali">Scatti Totali</label>
+			<input type="text" id="scattiTotali" name="scattiTotali">
+		</div>
+		<div>
+			<label for="restoScatti">Scatti Parziali</label>
+			<input type="text" id="restoScatti" name="restoScatti">
+		</div>
+		<div>
+			<label for="litri">Litri</label>
+			<input type="text" id="litri" name="litri">
+		</div>
+		<button class="btn btn-outline-primary" type="submit">
+			Salva
+		</button>
+	</form>
 </div>
 </body>
 

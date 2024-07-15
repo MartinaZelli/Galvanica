@@ -1,71 +1,61 @@
 <!DOCTYPE html>
-<html lang="it" xmlns:th="https://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/main_layout}">
+<html lang="it" xmlns:th="https://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+		layout:decorate="~{layout/main_layout}">
 
 <head>
-    <title>Azioni su DettaglioAlimentazione</title>
+	<title>Azioni su DettaglioAlimentazione</title>
 </head>
 
 <body>
 <div layout:fragment="content">
-    <div><a href="/dettaglioAlimentazione/list">Torna alla Lista </a></div>
-    <div></div>
-    <div>
-        <a th:href="'/dettaglioAlimentazione/new/'+${alimentazione.getIdAlimentazione()}">
-            Nuovo </a>
-    </div>
-    <div></div>
+	<div><a href="/dettaglioAlimentazione/list">Torna alla Lista </a></div>
+	<div></div>
+	<div>
+		<a th:href="'/dettaglioAlimentazione/new/'+${alimentazione.getIdAlimentazione()}"> Nuovo </a>
+	</div>
+	<div></div>
 
 
-    <div>
-        <label for="nome">Nome Bagno</label>
-        <input type="text" disabled id="nome" name="nome"
-               th:value="${alimentazione.getNomeBagno()}">
-    </div>
-    <div>
-        <label for="alimentazione">Tipo alimentazione</label>
-        <input type="text" disabled id="alimentazione" name="nome"
-               th:value="${alimentazione.getTipologiaAggiunta()}">
-    </div>
+	<div>
+		<label for="nome">Nome Bagno</label>
+		<input type="text" disabled id="nome" name="nome" th:value="${alimentazione.getNomeBagno()}">
+	</div>
+	<div>
+		<label for="alimentazione">Tipo alimentazione</label>
+		<input type="text" disabled id="alimentazione" name="nome" th:value="${alimentazione.getTipologiaAggiunta()}"/>
+	</div>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">idDettaglio</th>
-            <th scope="col">Prodotto</th>
-            <th scope="col">Quantità</th>
-            <th scope="col">Unità di misura</th>
-            <th scope="col">Note</th>
-            <th scope="col">Azioni</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="dettaglioAlimentazione: ${dettaglioAlimentazioneList}">
-            <td><span th:text="${dettaglioAlimentazione.getIdDettaglio()}"/>
-            </td>
-            <td><span th:text="${dettaglioAlimentazione.getNomeProdotto()}"/>
-            </td>
-            <td><span th:text="${dettaglioAlimentazione.getQuantitaProdotto()}"/>
-            </td>
-            <td><span th:text="${dettaglioAlimentazione.getUnitaDiMisura()}"/>
-            </td>
-            <td><span th:text="${dettaglioAlimentazione.getNote()}"/>
-            </td>
-            <td>
-                <a th:href="'/dettaglioAlimentazione/azioni/'+${dettaglioAlimentazione.getIdDettaglio()}">
-                    Modifica </a>
-                <div></div>
-                <a href="#"
-                   hx-target="body"
-                   hx-swap="outerHTML"
-                   th:attr="hx-delete=@{'/dettaglioAlimentazione/'+${dettaglioAlimentazione.getIdDettaglio()}}">
-                    Elimina </a>
-            </td>
-
-        </tr>
-        </tbody>
-    </table>
+	<table class="table">
+		<thead>
+		<tr>
+			<th scope="col">idDettaglio</th>
+			<th scope="col">Prodotto</th>
+			<th scope="col">Quantità</th>
+			<th scope="col">Unità di misura</th>
+			<th scope="col">Note</th>
+			<th scope="col">Azioni</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr th:each="dettaglioAlimentazione: ${dettaglioAlimentazioneList}">
+			<td><span th:text="${dettaglioAlimentazione.getIdDettaglio()}"/></td>
+			<td><span th:text="${dettaglioAlimentazione.getNomeProdotto()}"/></td>
+			<td><span th:text="${dettaglioAlimentazione.getQuantitaProdotto()}"/></td>
+			<td><span th:text="${dettaglioAlimentazione.getUnitaDiMisura()}"/></td>
+			<td><span th:text="${dettaglioAlimentazione.getNote()}"/></td>
+			<td>
+				<a th:href="'/dettaglioAlimentazione/azioni/'+${dettaglioAlimentazione.getIdDettaglio()}">Modifica</a>
+				<div></div>
+				<a href="#"
+						hx-target="body"
+						hx-swap="outerHTML"
+						th:attr="hx-delete=@{'/dettaglioAlimentazione/'+${dettaglioAlimentazione.getIdDettaglio()}}">
+					Elimina
+				</a>
+			</td>
+		</tr>
+		</tbody>
+	</table>
 
 </div>
 </body>

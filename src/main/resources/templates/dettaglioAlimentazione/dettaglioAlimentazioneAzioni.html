@@ -1,65 +1,63 @@
 <!DOCTYPE html>
-<html lang="it" xmlns:th="https://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/main_layout}">
+<html lang="it" xmlns:th="https://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+		layout:decorate="~{layout/main_layout}">
 
 <head>
-    <title>Azioni su Relazioni</title>
+	<title>Azioni su Relazioni</title>
 </head>
 
 <body>
 <div layout:fragment="content">
 
-    <form th:attr="hx-put=@{'/dettaglioAlimentazione/'+${dettaglioAlimentazione.getIdDettaglio()}}"
-          hx-ext="json-enc"
-          hx-target="body"
-          hx-swap="outerHTML"
-          hx-replace-url="true">
-        <div>
-            Bagno: <span th:text="${dettaglioAlimentazione.getNomeBagno()}"></span>
-        </div>
+	<form th:attr="hx-put=@{'/dettaglioAlimentazione/'+${dettaglioAlimentazione.getIdDettaglio()}}"
+			hx-ext="json-enc"
+			hx-target="body"
+			hx-swap="outerHTML"
+			hx-replace-url="true">
+		<div>
+			Bagno: <span th:text="${dettaglioAlimentazione.getNomeBagno()}"></span>
+		</div>
 
-        <input type="hidden" id="idAlimentazione" name="idAlimentazione"
-               th:value="${dettaglioAlimentazione.getIdAlimentazione()}">
+		<input type="hidden"
+				id="idAlimentazione"
+				name="idAlimentazione"
+				th:value="${dettaglioAlimentazione.getIdAlimentazione()}">
+		<div>
+			<label for="note">Note</label>
+			<input type="text" id="note" name="note" th:value="${dettaglioAlimentazione.getNote()}">
+		</div>
+		<div>
+			<label for="idProdotto">Nome Prodotto </label>
+			<select name="idProdotto" id="idProdotto">
+				<option></option>
+				<option th:each="prodotto: ${prodottoList}"
+						th:value="${prodotto.getIdProdotto()}"
+						th:text="${prodotto.getNome()}"
+						th:selected="${prodotto.getIdProdotto()==dettaglioAlimentazione.getIdProdotto()}">
+				</option>
+			</select>
+		</div>
+		<div>
+			<label for="quantita">Quantità prodotto</label>
+			<input type="text"
+					id="quantita"
+					name="quantitaProdotto"
+					th:value="${dettaglioAlimentazione.getQuantitaProdotto()}"/>
+		</div>
+		<div>
+			<label for="unitaDiMisura">Unità di Misura</label>
+			<select name="unitaDiMisura" id="unitaDiMisura">
+				<option></option>
+				<option th:each="unita: ${unitaDiMisuraList}"
+						th:value="${unita.name()}"
+						th:text="${unita.name()}"
+						th:selected="${unita.name()==dettaglioAlimentazione.getUnitaDiMisura().name()}">
+				</option>
+			</select>
+		</div>
 
-        <div>
-            <label for="note">Note</label>
-            <input type="text" id="note" name="note"
-                   th:value="${dettaglioAlimentazione.getNote()}">
-        </div>
-        <div>
-            <label for="idProdotto">Nome Prodotto </label>
-            <select name="idProdotto" id="idProdotto">
-                <option></option>
-                <option th:each="prodotto: ${prodottoList}"
-                        th:value="${prodotto.getIdProdotto()}"
-                        th:text="${prodotto.getNome()}"
-                        th:selected="${prodotto.getIdProdotto()==dettaglioAlimentazione.getIdProdotto()}">
-                </option>
-            </select>
-        </div>
-        <div>
-            <label for="quantita">Quantità prodotto</label>
-            <input type="text" id="quantita" name="quantitaProdotto"
-                   th:value="${dettaglioAlimentazione.getQuantitaProdotto()}">
-        </div>
-        <div>
-            <label for="unitaDiMisura">Unità di Misura </label>
-            <select name="unitaDiMisura" id="unitaDiMisura">
-                <option></option>
-                <option th:each="unita: ${unitaDiMisuraList}"
-                        th:value="${unita.name()}"
-                        th:text="${unita.name()}"
-                        th:selected="${unita.name()==dettaglioAlimentazione.getUnitaDiMisura().name()}">
-                </option>
-            </select>
-        </div>
-
-        <button class="btn btn-outline-primary"
-                type="submit">
-            Salva
-        </button>
-    </form>
+		<button class="btn btn-outline-primary" type="submit">Salva</button>
+	</form>
 
 </div>
 

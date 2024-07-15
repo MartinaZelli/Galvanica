@@ -5,6 +5,4 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/StoricoLista")
-public class StoricoSemplificatoController {
-    
-}
+public class StoricoSemplificatoController {}

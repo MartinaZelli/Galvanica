@@ -14,19 +14,18 @@ import java.util.List;
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"nome"})})
 public class Bagno {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idBagno;
-    private String nome;
-    private Integer litri;
-    private LocalDate dataInizio;
-    private LocalDate dataFine;
-    @OneToMany(mappedBy = "bagno", cascade = CascadeType.REMOVE)
-    private List<CaratteristicaBagno> caratteristicheList;
-    @OneToMany(mappedBy = "bagno", cascade = CascadeType.REMOVE)
-    private List<Alimentazione> alimentazioneList;
-    @OneToMany(mappedBy = "bagno", cascade = CascadeType.REMOVE)
-    private List<RelazioneBagnoProdotto> relazioneBagnoProdottoList;
-
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long idBagno;
+	private String nome;
+	private Integer litri;
+	private LocalDate dataInizio;
+	private LocalDate dataFine;
+	@OneToMany(mappedBy = "bagno", cascade = CascadeType.REMOVE)
+	private List<CaratteristicaBagno> caratteristicheList;
+	@OneToMany(mappedBy = "bagno", cascade = CascadeType.REMOVE)
+	private List<Alimentazione> alimentazioneList;
+	@OneToMany(mappedBy = "bagno", cascade = CascadeType.REMOVE)
+	private List<RelazioneBagnoProdotto> relazioneBagnoProdottoList;
 
 }
