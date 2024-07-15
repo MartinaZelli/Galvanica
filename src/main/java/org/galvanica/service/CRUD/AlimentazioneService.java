@@ -34,30 +34,13 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
             throw new RuntimeException(
                     "l'id deve essere autoincrementale, non inizializzare");
         }
-        if (elemento.getIdBagno() == null) {
-            throw new RuntimeException(
-                    "l'id bagno deve essere valorizzato");
-        }
-        if (elemento.getScatti() == null && elemento.getTempo() == null) {
-            throw new RuntimeException(
-                    "deve essere valorizzato un attributo fra Scatti e Tempo");
-        }
-        if (elemento.getScatti() != null && elemento.getTempo() != null) {
-            throw new RuntimeException(
-                    "può essere valorizzato un solo attributo fra Scatti e Tempo");
-        }
-        if (elemento.getValoriArrotondati() == null) {
-            elemento.setValoriArrotondati(false);
-        }
-        Optional<Bagno> bagnoOptional = bagnoRepository.findById(elemento.getIdBagno());
-        if (bagnoOptional.isEmpty()) {
-            throw new RuntimeException(
-                    "l'id del bagno non esiste, correggere.");
-        }
+
+        Bagno bagno = validaAlimentazione(elemento);
+
         if (Objects.equals(elemento.getTipologiaAggiunta(),
                 TipologiaAggiunta.SCATTI)) {
-            if (bagnoOptional.get().getAlimentazioneList() != null) {
-                if (bagnoOptional.get()
+            if (bagno.getAlimentazioneList() != null) {
+                if (bagno
                         .getAlimentazioneList()
                         .stream()
                         .anyMatch(alimentazione -> alimentazione.getScatti() != null)) {
@@ -66,12 +49,9 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
                 }
             }
         }
-        if (elemento.getTipologiaAggiunta().equals(TipologiaAggiunta.MANUALE)) {
-            throw new RuntimeException(
-                    "non può essere inizializzata un alimentazione Manuale per il bagno.");
-        }
+
         Alimentazione alimentazione = Alimentazione.builder()
-                .bagno(bagnoOptional.get())
+                .bagno(bagno)
                 .tempo(elemento.getTempo())
                 .scatti(elemento.getScatti())
                 .descrizione(elemento.getDescrizione())
@@ -98,41 +78,25 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
             throw new RuntimeException(
                     "mettere un id corretto");
         }
-        if (elemento.getIdBagno() == null) {
-            throw new RuntimeException(
-                    "l'id bagno non può essere null");
-        }
         if (!Objects.equals(elemento.getIdBagno(),
                 alimentazioneOptional.get().getBagno().getIdBagno())) {
             throw new RuntimeException(
                     "non può essere modificato il bagno relativo all'alimentazione.");
         }
-        Optional<Bagno> bagnoOptional = bagnoRepository.findById(elemento.getIdBagno());
-        if (bagnoOptional.isEmpty()) {
-            throw new RuntimeException(
-                    "l'id del bagno non esiste, correggere");
-        }
-        if (elemento.getScatti() != null && elemento.getTempo() != null) {
-            throw new RuntimeException(
-                    "può essere valorizzato un solo attributo fra Scatti e Tempo");
-        }
-        if (elemento.getValoriArrotondati() == null) {
-            elemento.setValoriArrotondati(false);
-        }
+        Bagno bagno = validaAlimentazione(elemento);
+
+
         if (!Objects.equals(elemento.getTipologiaAggiunta(),
                 alimentazioneOptional.get().getTipologiaAggiunta())) {
             throw new RuntimeException(
                     "non può essere modificata la tipologia di aggiunta di un bagno.");
         }
-        if (elemento.getTipologiaAggiunta().equals(TipologiaAggiunta.MANUALE)) {
-            throw new RuntimeException(
-                    "non può essere inizializzata un alimentazione Manuale per il bagno.");
-        }
+
         Alimentazione alimentazione = alimentazioneOptional.get();
         alimentazione.setDescrizione(elemento.getDescrizione());
         alimentazione.setTempo(elemento.getTempo());
         alimentazione.setScatti(elemento.getScatti());
-        alimentazione.setBagno(bagnoOptional.get());
+        alimentazione.setBagno(bagno);
         alimentazione.setValoriArrotondati(elemento.getValoriArrotondati());
         alimentazione = alimentazioneRepository.save(alimentazione);
 
@@ -177,14 +141,57 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
                 Collectors.toList());
     }
 
-    private void controlloAggiunta(AlimentazioneDto dto, Alimentazione model) {
-//todo: controllare se tipologia aggiunta e scatti/tempo sono corrispondenti (tempo: tempo, scatti: scatti)
-// controllare che tipologia aggiunta non sia manuale,
-// controllare che se tipologia aggiunta di model è x allora deve restare x.
-// controllare che sia valorizzato il tempo se Tip.Agg: Tempo e gli scatti...
-// controllare che se scatti model valorizzati allora non può diventare tempo e viceversa
-// il MODEL fa da verifica a tutti i controlli. l'unica cosa che può variare è o i giorni del tempo o il numero degli scatti..
-
+    private Bagno validaAlimentazione(AlimentazioneDto elemento) {
+        if (elemento.getIdBagno() == null) {
+            throw new RuntimeException(
+                    "l'id bagno deve essere valorizzato");
+        }
+        if (elemento.getScatti() == null && elemento.getTempo() == null) {
+            throw new RuntimeException(
+                    "deve essere valorizzato un attributo fra Scatti e Tempo");
+        }
+        if (elemento.getScatti() != null && elemento.getTempo() != null) {
+            throw new RuntimeException(
+                    "può essere valorizzato un solo attributo fra Scatti e Tempo");
+        }
+        if (elemento.getValoriArrotondati() == null) {
+            elemento.setValoriArrotondati(false);
+        }
+        Optional<Bagno> bagnoOptional = bagnoRepository.findById(elemento.getIdBagno());
+        if (bagnoOptional.isEmpty()) {
+            throw new RuntimeException(
+                    "l'id del bagno non esiste, correggere.");
+        }
+        if (elemento.getTipologiaAggiunta() == null) {
+            throw new RuntimeException(
+                    "la tipologia di aggiunta deve essere inizializzata");
+        }
+        if (elemento.getTipologiaAggiunta().equals(TipologiaAggiunta.MANUALE)) {
+            throw new RuntimeException(
+                    "non può essere inizializzata un alimentazione Manuale per il bagno.");
+        }
+        if (elemento.getTipologiaAggiunta().equals(TipologiaAggiunta.SCATTI)) {
+            if (elemento.getScatti() == null || elemento.getScatti() == 0) {
+                throw new RuntimeException(
+                        "la Tipologia di aggiunta è scatti ma gli scatti non sono inizializzati");
+            }
+            if (elemento.getTempo() != null) {
+                throw new RuntimeException(
+                        "la Tipologia di aggiunta è scatti, non può essere inizializzato il tempo.");
+            }
+        }
+        if (elemento.getTipologiaAggiunta().equals(TipologiaAggiunta.TEMPO)) {
+            if (elemento.getTempo() == null) {
+                throw new RuntimeException(
+                        "la Tipologia di aggiunta è Tempo ma il tempo non è inizializzato");
+            }
+            if (elemento.getScatti() != null) {
+                throw new RuntimeException(
+                        "la Tipologia di aggiunta è Tempo, non possono essere inizializzati gli scatti");
+            }
+        }
+        return bagnoOptional.get();
     }
+
 
 }

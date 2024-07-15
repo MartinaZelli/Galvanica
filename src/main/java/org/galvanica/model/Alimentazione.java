@@ -1,5 +1,6 @@
 package org.galvanica.model;
 
+import groovyjarjarantlr4.v4.runtime.misc.NotNull;
 import jakarta.persistence.*;
 import lombok.*;
 import org.galvanica.math.DayOfWeekConverter;
@@ -24,6 +25,7 @@ public class Alimentazione {
     private Bagno bagno;
     private Integer scatti;
     @Enumerated(EnumType.STRING)
+    @NotNull
     private TipologiaAggiunta tipologiaAggiunta;
     private Boolean valoriArrotondati;
     @Convert(converter = DayOfWeekConverter.class)
