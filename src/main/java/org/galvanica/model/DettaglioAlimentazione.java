@@ -3,6 +3,7 @@ package org.galvanica.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.galvanica.math.UnitaDiMisura;
+import org.springframework.lang.NonNull;
 
 @Getter
 @Setter
@@ -18,10 +19,13 @@ public class DettaglioAlimentazione {
     private String note;
     private Integer quantitaProdotto;
     @Enumerated(EnumType.STRING)
+    @NonNull
     private UnitaDiMisura unitaDiMisura;
     @ManyToOne
+    @NonNull
     private Prodotto prodotto;
     @ManyToOne
+    @NonNull
     private Alimentazione alimentazione;
 
 }

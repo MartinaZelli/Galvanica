@@ -163,15 +163,17 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
             throw new RuntimeException(
                     "l'id prodotto deve essere valorizzato");
         }
-        if (elemento.getQuantitaProdotto() != null && elemento.getUnitaDiMisura() == null) {
+        if (elemento.getUnitaDiMisura() == null) {
             throw new RuntimeException(
-                    "se è inizializzata la quantità di prodotto inserire anche l'unità di misura.");
+                    "l'unita di misura deve essere valorizzata");
         }
-        Optional<Alimentazione> alimentazioneOptional = alimentazioneRepository.findById(
-                elemento.getIdAlimentazione());
-        if (alimentazioneOptional.isEmpty()) {
+        if (elemento.getQuantitaProdotto() == null) {
             throw new RuntimeException(
-                    "mettere un id di alimentazione corretto");
+                    "la quantità di prodotto deve essere valorizzata");
+        }
+        if (elemento.getQuantitaProdotto() <= 0) {
+            throw new RuntimeException(
+                    "la quantità di prodotto non può essere negativa");
         }
         Optional<Prodotto> prodottoOptional = prodottoRepository.findById(elemento.getIdProdotto());
         if (prodottoOptional.isEmpty()) {
@@ -182,6 +184,12 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
                 .getSonoVolume()) {
             throw new RuntimeException(
                     "l'unità di misura selezionata non è dello stesso tipo dell'unità di misura del prodotto.");
+        }
+        Optional<Alimentazione> alimentazioneOptional = alimentazioneRepository.findById(
+                elemento.getIdAlimentazione());
+        if (alimentazioneOptional.isEmpty()) {
+            throw new RuntimeException(
+                    "mettere un id di alimentazione corretto");
         }
     }
 

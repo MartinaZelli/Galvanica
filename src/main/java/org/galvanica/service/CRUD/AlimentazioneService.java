@@ -154,6 +154,10 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
             throw new RuntimeException(
                     "può essere valorizzato un solo attributo fra Scatti e Tempo");
         }
+        if (elemento.getScatti() != null && elemento.getScatti() <= 0) {
+            throw new RuntimeException(
+                    "non esistono aggiunte a scatti di 0 oppure con valori Negativi");
+        }
         if (elemento.getValoriArrotondati() == null) {
             elemento.setValoriArrotondati(false);
         }
@@ -171,7 +175,7 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
                     "non può essere inizializzata un alimentazione Manuale per il bagno.");
         }
         if (elemento.getTipologiaAggiunta().equals(TipologiaAggiunta.SCATTI)) {
-            if (elemento.getScatti() == null || elemento.getScatti() == 0) {
+            if (elemento.getScatti() == null) {
                 throw new RuntimeException(
                         "la Tipologia di aggiunta è scatti ma gli scatti non sono inizializzati");
             }
