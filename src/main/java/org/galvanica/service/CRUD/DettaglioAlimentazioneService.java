@@ -42,30 +42,13 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
             throw new RuntimeException(
                     "l'id deve essere autoincrementale, non inizializzare");
         }
-        if (elemento.getIdAlimentazione() == null) {
-            throw new RuntimeException(
-                    "l'id alimentazione deve essere valorizzato");
-        }
-        if (elemento.getIdProdotto() == null) {
-            throw new RuntimeException(
-                    "l'id prodotto deve essere valorizzato");
-        }
-        if (elemento.getQuantitaProdotto() != null && elemento.getUnitaDiMisura() == null) {
-            throw new RuntimeException(
-                    "se è inizializzata la quantità di prodotto inserire anche l'unità di misura.");
-        }
-        Optional<Alimentazione> alimentazioneOptional = alimentazioneRepository.findById(
-                elemento.getIdAlimentazione());
-        if (alimentazioneOptional.isEmpty()) {
-            throw new RuntimeException(
-                    "mettere un id di alimentazione corretto");
-        }
-        Optional<Prodotto> prodottoOptional = prodottoRepository.findById(elemento.getIdProdotto());
-        if (prodottoOptional.isEmpty()) {
-            throw new RuntimeException(
-                    "mettere un id prodotto corretto");
-        }
-        if (alimentazioneOptional.get()
+        validaDettaglioAlimentazione(elemento);
+        Alimentazione alimentazione = alimentazioneRepository.findById(
+                elemento.getIdAlimentazione()).orElseThrow();
+        Prodotto prodotto = prodottoRepository.findById(elemento.getIdProdotto())
+                .orElseThrow();
+
+        if (alimentazione
                 .getDettaglioAlimentazioneList()
                 .stream()
                 .anyMatch(dettaglioAlimentazione -> Objects.equals(
@@ -77,20 +60,11 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
         }
         DettaglioAlimentazione dettaglioAlimentazione = DettaglioAlimentazione.builder()
                 .note(elemento.getNote())
-                .prodotto(prodottoOptional.get())
-                .alimentazione(alimentazioneOptional.get())
+                .prodotto(prodotto)
+                .alimentazione(alimentazione)
                 .build();
-        UnitaDiMisura unita = UnitaDiMisura.MG;
-        if (elemento.getUnitaDiMisura().isSonoVolume()) {
-            unita = UnitaDiMisura.ML;
-        }
-        Integer quantita = convertiQuantitaToDatabase(elemento.getQuantitaProdotto(),
-                elemento.getUnitaDiMisura());
-        dettaglioAlimentazione.setUnitaDiMisura(unita);
-        dettaglioAlimentazione.setQuantitaProdotto(quantita);
-        dettaglioAlimentazione = dettaglioAlimentazioneRepository.save(
-                dettaglioAlimentazione);
-        return fromModelToDto(dettaglioAlimentazione);
+        return aggiornamentoDataBase(elemento, dettaglioAlimentazione);
+
     }
 
     @Override
@@ -110,47 +84,17 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
             throw new RuntimeException(
                     "mettere un id corretto");
         }
-        if (elemento.getIdAlimentazione() == null) {
-            throw new RuntimeException(
-                    "l'id alimentazione deve essere valorizzato");
-        }
-        if (elemento.getIdProdotto() == null) {
-            throw new RuntimeException(
-                    "l'id prodotto deve essere valorizzato");
-        }
-        if (elemento.getQuantitaProdotto() != null && elemento.getUnitaDiMisura() == null) {
-            throw new RuntimeException(
-                    "se è inizializzata la quantità di prodotto inserire anche l'unità di misura.");
-        }
-        Optional<Alimentazione> alimentazioneOptional = alimentazioneRepository.findById(
-                elemento.getIdAlimentazione());
-        if (alimentazioneOptional.isEmpty()) {
-            throw new RuntimeException(
-                    "mettere un id di alimentazione corretto");
-        }
-        Optional<Prodotto> prodottoOptional = prodottoRepository.findById(elemento.getIdProdotto());
-        if (prodottoOptional.isEmpty()) {
-            throw new RuntimeException(
-                    "mettere un id prodotto corretto");
-        }
+        validaDettaglioAlimentazione(elemento);
+        Alimentazione alimentazione = alimentazioneRepository.findById(
+                elemento.getIdAlimentazione()).orElseThrow();
+        Prodotto prodotto = prodottoRepository.findById(elemento.getIdProdotto())
+                .orElseThrow();
 
         DettaglioAlimentazione dettaglioAlimentazione = dettaglioAlimentazioneOptional.get();
         dettaglioAlimentazione.setNote(elemento.getNote());
-        dettaglioAlimentazione.setProdotto(prodottoOptional.get());
-        dettaglioAlimentazione.setAlimentazione(alimentazioneOptional.get());
-        UnitaDiMisura unita = UnitaDiMisura.MG;
-        if (elemento.getUnitaDiMisura().isSonoVolume()) {
-            unita = UnitaDiMisura.ML;
-        }
-        Integer quantita = convertiQuantitaToDatabase(elemento.getQuantitaProdotto(),
-                elemento.getUnitaDiMisura());
-        dettaglioAlimentazione.setUnitaDiMisura(unita);
-        dettaglioAlimentazione.setQuantitaProdotto(quantita);
-
-        dettaglioAlimentazione = dettaglioAlimentazioneRepository.save(
-                dettaglioAlimentazione);
-
-        return fromModelToDto(dettaglioAlimentazione);
+        dettaglioAlimentazione.setProdotto(prodotto);
+        dettaglioAlimentazione.setAlimentazione(alimentazione);
+        return aggiornamentoDataBase(elemento, dettaglioAlimentazione);
     }
 
     @Override
@@ -208,5 +152,52 @@ public class DettaglioAlimentazioneService implements ICRUDService<DettaglioAlim
                 .stream()
                 .map(this::fromModelToDto)
                 .toList();
+    }
+
+    private void validaDettaglioAlimentazione(DettaglioAlimentazioneDto elemento) {
+        if (elemento.getIdAlimentazione() == null) {
+            throw new RuntimeException(
+                    "l'id alimentazione deve essere valorizzato");
+        }
+        if (elemento.getIdProdotto() == null) {
+            throw new RuntimeException(
+                    "l'id prodotto deve essere valorizzato");
+        }
+        if (elemento.getQuantitaProdotto() != null && elemento.getUnitaDiMisura() == null) {
+            throw new RuntimeException(
+                    "se è inizializzata la quantità di prodotto inserire anche l'unità di misura.");
+        }
+        Optional<Alimentazione> alimentazioneOptional = alimentazioneRepository.findById(
+                elemento.getIdAlimentazione());
+        if (alimentazioneOptional.isEmpty()) {
+            throw new RuntimeException(
+                    "mettere un id di alimentazione corretto");
+        }
+        Optional<Prodotto> prodottoOptional = prodottoRepository.findById(elemento.getIdProdotto());
+        if (prodottoOptional.isEmpty()) {
+            throw new RuntimeException(
+                    "mettere un id prodotto corretto");
+        }
+        if (elemento.getUnitaDiMisura().isSonoVolume() != prodottoOptional.get()
+                .getSonoVolume()) {
+            throw new RuntimeException(
+                    "l'unità di misura selezionata non è dello stesso tipo dell'unità di misura del prodotto.");
+        }
+    }
+
+    private DettaglioAlimentazioneDto aggiornamentoDataBase(
+            DettaglioAlimentazioneDto elemento,
+            DettaglioAlimentazione dettaglioAlimentazione) {
+        UnitaDiMisura unita = UnitaDiMisura.MG;
+        if (elemento.getUnitaDiMisura().isSonoVolume()) {
+            unita = UnitaDiMisura.ML;
+        }
+        Integer quantita = convertiQuantitaToDatabase(elemento.getQuantitaProdotto(),
+                elemento.getUnitaDiMisura());
+        dettaglioAlimentazione.setUnitaDiMisura(unita);
+        dettaglioAlimentazione.setQuantitaProdotto(quantita);
+        dettaglioAlimentazione = dettaglioAlimentazioneRepository.save(
+                dettaglioAlimentazione);
+        return fromModelToDto(dettaglioAlimentazione);
     }
 }
