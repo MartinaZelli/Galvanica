@@ -49,6 +49,7 @@ public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
                 .nome(elemento.getNome())
                 .magazzino(magazzino)
                 .ph(elemento.getPh())
+                .sonoVolume(elemento.getSonoVolume())
                 .build();
         prodotto = prodottoRepository.save(prodotto);
         return fromModelToDto(prodotto);
@@ -74,13 +75,14 @@ public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
             throw new RuntimeException(
                     "il magazzino non può essere null");
         }
-        Magazzino magazzino = validaProdotto(elemento);
 
+        Magazzino magazzino = validaProdotto(elemento);
         Prodotto prodotto = prodottoOptional.get();
         prodotto.setMagazzino(magazzino);
         prodotto.setNome(elemento.getNome());
         prodotto.setDescrizione(elemento.getDescrizione());
         prodotto.setPh(elemento.getPh());
+        prodotto.setSonoVolume(elemento.getSonoVolume());
         prodotto = prodottoRepository.save(prodotto);
 
         return fromModelToDto(prodotto);
@@ -98,6 +100,10 @@ public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
                 throw new RuntimeException(
                         "il pH ha valori compresi fra 0 e 14 se inizializzato.");
             }
+        }
+        if (elemento.getSonoVolume() == null) {
+            throw new RuntimeException(
+                    "deve essere dato un valore alla variabile 'sonoVolume'");
         }
         return magazzinoTrovato.get();
     }
@@ -119,6 +125,7 @@ public class ProdottoService implements ICRUDService<ProdottoDto, Prodotto> {
                 .nome(oggettoDaTrasformare.getNome())
                 .descrizione(oggettoDaTrasformare.getDescrizione())
                 .ph(oggettoDaTrasformare.getPh())
+                .sonoVolume(oggettoDaTrasformare.getSonoVolume())
                 .build();
     }
 

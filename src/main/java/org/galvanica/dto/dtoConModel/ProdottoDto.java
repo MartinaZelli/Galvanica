@@ -14,4 +14,5 @@ public class ProdottoDto {
     private String nome;
     private String descrizione;
     private Integer ph;
+    private Boolean sonoVolume;
 }

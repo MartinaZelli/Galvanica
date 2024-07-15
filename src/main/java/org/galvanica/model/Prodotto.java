@@ -1,5 +1,6 @@
 package org.galvanica.model;
 
+import groovyjarjarantlr4.v4.runtime.misc.NotNull;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,6 +20,7 @@ public class Prodotto {
     private String nome;
     private String descrizione;
     private Integer ph;
-    //todo: inserisci porcoddio boolean sonoVolume
+    @NotNull
+    private Boolean sonoVolume;
 
 }
