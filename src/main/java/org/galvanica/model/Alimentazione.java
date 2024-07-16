@@ -35,7 +35,7 @@ public class Alimentazione {
     private List<DettaglioAlimentazione> dettaglioAlimentazioneList;
     @OneToMany(mappedBy = "alimentazione")
     private List<StoricoGenerale> storicoGeneraleList;
-//todo: mettere un tipologiaAlimentazione da inizializzare a "scatti" o "tempo".
+
 
 }
 

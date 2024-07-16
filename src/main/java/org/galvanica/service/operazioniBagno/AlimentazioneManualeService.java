@@ -103,4 +103,5 @@ public class AlimentazioneManualeService {
                     "l'unita di misura deve essere valorizzata se è inserita una quantità");
         }
     }
+    //todo: controllare che unità di misura per i prodotti siano corrette e validare tutti i campi da inserire!
 }

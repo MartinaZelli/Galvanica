@@ -84,7 +84,7 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
                     "non può essere modificato il bagno relativo all'alimentazione.");
         }
         Bagno bagno = validaAlimentazione(elemento);
-
+        //todo:estrarre da validaAlimentazione la chiamata al repository e riportarla fuori dal metodo.
 
         if (!Objects.equals(elemento.getTipologiaAggiunta(),
                 alimentazioneOptional.get().getTipologiaAggiunta())) {
@@ -161,11 +161,6 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
         if (elemento.getValoriArrotondati() == null) {
             elemento.setValoriArrotondati(false);
         }
-        Optional<Bagno> bagnoOptional = bagnoRepository.findById(elemento.getIdBagno());
-        if (bagnoOptional.isEmpty()) {
-            throw new RuntimeException(
-                    "l'id del bagno non esiste, correggere.");
-        }
         if (elemento.getTipologiaAggiunta() == null) {
             throw new RuntimeException(
                     "la tipologia di aggiunta deve essere inizializzata");
@@ -193,6 +188,11 @@ public class AlimentazioneService implements ICRUDService<AlimentazioneDto, Alim
                 throw new RuntimeException(
                         "la Tipologia di aggiunta è Tempo, non possono essere inizializzati gli scatti");
             }
+        }
+        Optional<Bagno> bagnoOptional = bagnoRepository.findById(elemento.getIdBagno());
+        if (bagnoOptional.isEmpty()) {
+            throw new RuntimeException(
+                    "l'id del bagno non esiste, correggere.");
         }
         return bagnoOptional.get();
     }
