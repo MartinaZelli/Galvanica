@@ -20,76 +20,88 @@ import java.util.List;
 
 @Service
 public class AlimentazioneManualeService {
-	private final BagnoService bagnoService;
-	private final StoricoDettaglioRepository storicoDettaglioRepository;
-	private final StoricoGeneraleRepository storicoGeneraleRepository;
-	private final ProdottoService prodottoService;
+    private final BagnoService bagnoService;
+    private final StoricoDettaglioRepository storicoDettaglioRepository;
+    private final StoricoGeneraleRepository storicoGeneraleRepository;
+    private final ProdottoService prodottoService;
 
-	public AlimentazioneManualeService(BagnoService bagnoService,
-		StoricoDettaglioRepository storicoDettaglioRepository,
-		StoricoGeneraleRepository storicoGeneraleRepository, ProdottoService prodottoService) {
-		this.bagnoService = bagnoService;
-		this.storicoDettaglioRepository = storicoDettaglioRepository;
-		this.storicoGeneraleRepository = storicoGeneraleRepository;
-		this.prodottoService = prodottoService;
-	}
+    public AlimentazioneManualeService(BagnoService bagnoService,
+                                       StoricoDettaglioRepository storicoDettaglioRepository,
+                                       StoricoGeneraleRepository storicoGeneraleRepository,
+                                       ProdottoService prodottoService) {
+        this.bagnoService = bagnoService;
+        this.storicoDettaglioRepository = storicoDettaglioRepository;
+        this.storicoGeneraleRepository = storicoGeneraleRepository;
+        this.prodottoService = prodottoService;
+    }
 
-	public void creaAggiuntaManuale(AlimentazioneManualeGeneraleDto generale) {
-		StoricoGenerale storicoGenerale = creaAggiuntaGenerale(generale);
-		List<AlimentazioneManualeDettaglioDto> dettaglioList = generale.getDettaglioList();
-		if (dettaglioList == null || dettaglioList.isEmpty()) {
-			return;
-		}
-		for (AlimentazioneManualeDettaglioDto dettaglio : dettaglioList) {
-			verificaProdottoInserimentoManuale(generale.getIdBagno(), dettaglio.getIdProdotto());
-			verificaPresenzaUnitaMisura(dettaglio.getQuantita(), dettaglio.getUnitaDiMisura());
-			creaAggiuntaDettaglio(dettaglio, storicoGenerale);
-		}
-	}
+    public void creaAggiuntaManuale(AlimentazioneManualeGeneraleDto generale) {
+        StoricoGenerale storicoGenerale = creaAggiuntaGenerale(generale);
+        List<AlimentazioneManualeDettaglioDto> dettaglioList = generale.getDettaglioList();
+        if (dettaglioList == null || dettaglioList.isEmpty()) {
+            return;
+        }
+        for (AlimentazioneManualeDettaglioDto dettaglio : dettaglioList) {
+            verificaProdottoInserimentoManuale(generale.getIdBagno(),
+                    dettaglio.getIdProdotto());
+            verificaPresenzaUnitaMisura(dettaglio.getQuantita(),
+                    dettaglio.getUnitaDiMisura());
+            creaAggiuntaDettaglio(dettaglio, storicoGenerale);
+        }
+    }
 
-	public StoricoGenerale creaAggiuntaGenerale(AlimentazioneManualeGeneraleDto generale) {
-		Bagno bagno = bagnoService.modelRicercaId(generale.getIdBagno());
-		return storicoGeneraleRepository.save((StoricoGenerale.builder().bagno(bagno)
-			.scattiTotaliBagno(generale.getScattiTotaliBagno())
-			.restoScattiBagno(generale.getRestoScattiBagno())
-			.scattiInseriti(generale.getScattiInseriti())
-			.tipologiaAggiunta(TipologiaAggiunta.MANUALE).note(generale.getNote()).build()));
-	}
+    public StoricoGenerale creaAggiuntaGenerale(
+            AlimentazioneManualeGeneraleDto generale) {
+        Bagno bagno = bagnoService.modelRicercaId(generale.getIdBagno());
+        return storicoGeneraleRepository.save((StoricoGenerale.builder()
+                .bagno(bagno)
+                .scattiTotaliBagno(generale.getScattiTotaliBagno())
+                .restoScattiBagno(generale.getRestoScattiBagno())
+                .scattiInseriti(generale.getScattiInseriti())
+                .tipologiaAggiunta(TipologiaAggiunta.MANUALE)
+                .note(generale.getNote())
+                .build()));
+    }
 
-	public void creaAggiuntaDettaglio(AlimentazioneManualeDettaglioDto dettaglio,
-		StoricoGenerale generale) {
-		Prodotto prodotto = prodottoService.modelRicercaId(dettaglio.getIdProdotto());
-		UnitaDiMisura unitaDiMisura = UnitaDiMisura.MG;
-		if (dettaglio.getUnitaDiMisura().isSonoVolume()) {
-			unitaDiMisura = UnitaDiMisura.ML;
-		}
+    public void creaAggiuntaDettaglio(AlimentazioneManualeDettaglioDto dettaglio,
+                                      StoricoGenerale generale) {
+        Prodotto prodotto = prodottoService.modelRicercaId(dettaglio.getIdProdotto());
+        UnitaDiMisura unitaDiMisura = UnitaDiMisura.MG;
+        if (dettaglio.getUnitaDiMisura().isSonoVolume()) {
+            unitaDiMisura = UnitaDiMisura.ML;
+        }
 
-		storicoDettaglioRepository.save(
-			StoricoDettaglio.builder().prodotto(prodotto).storicoGenerale(generale).quantita(
-				ConvertitoreUnitaMisura.convertiQuantitaToDatabase(dettaglio.getQuantita(),
-					dettaglio.getUnitaDiMisura())).unitaDiMisura(unitaDiMisura).build());
+        storicoDettaglioRepository.save(StoricoDettaglio.builder()
+                .prodotto(prodotto)
+                .storicoGenerale(generale)
+                .quantita(ConvertitoreUnitaMisura.convertiQuantitaToDatabase(
+                        dettaglio.getQuantita(),
+                        dettaglio.getUnitaDiMisura()))
+                .unitaDiMisura(unitaDiMisura)
+                .build());
 
-	}
+    }
 
-	public void verificaProdottoInserimentoManuale(Long idBagno, Long idProdotto) {
-		List<ProdottoDto> prodottoDtoList = prodottoService.ricercaProdottiByBagno(idBagno);
-		boolean
-			prodottoValido =
-			prodottoDtoList.stream()
-				.anyMatch(prodottoDto -> prodottoDto.getIdProdotto().equals(idProdotto));
-		if (!prodottoValido) {
-			throw new RuntimeException(
-				"il prodotto inserito non è legato al bagno di destinazione.");
-		}
-	}
+    public void verificaProdottoInserimentoManuale(Long idBagno, Long idProdotto) {
+        List<ProdottoDto> prodottoDtoList = prodottoService.ricercaProdottiByBagno(
+                idBagno);
+        boolean prodottoValido = prodottoDtoList.stream().anyMatch(
+                prodottoDto -> prodottoDto.getIdProdotto().equals(idProdotto));
+        if (!prodottoValido) {
+            throw new RuntimeException(
+                    "il prodotto inserito non è legato al bagno di destinazione.");
+        }
+    }
 
-	public void verificaPresenzaUnitaMisura(double quantita, UnitaDiMisura unitaDiMisura) {
-		if (quantita == 0D) {
-			throw new RuntimeException("la quantità inserita non può essere 0");
-		}
-		if (unitaDiMisura == null) {
-			throw new RuntimeException(
-				"l'unita di misura deve essere valorizzata se è inserita una quantità");
-		}
-	}
+    public void verificaPresenzaUnitaMisura(double quantita,
+                                            UnitaDiMisura unitaDiMisura) {
+        if (quantita == 0D) {
+            throw new RuntimeException("la quantità inserita non può essere 0");
+        }
+        if (unitaDiMisura == null) {
+            throw new RuntimeException(
+                    "l'unita di misura deve essere valorizzata se è inserita una quantità");
+        }
+    }
+    //todo: controllare che unità di misura per i prodotti siano corrette e validare tutti i campi da inserire!
 }
