@@ -52,11 +52,21 @@ public class AlimentazioneAScattiService {
     public List<StoricoTotaleSingoloDto> creaNuovaAlimentazione(Long idBagno,
                                                                 int scattiLetti) {
         calcolaAlimentazioneControlliApprovati(idBagno);
-        StoricoGenerale storicoGeneraleCreato = creaStorici(idBagno, scattiLetti);
-        List<StoricoDettaglio> storicoDettaglioList = storicoGeneraleCreato.getStoricoDettaglioList();
+
+        long idStorico = creaStorici(idBagno, scattiLetti);
+
+        StoricoGenerale storicoGeneraleCreato =
+                storicoGeneraleRepository.findById(idStorico).orElseThrow();
+
+        List<StoricoDettaglio> storicoDettaglioList =
+                storicoDettaglioRepository.findByStoricoGeneraleIdStorico(idStorico);
+        //storicoGeneraleCreato.getStoricoDettaglioList();
+
         List<StoricoTotaleSingoloDto> risultato = new ArrayList<>();
-        StoricoTotaleSingoloDto risposta = buildaStoricoTotaleSingoloDtoSoloGenerale(
-                storicoGeneraleCreato);
+
+        StoricoTotaleSingoloDto risposta =
+                buildaStoricoTotaleSingoloDtoSoloGenerale(storicoGeneraleCreato);
+
         if (storicoGeneraleCreato.getMoltiplicatoreAlimentazione() == 0) {
             risposta.setRispostaCalcoloFront(
                     "gli scatti sono inferiori al 90% dell'alimentazione," +
@@ -64,6 +74,7 @@ public class AlimentazioneAScattiService {
             risultato.add(risposta);
             return risultato;
         }
+
         for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
 
             UnitaDiMisura unitaDiMisura = convertiUnitaMisuraPerDto(
@@ -143,8 +154,7 @@ public class AlimentazioneAScattiService {
 
     }
 
-    private StoricoGenerale creaStorici(Long idBagno,
-                                        int scattiLetti) {
+    protected Long creaStorici(Long idBagno, int scattiLetti) {
         Bagno bagno = bagnoService.modelRicercaId(idBagno);
         Alimentazione alimentazione = trovaAlimentazioneScatti(bagno);
         StoricoGenerale ultimoStoricoGenerale = storicoGeneraleRepository.ultimoStoricoGeneraleScatti(
@@ -168,7 +178,8 @@ public class AlimentazioneAScattiService {
 
         if (risultatoOperazioniAScatti.getMoltiplicatoreAlimentazione() == 0) {
             storicoGenerale.setRestoScattiBagno(ultimoStoricoGenerale.getRestoScattiBagno() + scattiLetti);
-            return storicoGeneraleRepository.save(storicoGenerale);
+            storicoGenerale = storicoGeneraleRepository.save(storicoGenerale);
+            return storicoGenerale.getIdStorico();
         }
 
         storicoGenerale.setRestoScattiBagno((int) risultatoOperazioniAScatti.getRestoScatti());
@@ -178,11 +189,7 @@ public class AlimentazioneAScattiService {
                 alimentazione,
                 risultatoOperazioniAScatti,
                 storicoGenerale);
-
-        storicoGenerale = storicoGeneraleRepository.findById(storicoGenerale.getIdStorico())
-                .orElseThrow();
-
-        return storicoGenerale;
+        return storicoGenerale.getIdStorico();
     }
 
 
@@ -270,7 +277,7 @@ public class AlimentazioneAScattiService {
         Bagno bagno = bagnoService.modelRicercaId(idBagno);
         if (bagno.getAlimentazioneList()
                 .stream()
-                .noneMatch(alimentazione -> alimentazione.getScatti() != 0)) {
+                .noneMatch(alimentazione -> alimentazione.getTipologiaAggiunta() == TipologiaAggiunta.SCATTI)) {
             throw new RuntimeException(
                     "Alimentazione a scatti non trovata per bagno " + idBagno);
         }
