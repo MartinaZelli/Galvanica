@@ -19,392 +19,6 @@
 CREATE DATABASE IF NOT EXISTS `galvanica` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION = 'N' */;
 USE `galvanica`;
 
--- Dump della struttura di tabella galvanica.alimentazione
-CREATE TABLE IF NOT EXISTS `alimentazione`
-(
-    `id_alimentazione`   bigint                            NOT NULL,
-    `descrizione`        varchar(255) DEFAULT NULL,
-    `scatti`             int          DEFAULT NULL,
-    `tempo`              varchar(255) DEFAULT NULL,
-    `bagno_id_bagno`     bigint       DEFAULT NULL,
-    `valori_arrotondati` bit(1)       DEFAULT NULL,
-    `tipologia_aggiunta` enum ('SCATTI','TEMPO','MANUALE') NOT NULL,
-    PRIMARY KEY (`id_alimentazione`),
-    UNIQUE KEY `UKckylved3mm12usfljj2y44pa3` (`bagno_id_bagno`, `scatti`),
-    CONSTRAINT `FKt50rrwm6fu38tpfx87jlh1vem` FOREIGN KEY (`bagno_id_bagno`) REFERENCES `bagno` (`id_bagno`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
-
--- Dump dei dati della tabella galvanica.alimentazione: ~32 rows (circa)
-REPLACE INTO `alimentazione` (`id_alimentazione`, `descrizione`, `scatti`, `tempo`,
-                              `bagno_id_bagno`, `valori_arrotondati`,
-                              `tipologia_aggiunta`)
-VALUES (4, 'Tempo', NULL, 'FRIDAY', 2, b'0', 'TEMPO'),
-       (5, 'Scatti', 500, NULL, 3, b'1', 'SCATTI'),
-       (6, 'Scatti', 500, NULL, 4, b'1', 'SCATTI'),
-       (52, 'Tempo', NULL, 'MONDAY', 3, b'0', 'TEMPO'),
-       (102, 'Tempo', NULL, 'MONDAY', 4, b'0', 'TEMPO'),
-       (103, 'Scatti', 1000, NULL, 5, b'1', 'SCATTI'),
-       (104, 'Scatti', 30000, NULL, 6, b'1', 'SCATTI'),
-       (105, 'Scatti', 500, NULL, 7, b'1', 'SCATTI'),
-       (106, 'Scatti', 2500, NULL, 9, b'1', 'SCATTI'),
-       (107, 'Tempo', NULL, 'MONDAY', 9, b'0', 'TEMPO'),
-       (108, 'Scatti', 2500, NULL, 10, b'1', 'SCATTI'),
-       (109, 'Tempo', NULL, 'MONDAY', 10, b'0', 'TEMPO'),
-       (110, 'Tempo', NULL, 'MONDAY', 11, b'0', 'TEMPO'),
-       (111, 'Scatti', 1000, NULL, 11, b'1', 'SCATTI'),
-       (112, 'Scatti', 1000, NULL, 12, b'1', 'SCATTI'),
-       (113, 'Tempo', NULL, 'MONDAY', 12, b'0', 'TEMPO'),
-       (114, 'Scatti', 500, NULL, 13, b'0', 'SCATTI'),
-       (115, 'Tempo', NULL, 'FRIDAY', 13, b'0', 'TEMPO'),
-       (116, 'Scatti', 700, NULL, 14, b'0', 'SCATTI'),
-       (117, 'Scatti', 900, NULL, 15, b'0', 'SCATTI'),
-       (118, 'Scatti', 1500, NULL, 16, b'0', 'SCATTI'),
-       (119, 'Scatti', 1250, NULL, 17, b'0', 'SCATTI'),
-       (120, 'Scatti', 500, NULL, 18, b'0', 'SCATTI'),
-       (121, 'Scatti', 1500, NULL, 19, b'0', 'SCATTI'),
-       (122, 'Scatti', 1000, NULL, 20, b'0', 'SCATTI'),
-       (123, 'Scatti', 450, NULL, 21, b'0', 'SCATTI'),
-       (124, 'Scatti', 1750, NULL, 22, b'0', 'SCATTI'),
-       (125, 'Scatti', 1250, NULL, 23, b'0', 'SCATTI'),
-       (152, 'Tempo', NULL, 'FRIDAY', 1, b'0', 'TEMPO'),
-       (153, 'Scatti', 500, NULL, 1, b'1', 'SCATTI'),
-       (202, 'Scatti', 1500, NULL, 52, b'1', 'SCATTI'),
-       (203, 'Scatti', 500, NULL, 2, b'1', 'SCATTI');
-
--- Dump della struttura di tabella galvanica.alimentazione_seq
-CREATE TABLE IF NOT EXISTS `alimentazione_seq`
-(
-    `next_val` bigint DEFAULT NULL
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
-
--- Dump dei dati della tabella galvanica.alimentazione_seq: ~24 rows (circa)
-REPLACE INTO `alimentazione_seq` (`next_val`)
-VALUES (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301),
-       (301);
-
--- Dump della struttura di tabella galvanica.bagno
-CREATE TABLE IF NOT EXISTS `bagno`
-(
-    `id_bagno`      bigint NOT NULL,
-    `data_fine`     date         DEFAULT NULL,
-    `data_inizio`   date         DEFAULT NULL,
-    `litri`         int          DEFAULT NULL,
-    `nome`          varchar(255) DEFAULT NULL,
-    `resto_scatti`  int          DEFAULT NULL,
-    `scatti_totali` int          DEFAULT NULL,
-    PRIMARY KEY (`id_bagno`),
-    UNIQUE KEY `UK35pe845spnta289i83nbcgir4` (`nome`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
-
--- Dump dei dati della tabella galvanica.bagno: ~24 rows (circa)
-REPLACE INTO `bagno` (`id_bagno`, `data_fine`, `data_inizio`, `litri`, `nome`,
-                      `resto_scatti`, `scatti_totali`)
-VALUES (1, NULL, '2024-05-02', 980, 'RAME ALCALINO 220 1', 4, 4),
-       (2, NULL, '2024-05-02', 980, 'RAME ALCALINO 220 2', 8, 8),
-       (3, NULL, '2024-05-02', 1380, 'RAME ACIDO 250 1', 109, 8109),
-       (4, NULL, '2024-05-02', 1380, 'RAME ACIDO 250 2', 16, 16),
-       (5, NULL, '2024-05-02', 1380, '3000', 21, 2021),
-       (6, NULL, '2024-05-02', 520, 'NICHELINOX', 24, 24),
-       (7, NULL, '2024-05-02', 520, 'PHOSBENT', 28, 28),
-       (8, NULL, '2024-05-02', 210, 'NICHEL WOOD', 0, 0),
-       (9, NULL, '2024-05-02', 520, 'BRINOX HT', 1716, 1716),
-       (10, NULL, '2024-05-02', 520, 'WHITEBRONZE HS 1', 30, 30),
-       (11, NULL, '2024-05-02', 520, 'WHITEBRONZE 2', 533, 533),
-       (12, NULL, '2024-05-02', 520, 'BRONZINOX 3', 36, 2536),
-       (13, NULL, '2024-05-02', 210, 'DORATURA MC0', 39, 39),
-       (14, NULL, '2024-05-02', 210, '720 PDFE', 42, 42),
-       (15, NULL, '2024-05-02', 210, '1811 PDNI', 45, 45),
-       (16, NULL, '2024-05-02', 210, '8698', 48, 48),
-       (17, NULL, '2024-05-02', 210, '8614', 51, 51),
-       (18, NULL, '2024-05-02', 210, '8693', 54, 54),
-       (19, NULL, '2024-05-02', 210, '8651', 57, 57),
-       (20, NULL, '2024-05-02', 210, '8670', 60, 60),
-       (21, NULL, '2024-05-02', 210, '223 CH', 63, 63),
-       (22, NULL, '2024-05-02', 210, '8618 NF', 66, 66),
-       (23, NULL, '2024-05-02', 210, 'GG0820', 69, 69),
-       (52, NULL, '2024-05-02', 210, 'BLACKCLAD', 156, 156);
-
--- Dump della struttura di tabella galvanica.bagno_seq
-CREATE TABLE IF NOT EXISTS `bagno_seq`
-(
-    `next_val` bigint DEFAULT NULL
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
-
--- Dump dei dati della tabella galvanica.bagno_seq: ~24 rows (circa)
-REPLACE INTO `bagno_seq` (`next_val`)
-VALUES (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151),
-       (151);
-
--- Dump della struttura di tabella galvanica.caratteristica_bagno
-CREATE TABLE IF NOT EXISTS `caratteristica_bagno`
-(
-    `id_caratteristica` bigint NOT NULL,
-    `descrizione`       varchar(255) DEFAULT NULL,
-    `nome`              varchar(255) DEFAULT NULL,
-    `bagno_id_bagno`    bigint       DEFAULT NULL,
-    PRIMARY KEY (`id_caratteristica`),
-    KEY `FK9fcrmkv88fk1lxqwlxkdshfwj` (`bagno_id_bagno`),
-    CONSTRAINT `FK9fcrmkv88fk1lxqwlxkdshfwj` FOREIGN KEY (`bagno_id_bagno`) REFERENCES `bagno` (`id_bagno`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
-
--- Dump dei dati della tabella galvanica.caratteristica_bagno: ~1 rows (circa)
-
--- Dump della struttura di tabella galvanica.caratteristica_bagno_seq
-CREATE TABLE IF NOT EXISTS `caratteristica_bagno_seq`
-(
-    `next_val` bigint DEFAULT NULL
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
-
--- Dump dei dati della tabella galvanica.caratteristica_bagno_seq: ~24 rows (circa)
-REPLACE INTO `caratteristica_bagno_seq` (`next_val`)
-VALUES (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1),
-       (1);
-
--- Dump della struttura di tabella galvanica.datab
-CREATE TABLE IF NOT EXISTS `datab`
-(
-    `C1` text
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
-
--- Dump dei dati della tabella galvanica.datab: ~0 rows (circa)
-
--- Dump della struttura di tabella galvanica.dettaglio_alimentazione
-CREATE TABLE IF NOT EXISTS `dettaglio_alimentazione`
-(
-    `id_dettaglio`                   bigint                        NOT NULL,
-    `note`                           varchar(255) DEFAULT NULL,
-    `unita_di_misura`                enum ('ML','L','G','KG','MG') NOT NULL,
-    `alimentazione_id_alimentazione` bigint                        NOT NULL,
-    `prodotto_id_prodotto`           bigint                        NOT NULL,
-    `quantita_prodotto`              int                           NOT NULL,
-    PRIMARY KEY (`id_dettaglio`),
-    UNIQUE KEY `UKr43fxvqdu7h1q2brlny6iwwul` (`alimentazione_id_alimentazione`,
-                                              `prodotto_id_prodotto`),
-    KEY `FKj6wwlfgt7bq2hxe01udum8cnp` (`prodotto_id_prodotto`),
-    CONSTRAINT `FK28mumcp34t1ix33luwrwjkkrv` FOREIGN KEY (`alimentazione_id_alimentazione`) REFERENCES `alimentazione` (`id_alimentazione`),
-    CONSTRAINT `FKj6wwlfgt7bq2hxe01udum8cnp` FOREIGN KEY (`prodotto_id_prodotto`) REFERENCES `prodotto` (`id_prodotto`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
-
--- Dump dei dati della tabella galvanica.dettaglio_alimentazione: ~73 rows (circa)
-REPLACE INTO `dettaglio_alimentazione` (`id_dettaglio`, `note`, `unita_di_misura`,
-                                        `alimentazione_id_alimentazione`,
-                                        `prodotto_id_prodotto`, `quantita_prodotto`)
-VALUES (202, '', 'ML', 5, 7, 100),
-       (203, '', 'MG', 4, 4, 500000),
-       (453, '', 'ML', 6, 7, 100),
-       (502, '', 'ML', 52, 9, 30),
-       (503, '', 'ML', 103, 71, 800),
-       (504, '', 'ML', 104, 85, 300),
-       (505, '', 'ML', 104, 86, 250),
-       (506, '', 'ML', 104, 87, 100),
-       (507, '', 'ML', 105, 78, 1500),
-       (508, '', 'ML', 105, 79, 200),
-       (509, '', 'ML', 106, 65, 400),
-       (510, '', 'ML', 106, 66, 250),
-       (511, '', 'ML', 106, 67, 250),
-       (512, '', 'ML', 106, 68, 250),
-       (513, '', 'ML', 106, 69, 250),
-       (514, '', 'ML', 106, 70, 80),
-       (515, '', 'MG', 107, 4, 250000),
-       (516, '', 'MG', 107, 54, 50000),
-       (517, '', 'ML', 108, 55, 500),
-       (518, '', 'ML', 108, 56, 500),
-       (519, '', 'ML', 108, 57, 250),
-       (520, '', 'ML', 108, 58, 250),
-       (521, '', 'ML', 108, 60, 50),
-       (522, '', 'MG', 109, 4, 330000),
-       (523, '', 'ML', 109, 54, 200),
-       (524, '', 'MG', 110, 4, 330000),
-       (525, '', 'MG', 110, 54, 200000),
-       (526, '', 'ML', 111, 17, 150),
-       (527, '', 'ML', 111, 18, 90),
-       (528, '', 'ML', 111, 19, 100),
-       (529, '', 'ML', 111, 52, 50),
-       (530, '', 'ML', 111, 53, 150),
-       (531, '', 'ML', 112, 61, 300),
-       (532, '', 'ML', 112, 62, 100),
-       (533, '', 'ML', 112, 63, 30),
-       (534, '', 'ML', 112, 64, 100),
-       (535, '', 'ML', 112, 60, 20),
-       (536, '', 'ML', 112, 53, 100),
-       (537, '', 'MG', 113, 4, 330000),
-       (538, '', 'MG', 113, 54, 250000),
-       (539, '', 'MG', 115, 4, 50000),
-       (540, '', 'ML', 114, 13, 300),
-       (541, '', 'MG', 114, 108, 4500),
-       (542, '', 'ML', 116, 89, 250),
-       (543, '', 'MG', 116, 93, 70000),
-       (544, '', 'ML', 117, 98, 225),
-       (545, '', 'ML', 117, 99, 250),
-       (546, '', 'ML', 118, 107, 125),
-       (547, '', 'MG', 118, 108, 40000),
-       (548, '', 'MG', 119, 108, 25000),
-       (549, '', 'ML', 119, 115, 65),
-       (550, '', 'MG', 120, 108, 14700),
-       (551, '', 'ML', 120, 117, 50),
-       (552, '', 'MG', 121, 108, 29400),
-       (553, '', 'ML', 121, 118, 50),
-       (554, '', 'MG', 122, 108, 35000),
-       (555, '', 'ML', 122, 120, 65),
-       (556, '', 'ML', 123, 122, 50),
-       (557, '', 'MG', 123, 108, 14700),
-       (558, '', 'MG', 124, 108, 35000),
-       (559, '', 'ML', 124, 129, 125),
-       (560, '', 'ML', 125, 131, 100),
-       (561, '', 'MG', 125, 132, 17200),
-       (562, '', 'ML', 202, 134, 125),
-       (563, '', 'ML', 202, 135, 140),
-       (564, '', 'ML', 202, 136, 50),
-       (565, '', 'MG', 152, 4, 500000),
-       (566, '', 'ML', 153, 1, 700),
-       (567, '', 'ML', 153, 2, 700),
-       (568, '', 'ML', 153, 3, 150),
-       (569, '', 'ML', 203, 1, 700),
-       (570, '', 'ML', 203, 2, 700),
-       (571, '', 'ML', 203, 3, 150);
-
--- Dump della struttura di tabella galvanica.dettaglio_alimentazione_seq
-CREATE TABLE IF NOT EXISTS `dettaglio_alimentazione_seq`
-(
-    `next_val` bigint DEFAULT NULL
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
-
--- Dump dei dati della tabella galvanica.dettaglio_alimentazione_seq: ~24 rows (circa)
-REPLACE INTO `dettaglio_alimentazione_seq` (`next_val`)
-VALUES (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651),
-       (651);
-
--- Dump della struttura di tabella galvanica.magazzino
-CREATE TABLE IF NOT EXISTS `magazzino`
-(
-    `id_magazzino` bigint NOT NULL,
-    `descrizione`  varchar(255) DEFAULT NULL,
-    PRIMARY KEY (`id_magazzino`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
 
 -- Dump dei dati della tabella galvanica.magazzino: ~4 rows (circa)
 REPLACE INTO `magazzino` (`id_magazzino`, `descrizione`)
@@ -412,14 +26,6 @@ VALUES (1, 'Magazzino Acidi'),
        (2, 'Magazzino Alcalini'),
        (52, 'Cassaforte'),
        (53, 'Senza Magazzino');
-
--- Dump della struttura di tabella galvanica.magazzino_seq
-CREATE TABLE IF NOT EXISTS `magazzino_seq`
-(
-    `next_val` bigint DEFAULT NULL
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
 
 -- Dump dei dati della tabella galvanica.magazzino_seq: ~24 rows (circa)
 REPLACE INTO `magazzino_seq` (`next_val`)
@@ -452,22 +58,6 @@ VALUES (201),
        (201),
        (201);
 
--- Dump della struttura di tabella galvanica.prodotto
-CREATE TABLE IF NOT EXISTS `prodotto`
-(
-    `id_prodotto`            bigint NOT NULL,
-    `nome`                   varchar(255)                                                  DEFAULT NULL,
-    `descrizione`            varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-    `ph`                     int                                                           DEFAULT NULL,
-    `magazzino_id_magazzino` bigint                                                        DEFAULT NULL,
-    `sono_volume`            bit(1) NOT NULL,
-    PRIMARY KEY (`id_prodotto`),
-    UNIQUE KEY `UK4l5xd5ie612vqjo3eacgiivxn` (`nome`),
-    KEY `FKmyi3tnnawfmx45kcccqbi3j1a` (`magazzino_id_magazzino`),
-    CONSTRAINT `FKmyi3tnnawfmx45kcccqbi3j1a` FOREIGN KEY (`magazzino_id_magazzino`) REFERENCES `magazzino` (`id_magazzino`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
 
 -- Dump dei dati della tabella galvanica.prodotto: ~109 rows (circa)
 REPLACE INTO `prodotto` (`id_prodotto`, `nome`, `descrizione`, `ph`,
@@ -582,14 +172,6 @@ VALUES (1, '220 BRI', 'Brillantante 220', NULL, 2, b'1'),
        (140, 'PH30', '', NULL, 1, b'1'),
        (141, 'PH20', '', NULL, 1, b'1');
 
--- Dump della struttura di tabella galvanica.prodotto_seq
-CREATE TABLE IF NOT EXISTS `prodotto_seq`
-(
-    `next_val` bigint DEFAULT NULL
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
-
 -- Dump dei dati della tabella galvanica.prodotto_seq: ~24 rows (circa)
 REPLACE INTO `prodotto_seq` (`next_val`)
 VALUES (201),
@@ -621,20 +203,65 @@ VALUES (201),
        (201),
        (201);
 
--- Dump della struttura di tabella galvanica.relazione_bagno_prodotto
-CREATE TABLE IF NOT EXISTS `relazione_bagno_prodotto`
-(
-    `note`                 varchar(255) DEFAULT NULL,
-    `prodotto_id_prodotto` bigint NOT NULL,
-    `bagno_id_bagno`       bigint NOT NULL,
-    `id_relazione`         bigint NOT NULL,
-    PRIMARY KEY (`bagno_id_bagno`, `prodotto_id_prodotto`),
-    KEY `FK8jaeu7w306jde83asmnj3haj4` (`prodotto_id_prodotto`),
-    CONSTRAINT `FK8jaeu7w306jde83asmnj3haj4` FOREIGN KEY (`prodotto_id_prodotto`) REFERENCES `prodotto` (`id_prodotto`),
-    CONSTRAINT `FKk7obk4x9jvylwrp7kfp83xmjb` FOREIGN KEY (`bagno_id_bagno`) REFERENCES `bagno` (`id_bagno`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+
+-- Dump dei dati della tabella galvanica.bagno: ~24 rows (circa)
+REPLACE INTO `bagno` (`id_bagno`, `data_fine`, `data_inizio`, `litri`, `nome`)
+VALUES (1, NULL, '2024-05-02', 980, 'RAME ALCALINO 220 1'),
+       (2, NULL, '2024-05-02', 980, 'RAME ALCALINO 220 2'),
+       (3, NULL, '2024-05-02', 1380, 'RAME ACIDO 250 1'),
+       (4, NULL, '2024-05-02', 1380, 'RAME ACIDO 250 2'),
+       (5, NULL, '2024-05-02', 1380, '3000'),
+       (6, NULL, '2024-05-02', 520, 'NICHELINOX'),
+       (7, NULL, '2024-05-02', 520, 'PHOSBENT'),
+       (8, NULL, '2024-05-02', 210, 'NICHEL WOOD'),
+       (9, NULL, '2024-05-02', 520, 'BRINOX HT'),
+       (10, NULL, '2024-05-02', 520, 'WHITEBRONZE HS 1'),
+       (11, NULL, '2024-05-02', 520, 'WHITEBRONZE 2'),
+       (12, NULL, '2024-05-02', 520, 'BRONZINOX 3'),
+       (13, NULL, '2024-05-02', 210, 'DORATURA MC0'),
+       (14, NULL, '2024-05-02', 210, '720 PDFE'),
+       (15, NULL, '2024-05-02', 210, '1811 PDNI'),
+       (16, NULL, '2024-05-02', 210, '8698'),
+       (17, NULL, '2024-05-02', 210, '8614'),
+       (18, NULL, '2024-05-02', 210, '8693'),
+       (19, NULL, '2024-05-02', 210, '8651'),
+       (20, NULL, '2024-05-02', 210, '8670'),
+       (21, NULL, '2024-05-02', 210, '223 CH'),
+       (22, NULL, '2024-05-02', 210, '8618 NF'),
+       (23, NULL, '2024-05-02', 210, 'GG0820'),
+       (52, NULL, '2024-05-02', 210, 'BLACKCLAD');
+
+-- Dump dei dati della tabella galvanica.bagno_seq: ~24 rows (circa)
+REPLACE INTO `bagno_seq` (`next_val`)
+VALUES (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151),
+       (151);
+
 
 -- Dump dei dati della tabella galvanica.relazione_bagno_prodotto: ~138 rows (circa)
 REPLACE INTO `relazione_bagno_prodotto` (`note`, `prodotto_id_prodotto`,
@@ -791,14 +418,6 @@ VALUES ('', 1, 1, 1),
        ('', 139, 52, 142),
        ('', 140, 52, 141);
 
--- Dump della struttura di tabella galvanica.relazione_bagno_prodotto_seq
-CREATE TABLE IF NOT EXISTS `relazione_bagno_prodotto_seq`
-(
-    `next_val` bigint DEFAULT NULL
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
-
 -- Dump dei dati della tabella galvanica.relazione_bagno_prodotto_seq: ~24 rows (circa)
 REPLACE INTO `relazione_bagno_prodotto_seq` (`next_val`)
 VALUES (351),
@@ -830,24 +449,301 @@ VALUES (351),
        (351),
        (351);
 
--- Dump della struttura di tabella galvanica.storico_dettaglio
-CREATE TABLE IF NOT EXISTS `storico_dettaglio`
-(
-    `id_storico_dettaglio`        bigint NOT NULL,
-    `quantita`                    int                           DEFAULT NULL,
-    `unita_di_misura`             enum ('ML','L','G','KG','MG') DEFAULT NULL,
-    `prodotto_id_prodotto`        bigint                        DEFAULT NULL,
-    `storico_generale_id_storico` bigint                        DEFAULT NULL,
-    `annullato_dettaglio`         bit(1)                        DEFAULT NULL,
-    `eseguito_dettaglio`          bit(1)                        DEFAULT NULL,
-    PRIMARY KEY (`id_storico_dettaglio`),
-    KEY `FKsio7x2bd1xvgtv16mupi4pobs` (`prodotto_id_prodotto`),
-    KEY `FKpdkpylyhjir8i963lao7lvm9n` (`storico_generale_id_storico`),
-    CONSTRAINT `FKpdkpylyhjir8i963lao7lvm9n` FOREIGN KEY (`storico_generale_id_storico`) REFERENCES `storico_generale` (`id_storico`),
-    CONSTRAINT `FKsio7x2bd1xvgtv16mupi4pobs` FOREIGN KEY (`prodotto_id_prodotto`) REFERENCES `prodotto` (`id_prodotto`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+-- Dump dei dati della tabella galvanica.alimentazione: ~32 rows (circa)
+REPLACE INTO `alimentazione` (`id_alimentazione`, `descrizione`, `scatti`, `tempo`,
+                              `bagno_id_bagno`, `valori_arrotondati`,
+                              `tipologia_aggiunta`)
+VALUES (4, 'Tempo', NULL, 'FRIDAY', 2, b'0', 'TEMPO'),
+       (5, 'Scatti', 500, NULL, 3, b'1', 'SCATTI'),
+       (6, 'Scatti', 500, NULL, 4, b'1', 'SCATTI'),
+       (52, 'Tempo', NULL, 'MONDAY', 3, b'0', 'TEMPO'),
+       (102, 'Tempo', NULL, 'MONDAY', 4, b'0', 'TEMPO'),
+       (103, 'Scatti', 1000, NULL, 5, b'1', 'SCATTI'),
+       (104, 'Scatti', 30000, NULL, 6, b'1', 'SCATTI'),
+       (105, 'Scatti', 500, NULL, 7, b'1', 'SCATTI'),
+       (106, 'Scatti', 2500, NULL, 9, b'1', 'SCATTI'),
+       (107, 'Tempo', NULL, 'MONDAY', 9, b'0', 'TEMPO'),
+       (108, 'Scatti', 2500, NULL, 10, b'1', 'SCATTI'),
+       (109, 'Tempo', NULL, 'MONDAY', 10, b'0', 'TEMPO'),
+       (110, 'Tempo', NULL, 'MONDAY', 11, b'0', 'TEMPO'),
+       (111, 'Scatti', 1000, NULL, 11, b'1', 'SCATTI'),
+       (112, 'Scatti', 1000, NULL, 12, b'1', 'SCATTI'),
+       (113, 'Tempo', NULL, 'MONDAY', 12, b'0', 'TEMPO'),
+       (114, 'Scatti', 500, NULL, 13, b'0', 'SCATTI'),
+       (115, 'Tempo', NULL, 'FRIDAY', 13, b'0', 'TEMPO'),
+       (116, 'Scatti', 700, NULL, 14, b'0', 'SCATTI'),
+       (117, 'Scatti', 900, NULL, 15, b'0', 'SCATTI'),
+       (118, 'Scatti', 1500, NULL, 16, b'0', 'SCATTI'),
+       (119, 'Scatti', 1250, NULL, 17, b'0', 'SCATTI'),
+       (120, 'Scatti', 500, NULL, 18, b'0', 'SCATTI'),
+       (121, 'Scatti', 1500, NULL, 19, b'0', 'SCATTI'),
+       (122, 'Scatti', 1000, NULL, 20, b'0', 'SCATTI'),
+       (123, 'Scatti', 450, NULL, 21, b'0', 'SCATTI'),
+       (124, 'Scatti', 1750, NULL, 22, b'0', 'SCATTI'),
+       (125, 'Scatti', 1250, NULL, 23, b'0', 'SCATTI'),
+       (152, 'Tempo', NULL, 'FRIDAY', 1, b'0', 'TEMPO'),
+       (153, 'Scatti', 500, NULL, 1, b'1', 'SCATTI'),
+       (202, 'Scatti', 1500, NULL, 52, b'1', 'SCATTI'),
+       (203, 'Scatti', 500, NULL, 2, b'1', 'SCATTI');
+
+-- Dump dei dati della tabella galvanica.alimentazione_seq: ~24 rows (circa)
+REPLACE INTO `alimentazione_seq` (`next_val`)
+VALUES (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301),
+       (301);
+
+-- Dump dei dati della tabella galvanica.datab: ~0 rows (circa)
+
+-- Dump dei dati della tabella galvanica.dettaglio_alimentazione: ~73 rows (circa)
+REPLACE INTO `dettaglio_alimentazione` (`id_dettaglio`, `note`, `unita_di_misura`,
+                                        `alimentazione_id_alimentazione`,
+                                        `prodotto_id_prodotto`, `quantita_prodotto`)
+VALUES (202, '', 'ML', 5, 7, 100),
+       (203, '', 'MG', 4, 4, 500000),
+       (453, '', 'ML', 6, 7, 100),
+       (502, '', 'ML', 52, 9, 30),
+       (503, '', 'ML', 103, 71, 800),
+       (504, '', 'ML', 104, 85, 300),
+       (505, '', 'ML', 104, 86, 250),
+       (506, '', 'ML', 104, 87, 100),
+       (507, '', 'ML', 105, 78, 1500),
+       (508, '', 'ML', 105, 79, 200),
+       (509, '', 'ML', 106, 65, 400),
+       (510, '', 'ML', 106, 66, 250),
+       (511, '', 'ML', 106, 67, 250),
+       (512, '', 'ML', 106, 68, 250),
+       (513, '', 'ML', 106, 69, 250),
+       (514, '', 'ML', 106, 70, 80),
+       (515, '', 'MG', 107, 4, 250000),
+       (516, '', 'MG', 107, 54, 50000),
+       (517, '', 'ML', 108, 55, 500),
+       (518, '', 'ML', 108, 56, 500),
+       (519, '', 'ML', 108, 57, 250),
+       (520, '', 'ML', 108, 58, 250),
+       (521, '', 'ML', 108, 60, 50),
+       (522, '', 'MG', 109, 4, 330000),
+       (523, '', 'ML', 109, 54, 200),
+       (524, '', 'MG', 110, 4, 330000),
+       (525, '', 'MG', 110, 54, 200000),
+       (526, '', 'ML', 111, 17, 150),
+       (527, '', 'ML', 111, 18, 90),
+       (528, '', 'ML', 111, 19, 100),
+       (529, '', 'ML', 111, 52, 50),
+       (530, '', 'ML', 111, 53, 150),
+       (531, '', 'ML', 112, 61, 300),
+       (532, '', 'ML', 112, 62, 100),
+       (533, '', 'ML', 112, 63, 30),
+       (534, '', 'ML', 112, 64, 100),
+       (535, '', 'ML', 112, 60, 20),
+       (536, '', 'ML', 112, 53, 100),
+       (537, '', 'MG', 113, 4, 330000),
+       (538, '', 'MG', 113, 54, 250000),
+       (539, '', 'MG', 115, 4, 50000),
+       (540, '', 'ML', 114, 13, 300),
+       (541, '', 'MG', 114, 108, 4500),
+       (542, '', 'ML', 116, 89, 250),
+       (543, '', 'MG', 116, 93, 70000),
+       (544, '', 'ML', 117, 98, 225),
+       (545, '', 'ML', 117, 99, 250),
+       (546, '', 'ML', 118, 107, 125),
+       (547, '', 'MG', 118, 108, 40000),
+       (548, '', 'MG', 119, 108, 25000),
+       (549, '', 'ML', 119, 115, 65),
+       (550, '', 'MG', 120, 108, 14700),
+       (551, '', 'ML', 120, 117, 50),
+       (552, '', 'MG', 121, 108, 29400),
+       (553, '', 'ML', 121, 118, 50),
+       (554, '', 'MG', 122, 108, 35000),
+       (555, '', 'ML', 122, 120, 65),
+       (556, '', 'ML', 123, 122, 50),
+       (557, '', 'MG', 123, 108, 14700),
+       (558, '', 'MG', 124, 108, 35000),
+       (559, '', 'ML', 124, 129, 125),
+       (560, '', 'ML', 125, 131, 100),
+       (561, '', 'MG', 125, 132, 17200),
+       (562, '', 'ML', 202, 134, 125),
+       (563, '', 'ML', 202, 135, 140),
+       (564, '', 'ML', 202, 136, 50),
+       (565, '', 'MG', 152, 4, 500000),
+       (566, '', 'ML', 153, 1, 700),
+       (567, '', 'ML', 153, 2, 700),
+       (568, '', 'ML', 153, 3, 150),
+       (569, '', 'ML', 203, 1, 700),
+       (570, '', 'ML', 203, 2, 700),
+       (571, '', 'ML', 203, 3, 150);
+
+
+-- Dump dei dati della tabella galvanica.dettaglio_alimentazione_seq: ~24 rows (circa)
+REPLACE INTO `dettaglio_alimentazione_seq` (`next_val`)
+VALUES (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651),
+       (651);
+
+
+-- Dump dei dati della tabella galvanica.storico_generale: ~34 rows (circa)
+REPLACE INTO `storico_generale` (`id_storico`, `data_creazione`,
+                                 `moltiplicatore_alimentazione`,
+                                 `alimentazione_id_alimentazione`, `bagno_id_bagno`,
+                                 `data_controllo_tempo`, `note`,
+                                 `scatti_inseriti`, `tipologia_aggiunta`,
+                                 `annullato_generale`, `data_esecuzione`,
+                                 `eseguito_generale`, `resto_scatti_bagno`,
+                                 `scatti_totali_bagno`)
+VALUES (1, '2024-06-04 20:50:42.000000', NULL, NULL, 1, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (2, '2024-06-04 20:50:42.000000', NULL, NULL, 2, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (3, '2024-06-04 20:50:42.000000', NULL, NULL, 3, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (4, '2024-06-04 20:50:42.000000', NULL, NULL, 4, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (5, '2024-06-04 20:50:42.000000', NULL, NULL, 5, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (6, '2024-06-04 20:50:42.000000', NULL, NULL, 6, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (7, '2024-06-04 20:50:42.000000', NULL, NULL, 7, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (8, '2024-06-04 20:50:42.000000', NULL, NULL, 8, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (9, '2024-06-04 20:50:42.000000', NULL, NULL, 9, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (10, '2024-06-04 20:50:42.000000', NULL, NULL, 10, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (11, '2024-06-04 20:50:42.000000', NULL, NULL, 11, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (12, '2024-06-04 20:50:42.000000', NULL, NULL, 12, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (13, '2024-06-04 20:50:42.000000', NULL, NULL, 13, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (14, '2024-06-04 20:50:42.000000', NULL, NULL, 14, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (15, '2024-06-04 20:50:42.000000', NULL, NULL, 15, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (16, '2024-06-04 20:50:42.000000', NULL, NULL, 16, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (17, '2024-06-04 20:50:42.000000', NULL, NULL, 17, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (18, '2024-06-04 20:50:42.000000', NULL, NULL, 18, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (19, '2024-06-04 20:50:42.000000', NULL, NULL, 19, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (20, '2024-06-04 20:50:42.000000', NULL, NULL, 20, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (21, '2024-06-04 20:50:42.000000', NULL, NULL, 21, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (22, '2024-06-04 20:50:42.000000', NULL, NULL, 22, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (23, '2024-06-04 20:50:42.000000', NULL, NULL, 23, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (52, '2024-06-04 20:50:42.000000', NULL, NULL, 52, NULL,
+        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
+        b'1', 0, 0),
+       (1552, '2024-06-04 21:25:29.398272', 1, 5, 3, NULL, NULL, 500, 'SCATTI',
+        b'0', NULL, b'0', 0, 500),
+       (1553, '2024-06-04 21:25:29.495265', 2.5, 111, 11, NULL, NULL, 2500,
+        'SCATTI', b'0', NULL, b'0', 0, 2500),
+       (1554, '2024-06-04 21:27:04.546501', 1, 5, 3, NULL, NULL, 500, 'SCATTI',
+        b'0', NULL, b'0', 0, 1000),
+       (1555, '2024-06-04 21:27:04.575479', 3, 103, 5, NULL, NULL, 3000,
+        'SCATTI', b'0', NULL, b'0', 0, 3000),
+       (1602, '2024-06-16 12:58:15.046919', 1, 153, 1, NULL, NULL, 500,
+        'SCATTI', b'0', NULL, b'0', 0, 500),
+       (1652, '2024-07-21 19:27:19.793029', 0.5, 5, 3, NULL, NULL, 450,
+        'SCATTI', b'0', NULL, b'0', 200, 1450),
+       (1702, '2024-07-21 19:32:27.228698', 1, 5, 3, NULL, NULL, 500, 'SCATTI',
+        b'0', NULL, b'0', 0, 1950),
+       (1703, '2024-07-21 19:32:51.376463', 1, 5, 3, NULL, NULL, 500, 'SCATTI',
+        b'0', NULL, b'0', 0, 2450),
+       (1704, '2024-07-21 19:33:14.586047', 1, 5, 3, NULL, NULL, 500, 'SCATTI',
+        b'0', NULL, b'0', 0, 2950),
+       (1752, '2024-07-21 19:34:03.415612', 1, 5, 3, NULL, NULL, 500, 'SCATTI',
+        b'0', NULL, b'0', 0, 3450),
+       (1802, '2024-07-21 19:42:05.495054', 1, 5, 3, NULL, NULL, 500, 'SCATTI',
+        b'0', NULL, b'0', 0, 3950),
+       (1852, '2024-07-21 19:43:35.398322', 1, 5, 3, NULL, NULL, 500, 'SCATTI',
+        b'0', NULL, b'0', 0, 4450),
+       (1902, '2024-07-21 19:47:53.197517', 1, 5, 3, NULL, NULL, 500, 'SCATTI',
+        b'0', NULL, b'0', 0, 4950),
+       (1952, '2024-07-23 18:56:32.215851', 1, 5, 3, NULL, NULL, 500, 'SCATTI',
+        b'0', NULL, b'0', 0, 5450);
+
+
+-- Dump dei dati della tabella galvanica.storico_generale_seq: ~0 rows (circa)
+REPLACE INTO `storico_generale_seq` (`next_val`)
+VALUES (2051);
 
 -- Dump dei dati della tabella galvanica.storico_dettaglio: ~17 rows (circa)
 REPLACE INTO `storico_dettaglio` (`id_storico_dettaglio`, `quantita`,
@@ -875,166 +771,11 @@ VALUES (1602, 100, 'ML', 7, 1552, b'0', b'0'),
        (1952, 100, 'ML', 7, 1902, b'0', b'0'),
        (2002, 100, 'ML', 7, 1952, b'0', b'0');
 
--- Dump della struttura di tabella galvanica.storico_dettaglio_seq
-CREATE TABLE IF NOT EXISTS `storico_dettaglio_seq`
-(
-    `next_val` bigint DEFAULT NULL
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
 
 -- Dump dei dati della tabella galvanica.storico_dettaglio_seq: ~0 rows (circa)
 REPLACE INTO `storico_dettaglio_seq` (`next_val`)
 VALUES (2101);
 
--- Dump della struttura di tabella galvanica.storico_generale
-CREATE TABLE IF NOT EXISTS `storico_generale`
-(
-    `id_storico`                     bigint NOT NULL,
-    `data_creazione`                 datetime(6)                       DEFAULT NULL,
-    `moltiplicatore_alimentazione`   double                            DEFAULT NULL,
-    `alimentazione_id_alimentazione` bigint                            DEFAULT NULL,
-    `bagno_id_bagno`                 bigint                            DEFAULT NULL,
-    `sono_scatti`                    bit(1)                            DEFAULT NULL,
-    `data_controllo_tempo`           date                              DEFAULT NULL,
-    `note`                           varchar(255)                      DEFAULT NULL,
-    `scatti_inseriti`                int                               DEFAULT NULL,
-    `tipologia_aggiunta`             enum ('SCATTI','TEMPO','MANUALE') DEFAULT NULL,
-    `annullato_generale`             bit(1)                            DEFAULT NULL,
-    `data_esecuzione`                datetime(6)                       DEFAULT NULL,
-    `eseguito_generale`              bit(1)                            DEFAULT NULL,
-    `resto_scatti_bagno`             int                               DEFAULT NULL,
-    `scatti_totali_bagno`            int                               DEFAULT NULL,
-    PRIMARY KEY (`id_storico`),
-    KEY `FKtepjqwcc5ihjeoxjp30iwy9di` (`alimentazione_id_alimentazione`),
-    KEY `FK9n60kbbwn45u40em952wprymm` (`bagno_id_bagno`),
-    CONSTRAINT `FK9n60kbbwn45u40em952wprymm` FOREIGN KEY (`bagno_id_bagno`) REFERENCES `bagno` (`id_bagno`),
-    CONSTRAINT `FKtepjqwcc5ihjeoxjp30iwy9di` FOREIGN KEY (`alimentazione_id_alimentazione`) REFERENCES `alimentazione` (`id_alimentazione`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
-
--- Dump dei dati della tabella galvanica.storico_generale: ~34 rows (circa)
-REPLACE INTO `storico_generale` (`id_storico`, `data_creazione`,
-                                 `moltiplicatore_alimentazione`,
-                                 `alimentazione_id_alimentazione`, `bagno_id_bagno`,
-                                 `sono_scatti`, `data_controllo_tempo`, `note`,
-                                 `scatti_inseriti`, `tipologia_aggiunta`,
-                                 `annullato_generale`, `data_esecuzione`,
-                                 `eseguito_generale`, `resto_scatti_bagno`,
-                                 `scatti_totali_bagno`)
-VALUES (1, '2024-06-04 20:50:42.000000', NULL, NULL, 1, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (2, '2024-06-04 20:50:42.000000', NULL, NULL, 2, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (3, '2024-06-04 20:50:42.000000', NULL, NULL, 3, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (4, '2024-06-04 20:50:42.000000', NULL, NULL, 4, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (5, '2024-06-04 20:50:42.000000', NULL, NULL, 5, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (6, '2024-06-04 20:50:42.000000', NULL, NULL, 6, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (7, '2024-06-04 20:50:42.000000', NULL, NULL, 7, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (8, '2024-06-04 20:50:42.000000', NULL, NULL, 8, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (9, '2024-06-04 20:50:42.000000', NULL, NULL, 9, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (10, '2024-06-04 20:50:42.000000', NULL, NULL, 10, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (11, '2024-06-04 20:50:42.000000', NULL, NULL, 11, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (12, '2024-06-04 20:50:42.000000', NULL, NULL, 12, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (13, '2024-06-04 20:50:42.000000', NULL, NULL, 13, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (14, '2024-06-04 20:50:42.000000', NULL, NULL, 14, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (15, '2024-06-04 20:50:42.000000', NULL, NULL, 15, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (16, '2024-06-04 20:50:42.000000', NULL, NULL, 16, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (17, '2024-06-04 20:50:42.000000', NULL, NULL, 17, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (18, '2024-06-04 20:50:42.000000', NULL, NULL, 18, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (19, '2024-06-04 20:50:42.000000', NULL, NULL, 19, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (20, '2024-06-04 20:50:42.000000', NULL, NULL, 20, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (21, '2024-06-04 20:50:42.000000', NULL, NULL, 21, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (22, '2024-06-04 20:50:42.000000', NULL, NULL, 22, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (23, '2024-06-04 20:50:42.000000', NULL, NULL, 23, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (52, '2024-06-04 20:50:42.000000', NULL, NULL, 52, NULL, NULL,
-        'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0),
-       (1552, '2024-06-04 21:25:29.398272', 1, 5, 3, NULL, NULL, NULL, 500, 'SCATTI',
-        b'0', NULL, b'0', 0, 500),
-       (1553, '2024-06-04 21:25:29.495265', 2.5, 111, 11, NULL, NULL, NULL, 2500,
-        'SCATTI', b'0', NULL, b'0', 0, 2500),
-       (1554, '2024-06-04 21:27:04.546501', 1, 5, 3, NULL, NULL, NULL, 500, 'SCATTI',
-        b'0', NULL, b'0', 0, 1000),
-       (1555, '2024-06-04 21:27:04.575479', 3, 103, 5, NULL, NULL, NULL, 3000,
-        'SCATTI', b'0', NULL, b'0', 0, 3000),
-       (1602, '2024-06-16 12:58:15.046919', 1, 153, 1, NULL, NULL, NULL, 500,
-        'SCATTI', b'0', NULL, b'0', 0, 500),
-       (1652, '2024-07-21 19:27:19.793029', 0.5, 5, 3, NULL, NULL, NULL, 450,
-        'SCATTI', b'0', NULL, b'0', 200, 1450),
-       (1702, '2024-07-21 19:32:27.228698', 1, 5, 3, NULL, NULL, NULL, 500, 'SCATTI',
-        b'0', NULL, b'0', 0, 1950),
-       (1703, '2024-07-21 19:32:51.376463', 1, 5, 3, NULL, NULL, NULL, 500, 'SCATTI',
-        b'0', NULL, b'0', 0, 2450),
-       (1704, '2024-07-21 19:33:14.586047', 1, 5, 3, NULL, NULL, NULL, 500, 'SCATTI',
-        b'0', NULL, b'0', 0, 2950),
-       (1752, '2024-07-21 19:34:03.415612', 1, 5, 3, NULL, NULL, NULL, 500, 'SCATTI',
-        b'0', NULL, b'0', 0, 3450),
-       (1802, '2024-07-21 19:42:05.495054', 1, 5, 3, NULL, NULL, NULL, 500, 'SCATTI',
-        b'0', NULL, b'0', 0, 3950),
-       (1852, '2024-07-21 19:43:35.398322', 1, 5, 3, NULL, NULL, NULL, 500, 'SCATTI',
-        b'0', NULL, b'0', 0, 4450),
-       (1902, '2024-07-21 19:47:53.197517', 1, 5, 3, NULL, NULL, NULL, 500, 'SCATTI',
-        b'0', NULL, b'0', 0, 4950),
-       (1952, '2024-07-23 18:56:32.215851', 1, 5, 3, NULL, NULL, NULL, 500, 'SCATTI',
-        b'0', NULL, b'0', 0, 5450);
-
--- Dump della struttura di tabella galvanica.storico_generale_seq
-CREATE TABLE IF NOT EXISTS `storico_generale_seq`
-(
-    `next_val` bigint DEFAULT NULL
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
-
--- Dump dei dati della tabella galvanica.storico_generale_seq: ~0 rows (circa)
-REPLACE INTO `storico_generale_seq` (`next_val`)
-VALUES (2051);
 
 /*!40103 SET TIME_ZONE = IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE = IFNULL(@OLD_SQL_MODE, '') */;

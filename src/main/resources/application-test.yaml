@@ -1,4 +1,6 @@
 spring:
+  jpa:
+    defer-datasource-initialization: true
   sql:
     init:
       mode: always
