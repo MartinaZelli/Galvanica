@@ -2,6 +2,7 @@ package org.galvanica.service.operazioniBagno;
 
 import org.galvanica.dto.StoricoTotaleGroupDto;
 import org.galvanica.dto.StoricoTotaleSingoloDto;
+import org.galvanica.dto.rispostaScatti.RispostaScattiGenerale;
 import org.galvanica.math.MetodiArrotondamenti;
 import org.galvanica.math.RisultatoOperazioniAScatti;
 import org.galvanica.math.TipologiaAggiunta;
@@ -41,16 +42,18 @@ public class AlimentazioneAScattiService {
             if (entry.getValue() == null) {
                 continue;
             }
-            risposta.add(creaNuovaAlimentazione(entry.getKey(),
-                    entry.getValue()));
-
+            risposta.add(creaNuovaAlimentazione(entry.getKey(), entry.getValue()));
         }
         return risposta;
     }
 
+
+    public List<RispostaScattiGenerale> aggiungiScatti(Map<Long, Integer> idBagnoScattiParzialiMap) {
+        return new ArrayList<>();
+    }
+
     //calcola nuova Alimentazione
-    public List<StoricoTotaleSingoloDto> creaNuovaAlimentazione(Long idBagno,
-                                                                int scattiLetti) {
+    public List<StoricoTotaleSingoloDto> creaNuovaAlimentazione(Long idBagno, int scattiLetti) {
         calcolaAlimentazioneControlliApprovati(idBagno);
 
         long idStorico = creaStorici(idBagno, scattiLetti);

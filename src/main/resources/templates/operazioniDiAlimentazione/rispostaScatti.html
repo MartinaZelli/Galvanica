@@ -1,59 +1,84 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="https://www.thymeleaf.org"
-		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-		layout:decorate="~{layout/main_layout}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main_layout}">
 
 <head>
-	<title>Aggiunta a scatti</title>
+    <title>Aggiunta a scatti</title>
 </head>
 
 <body>
 <div layout:fragment="content">
-	<form th:attr="hx-post=@{'/operazioni/alimentazioni/confermaTutto'}"
-			hx-target="body" hx-swap="outerHTML">
-		<table class="table">
-			<thead>
-			<tr>
-				<th scope="col">Bagno</th>
-				<th scope="col">Moltiplicatore</th>
-				<th scope="col">Resto Scatti</th>
-				<th scope="col">Aggiunta</th>
-				<th scope="col">Messaggio</th>
-			</tr>
-			
-			</thead>
-			<tbody>
-			<tr th:each="risposta: ${alimentazioneRispostaDtoList}">
-				<td><span th:text="${risposta.getNomeBagno()}"></span></td>
-				<td><span
-						th:text="${risposta.getMoltiplicatoreAlimentazione()}"></span>
-				</td>
-				<td><span th:text="${risposta.getRestoScatti()}"></span></td>
-				<td>
-					<div th:each="aggiunta:${risposta.getOggettoAggiuntaList()}">
-						<span th:text="${aggiunta.getNomeProdotto()}"></span>-->
-						<span th:text="${aggiunta.getQuantitaProdotto()}"></span>
-						<span th:text="${aggiunta.getUnitaDiMisura()}"></span>
-					</div>
-				</td>
-				<td>
-					<span th:text="${risposta.getMessaggio()}"></span>
-					<input th:each="id:${risposta.getIdStoricoDettaglioList()}"
-							type="hidden"
-							name="idDettaglioList" th:value="${id}">
-				</td>
+    <form th:attr="hx-post=@{'/operazioni/alimentazioni/confermaTutto'}"
+          hx-target="body" hx-swap="outerHTML">
+        <div class="card shadow mb-4" th:each="rispostaScattiGenerale: ${rispostaScattiGeneraleList}">
+            <div class="card-body">
 
-			</tr>
-			</tbody>
-		</table>
+                <table class="table table-bordered" id="dataTable">
+                    <thead>
+                    <tr>
+                        <th>Nome Prodotto</th>
+                        <th>Unità di misura</th>
+                        <th>Quantità prodotto</th>
+                    </tr>
+                    </thead>
+                    <tbody>
 
+                    <tr th:each="dettaglio: ${rispostaScattiGenerale.getDettaglioList()}">
+                        <td th:text="${dettaglio.getNomeProdotto()}"></td>
+                        <td th:text="${dettaglio.getUnitaDiMisura()}"></td>
+                        <td th:text="${dettaglio.getQuantitaProdotto()()}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--<table class="table table-bordered" id="dataTable">
+            <thead>
+            <tr>
+                <th scope="col">Bagno</th>
+                <th scope="col">Moltiplicatore</th>
+                <th scope="col">Resto Scatti</th>
+                <th scope="col">Aggiunta</th>
+                <th scope="col">Messaggio</th>
+            </tr>
 
-		<button class="btn btn-outline-primary" type="submit">
-			Conferma tutte le alimentazioni
-		</button>
-	</form>
+            </thead>
+            <tbody>
+            <tr th:each="risposta: ${alimentazioneRispostaList}">
+                <td><span th:text="${risposta.getNomeBagno()}"></span></td>
+                <td><span
+                        th:text="${risposta.getMoltiplicatoreAlimentazione()}"></span>
+                </td>
+                <td><span th:text="${risposta.getRestoScatti()}"></span></td>
+                <td>
+                    <div th:each="aggiunta:${risposta.getOggettoAggiuntaList()}">
+                        <span th:text="${aggiunta.getNomeProdotto()}"></span>
+                        <span th:text="${aggiunta.getQuantitaProdotto()}"></span>
+                        <span th:text="${aggiunta.getUnitaDiMisura()}"></span>
+                    </div>
+                </td>
+                <td>
+                    <span th:text="${risposta.getMessaggio()}"></span>
+                    <input th:each="id:${risposta.getIdStoricoDettaglioList()}"
+                           type="hidden"
+                           name="idDettaglioList" th:value="${id}">
+                </td>
 
-	<a href="/alimentazioni/home">Torna alla Home di Alimentazioni</a>
+            </tr>
+            </tbody>
+        </table>-->
+
+        <div class="card shadow mb-4" th:each="sottoLista: ${alimentazioneRispostaList}">
+            <div class="card-body">
+                <button class="btn btn-outline-primary" type="submit">
+                    Conferma tutte le alimentazioni
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <a href="/alimentazioni/home">Torna alla Home di Alimentazioni</a>
 
 </div>
 </body>

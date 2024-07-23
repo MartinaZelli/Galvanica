@@ -2,7 +2,7 @@ package org.galvanica.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
-import org.galvanica.dto.StoricoTotaleSingoloDto;
+import org.galvanica.dto.rispostaScatti.RispostaScattiGenerale;
 import org.galvanica.service.CRUD.AlimentazioneService;
 import org.galvanica.service.CRUD.BagnoService;
 import org.galvanica.service.operazioniBagno.AlimentazioneAScattiService;
@@ -50,11 +50,13 @@ public class OperazioniDiAlimentazione {
 		}
 		double scatti = Double.parseDouble(scattiValue);
 
-		Integer
-			scattiAlimentazione =
-			alimentazioneService.ricercaAlimentazioneByBagno(id).stream()
-				.filter(alimentazione -> alimentazione.getScatti() != null).findFirst()
-				.orElseThrow().getScatti();
+		Integer scattiAlimentazione = alimentazioneService
+			.ricercaAlimentazioneByBagno(id)
+			.stream()
+			.filter(alimentazione -> alimentazione.getScatti() != null)
+			.findFirst()
+			.orElseThrow()
+			.getScatti();
 		Double moltiplicatore = (scatti / (double) scattiAlimentazione);
 		return String.format("%.2f", moltiplicatore);
 	}
@@ -62,23 +64,22 @@ public class OperazioniDiAlimentazione {
 	@PostMapping("/scatti")
 	public String calcoloAlimentazione(Model model,
 		@RequestBody Map<Long, Integer> mappaBagnoScatti) {
-		List<List<StoricoTotaleSingoloDto>>
-			alimentazioneRispostaDtoList =
-			alimentazioneAScattiService.calcolaAlimentazioneList(mappaBagnoScatti);
-		model.addAttribute("alimentazioneRispostaList", alimentazioneRispostaDtoList);
-		System.out.println(alimentazioneRispostaDtoList);
+
+		List<RispostaScattiGenerale> rispostaScattiGeneraleList =
+			alimentazioneAScattiService.aggiungiScatti(mappaBagnoScatti);
+		model.addAttribute("rispostaScattiGeneraleList", rispostaScattiGeneraleList);
 		return "operazioniDiAlimentazione/rispostaScatti";
 	}
 
 	@PostMapping("/confermaTutto")
 	@Transactional
-	public String confermaTutto(Model model, @RequestParam List<Long> idDettaglioList) {
+	public String confermaTutto(@RequestParam List<Long> idDettaglioList) {
 		storiciAnnullaOConcludiService.eseguiSingolaAggiuntaList(idDettaglioList);
 		return "operazioniDiAlimentazione/confermaInteraAlimentazione";
 	}
 
 	@GetMapping("/rispostaScatti")
-	public String rispostaScatti(Model model) {
+	public String rispostaScatti() {
 		return "";
 	}
 
