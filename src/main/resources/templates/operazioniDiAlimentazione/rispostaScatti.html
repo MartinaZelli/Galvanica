@@ -16,18 +16,19 @@
                 <div class="row">
                     <div class="col-sm">
                         <div>Bagno: <span th:text="${rispostaScattiGenerale.getNomeBagno()}"></span></div>
-                        <div>Moltiplicatore:
-                            <span th:text="${rispostaScattiGenerale.getMoltiplicatoreAlimentazione()}"></span></div>
-                        <div><span th:text="${rispostaScattiGenerale.get()}"></span></div>
-                        <div><span th:text="${rispostaScattiGenerale.getNomeBagno()}"></span></div>
-                        <div><span th:text="${rispostaScattiGenerale.getRispostaCalcoloFront()}"></span></div>
-                        <div><span th:text="${rispostaScattiGenerale.getIdStoricoGenerale()}"></span></div>
-                        <div><span th:text="${rispostaScattiGenerale.getMoltiplicatoreAlimentazione()}"></span></div>
-                        <div><span th:text="${rispostaScattiGenerale.getRestoScattiBagno()}"></span></div>
-                        <div><span th:text="${rispostaScattiGenerale.getScattiAlimentazione()}"></span></div>
-                        <div><span th:text="${rispostaScattiGenerale.getScattiTotaliBagno()}"></span></div>
-                        <div><span th:text="${rispostaScattiGenerale.getScattiInseriti()}"></span></div>
-                        <div><span th:text="${rispostaScattiGenerale.getRestoScattiPrecedenti()}"></span></div>
+                        <div>Risposta: <span th:text="${rispostaScattiGenerale.getRispostaCalcoloFront()}"></span></div>
+                        <div>Id generale: <span th:text="${rispostaScattiGenerale.getIdStoricoGenerale()}"></span></div>
+                        <div>Molt: <span th:text="${rispostaScattiGenerale.getMoltiplicatoreAlimentazione()}"></span>
+                        </div>
+                        <div>Resto scatti: <span th:text="${rispostaScattiGenerale.getRestoScattiBagno()}"></span></div>
+                        <div>Scatti alimentazione:
+                            <span th:text="${rispostaScattiGenerale.getScattiAlimentazione()}"></span></div>
+                        <div>Scatti Totali: <span th:text="${rispostaScattiGenerale.getScattiTotaliBagno()}"></span>
+                        </div>
+                        <div>Scatti inseriti: <span th:text="${rispostaScattiGenerale.getScattiInseriti()}"></span>
+                        </div>
+                        <div>Resto Scatti precedente:
+                            <span th:text="${rispostaScattiGenerale.getRestoScattiPrecedenti()}"></span></div>
                     </div>
                     <div class="col-sm">
                         <table class="table table-bordered" id="dataTable">
