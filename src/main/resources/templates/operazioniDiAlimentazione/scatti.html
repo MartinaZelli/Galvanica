@@ -9,46 +9,45 @@
 
 <body>
 <div layout:fragment="content">
-    <form>
-        <div class="card shadow mb-4">
-            <div class="card-body">
-                <table class="table table-bordered" id="dataTable" width="100%"
-                       cellspacing="0">
-                    <thead>
-                    <tr>
-                        <th scope="col">Bagno</th>
-                        <th scope="col">Scatti</th>
-                        <th scope="col">Pre-conto</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="bagno: ${bagnoList}">
-                        <td><span th:text="${bagno.getNome()}"></span>
-                        </td>
-                        <td>
-                            <input type="number" th:name="${bagno.getIdBagno()}"
-                                   hx-trigger="input changed dalay:1000ms"
-                                   th:attr="hx-get=@{'/operazioni/alimentazioni/scatti/preconto/'+${bagno.getIdBagno()}},
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <table class="table table-bordered" id="dataTable">
+                <thead>
+                <tr>
+                    <th scope="col">Bagno</th>
+                    <th scope="col">Scatti</th>
+                    <th scope="col">Pre-conto</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="bagno: ${bagnoList}">
+                    <td><span th:text="${bagno.getNome()}"></span>
+                    </td>
+                    <td>
+                        <input type="number" th:name="${bagno.getIdBagno()}"
+                               hx-trigger="input changed dalay:1000ms"
+                               th:attr="hx-get=@{'/operazioni/alimentazioni/scatti/preconto/'+${bagno.getIdBagno()}},
                                 hx-target=@{'#preconto'+${bagno.getIdBagno()}}"/>
-                        </td>
-                        <td th:id="@{'preconto'+${bagno.getIdBagno()}}"></td>
-                    </tr>
-                    </tbody>
-                </table>
-                <button class="btn btn-primary btn-icon-split btn-lg"
-                        type="submit"
-                        hx-post="/operazioni/alimentazioni/scatti"
-                        hx-ext="json-enc" hx-target="body"
-                        hx-swap="outerHTML"
-                >
+                    </td>
+                    <td th:id="@{'preconto'+${bagno.getIdBagno()}}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <button class="btn btn-primary btn-icon-split btn-lg"
+                    type="submit"
+                    hx-post="/operazioni/alimentazioni/scatti"
+                    hx-ext="json-enc"
+                    hx-target="body"
+                    hx-include="closest tr"
+                    hx-swap="outerHTML"
+            >
                     <span class="icon text-white-50">
                         <i class="fas fa-arrow-right"></i>
                     </span>
-                    <span class="text">Calcola Alimentazioni</span>
-                </button>
-            </div>
+                <span class="text">Calcola Alimentazioni</span>
+            </button>
         </div>
-    </form>
+    </div>
 </div>
 </body>
 

@@ -66,7 +66,7 @@ public class OperazioniDiAlimentazione {
 		@RequestBody Map<Long, Integer> mappaBagnoScatti) {
 
 		List<RispostaScattiGenerale> rispostaScattiGeneraleList =
-			alimentazioneAScattiService.aggiungiScatti(mappaBagnoScatti);
+			alimentazioneAScattiService.calcolaRispostaList(mappaBagnoScatti);
 		model.addAttribute("rispostaScattiGeneraleList", rispostaScattiGeneraleList);
 		return "operazioniDiAlimentazione/rispostaScatti";
 	}
