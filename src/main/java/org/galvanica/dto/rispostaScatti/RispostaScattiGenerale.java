@@ -11,14 +11,14 @@ import java.util.List;
 @Builder
 public class RispostaScattiGenerale {
     private String nomeBagno;
-    private String rispostaCalcoloFront;
+    private String rispostaCalcoloFront;//
     private Long idStoricoGenerale;
     private Double moltiplicatoreAlimentazione;
     private Integer restoScattiBagno;
     private Integer scattiAlimentazione;
     private Integer scattiTotaliBagno;
     private Integer scattiInseriti;
-    private Integer restoScattiPrecedenti;
+    private Integer restoScattiPrecedenti;//
     private List<RispostaScattiDettaglio> dettaglioList;
 
 }
