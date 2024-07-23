@@ -2,6 +2,7 @@ package org.galvanica.service.operazioniBagno;
 
 import org.galvanica.dto.StoricoTotaleGroupDto;
 import org.galvanica.dto.StoricoTotaleSingoloDto;
+import org.galvanica.dto.rispostaScatti.RispostaScattiDettaglio;
 import org.galvanica.dto.rispostaScatti.RispostaScattiGenerale;
 import org.galvanica.math.MetodiArrotondamenti;
 import org.galvanica.math.RisultatoOperazioniAScatti;
@@ -42,18 +43,96 @@ public class AlimentazioneAScattiService {
             if (entry.getValue() == null) {
                 continue;
             }
-            risposta.add(creaNuovaAlimentazione(entry.getKey(), entry.getValue()));
+            risposta.add(creaNuovaAlimentazione(entry.getKey(),
+                    entry.getValue()));
+
         }
         return risposta;
     }
 
+    public List<RispostaScattiGenerale> calcolaRispostaList(
+            Map<Long, Integer> idBagnoScattiParzialiMap) {
+        List<RispostaScattiGenerale> risposta = new ArrayList<>();
+        for (Map.Entry<Long, Integer> entry : idBagnoScattiParzialiMap.entrySet()) {
+            if (entry.getValue() == null) {
+                continue;
+            }
+            risposta.add(creaNuovaRisposta(entry.getKey(),
+                    entry.getValue()));
+        }
+        return risposta;
+    }
 
-    public List<RispostaScattiGenerale> aggiungiScatti(Map<Long, Integer> idBagnoScattiParzialiMap) {
-        return new ArrayList<>();
+    public RispostaScattiGenerale rispostaBuilder(
+            StoricoGenerale storicoGenerale, String rispostaCalcoloFront,
+            Integer restoscattiPrecedenti) {
+        List<RispostaScattiDettaglio> dettaglioList = new ArrayList<>();
+        RispostaScattiGenerale risposta = RispostaScattiGenerale.builder()
+                .nomeBagno(storicoGenerale.getBagno().getNome())
+                .idStoricoGenerale(storicoGenerale.getIdStorico())
+                .moltiplicatoreAlimentazione(storicoGenerale.getMoltiplicatoreAlimentazione())
+                .restoScattiBagno(storicoGenerale.getRestoScattiBagno())
+                .scattiAlimentazione(storicoGenerale.getAlimentazione().getScatti())
+                .scattiTotaliBagno(storicoGenerale.getScattiTotaliBagno())
+                .scattiInseriti(storicoGenerale.getScattiInseriti())
+                .dettaglioList(dettaglioList)
+                .rispostaCalcoloFront(rispostaCalcoloFront)
+                .restoScattiPrecedenti(restoscattiPrecedenti)
+                .build();
+        List<StoricoDettaglio> storicoDettaglioList = storicoGenerale.getStoricoDettaglioList();
+        if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
+            return risposta;
+        } else {
+            for (StoricoDettaglio dettaglio : storicoDettaglioList) {
+                UnitaDiMisura unita = convertiUnitaMisuraPerDto(dettaglio.getQuantita(),
+                        dettaglio.getUnitaDiMisura().isSonoVolume());
+                Double quantita = convertiQuantitaGenerico(
+                        dettaglio.getQuantita(),
+                        dettaglio.getUnitaDiMisura(),
+                        unita);
+                RispostaScattiDettaglio rsd = RispostaScattiDettaglio.builder()
+                        .quantitaProdotto(quantita)
+                        .unitaDiMisura(unita)
+                        .nomeProdotto(dettaglio.getProdotto().getNome())
+                        .build();
+                dettaglioList.add(rsd);
+            }
+        }
+        return risposta;
+    }
+
+    public RispostaScattiGenerale creaNuovaRisposta(Long idBagno,
+                                                    int scattiLetti) {
+        calcolaAlimentazioneControlliApprovati(idBagno);
+        Integer restoScattiPrecedenti = (storicoGeneraleRepository.ultimoStoricoGeneraleScatti(
+                idBagno)).getRestoScattiBagno();
+        long idStorico = creaStorici(idBagno, scattiLetti);
+
+        StoricoGenerale storicoGeneraleCreato =
+                storicoGeneraleRepository.findById(idStorico).orElseThrow();
+
+        List<StoricoDettaglio> storicoDettaglioList =
+                storicoDettaglioRepository.findByStoricoGeneraleIdStorico(idStorico);
+        String messaggioFront;
+
+
+        if (storicoGeneraleCreato.getMoltiplicatoreAlimentazione() == 0) {
+            messaggioFront = "gli scatti sono inferiori al 90% dell'alimentazione," +
+                    "le aggiunte non verranno eseguite ma messe in conto per la prossima chiamata.";
+            return rispostaBuilder(storicoGeneraleCreato,
+                    messaggioFront,
+                    restoScattiPrecedenti);
+        }
+
+        messaggioFront = "questa è l'aggiunta a scatti che prevede il bagno";
+        return rispostaBuilder(storicoGeneraleCreato,
+                messaggioFront,
+                restoScattiPrecedenti);
     }
 
     //calcola nuova Alimentazione
-    public List<StoricoTotaleSingoloDto> creaNuovaAlimentazione(Long idBagno, int scattiLetti) {
+    public List<StoricoTotaleSingoloDto> creaNuovaAlimentazione(Long idBagno,
+                                                                int scattiLetti) {
         calcolaAlimentazioneControlliApprovati(idBagno);
 
         long idStorico = creaStorici(idBagno, scattiLetti);
