@@ -52,4 +52,5 @@ public interface StoricoDettaglioRepository extends CrudRepository<StoricoDettag
 		"limit ?1", nativeQuery = true)
 	List<StoricoTotaleDto> listaStoricoSemplificato(int limite);
 
+    List<StoricoDettaglio> findByStoricoGeneraleIdStorico(Long idStoricoGenerale);
 }
