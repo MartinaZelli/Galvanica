@@ -10,25 +10,39 @@
 <body>
 <div layout:fragment="content">
     <form>
-        <div class="card shadow mb-4" th:each="rispostaScattiGenerale: ${rispostaScattiGeneraleList}">
+        <div class="card shadow mb-4"
+             th:each="rispostaScattiGenerale: ${rispostaScattiGeneraleList}">
             <div class="card-body">
 
                 <div class="row">
                     <div class="col-sm">
-                        <div>Bagno: <span th:text="${rispostaScattiGenerale.getNomeBagno()}"></span></div>
-                        <div>Risposta: <span th:text="${rispostaScattiGenerale.getRispostaCalcoloFront()}"></span></div>
-                        <div>Id generale: <span th:text="${rispostaScattiGenerale.getIdStoricoGenerale()}"></span></div>
-                        <div>Molt: <span th:text="${rispostaScattiGenerale.getMoltiplicatoreAlimentazione()}"></span>
+                        <div>Bagno: <span
+                                th:text="${rispostaScattiGenerale.getNomeBagno()}"></span>
                         </div>
-                        <div>Resto scatti: <span th:text="${rispostaScattiGenerale.getRestoScattiBagno()}"></span></div>
+                        <div>Risposta: <span
+                                th:text="${rispostaScattiGenerale.getRispostaCalcoloFront()}"></span>
+                        </div>
+                        <div>Id generale: <span
+                                th:text="${rispostaScattiGenerale.getIdStoricoGenerale()}"></span>
+                        </div>
+                        <div>Molt: <span
+                                th:text="${rispostaScattiGenerale.getMoltiplicatoreAlimentazione()}"></span>
+                        </div>
+                        <div>Resto scatti: <span
+                                th:text="${rispostaScattiGenerale.getRestoScattiBagno()}"></span>
+                        </div>
                         <div>Scatti alimentazione:
-                            <span th:text="${rispostaScattiGenerale.getScattiAlimentazione()}"></span></div>
-                        <div>Scatti Totali: <span th:text="${rispostaScattiGenerale.getScattiTotaliBagno()}"></span>
+                            <span th:text="${rispostaScattiGenerale.getScattiAlimentazione()}"></span>
                         </div>
-                        <div>Scatti inseriti: <span th:text="${rispostaScattiGenerale.getScattiInseriti()}"></span>
+                        <div>Scatti Totali: <span
+                                th:text="${rispostaScattiGenerale.getScattiTotaliBagno()}"></span>
+                        </div>
+                        <div>Scatti inseriti: <span
+                                th:text="${rispostaScattiGenerale.getScattiInseriti()}"></span>
                         </div>
                         <div>Resto Scatti precedente:
-                            <span th:text="${rispostaScattiGenerale.getRestoScattiPrecedenti()}"></span></div>
+                            <span th:text="${rispostaScattiGenerale.getRestoScattiPrecedenti()}"></span>
+                        </div>
                     </div>
                     <div class="col-sm">
                         <table class="table table-bordered" id="dataTable">
@@ -44,7 +58,7 @@
                             <tr th:each="dettaglio: ${rispostaScattiGenerale.getDettaglioList()}">
                                 <td th:text="${dettaglio.getNomeProdotto()}"></td>
                                 <td th:text="${dettaglio.getUnitaDiMisura()}"></td>
-                                <td th:text="${dettaglio.getQuantitaProdotto()()}"></td>
+                                <td th:text="${dettaglio.getQuantitaProdotto()}"></td>
                             </tr>
                             </tbody>
                         </table>
