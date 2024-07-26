@@ -1,8 +1,9 @@
-package org.galvanica.dto.rispostaTempo;
+package org.galvanica.dto.risposta.tempo;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.galvanica.dto.risposta.RispostaDettaglio;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,7 +18,7 @@ public class RispostaTempoGenerale {
     private LocalDate dataControlloTempo;
     private LocalDate dataControlloPrecedente;
     private Integer numeroDiAggiunteCalcolate;
-    private List<RispostaTempoDettaglio> dettaglioList;
+    private List<RispostaDettaglio> dettaglioList;
     private List<Long> idStoricoGeneraleList;
     private List<Long> idStoricoDettaglioList;
 }

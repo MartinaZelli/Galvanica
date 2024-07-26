@@ -1,4 +1,4 @@
-package org.galvanica.dto.rispostaTempo;
+package org.galvanica.dto.risposta;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -10,9 +10,9 @@ import org.galvanica.math.UnitaDiMisura;
 @Getter
 @Setter
 @Builder
+public class RispostaDettaglio {
 
-public class RispostaTempoDettaglio {
-    private Double quantitaProdottoTotale;
+    private Double quantitaProdotto;
     @Enumerated(EnumType.STRING)
     private UnitaDiMisura unitaDiMisura;
     private String nomeProdotto;

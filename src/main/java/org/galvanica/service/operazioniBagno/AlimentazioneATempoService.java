@@ -2,8 +2,8 @@ package org.galvanica.service.operazioniBagno;
 
 import org.galvanica.dto.StoricoTotaleGroupDto;
 import org.galvanica.dto.StoricoTotaleSingoloDto;
-import org.galvanica.dto.rispostaTempo.RispostaTempoDettaglio;
-import org.galvanica.dto.rispostaTempo.RispostaTempoGenerale;
+import org.galvanica.dto.risposta.RispostaDettaglio;
+import org.galvanica.dto.risposta.tempo.RispostaTempoGenerale;
 import org.galvanica.math.TipologiaAggiunta;
 import org.galvanica.math.UnitaDiMisura;
 import org.galvanica.model.*;
@@ -55,6 +55,15 @@ public class AlimentazioneATempoService {
             calcolaAlimentazione(id, dataControllo);
         }
     }
+
+  /*  public RispostaTempoGenerale calcola (Long idBagno, LocalDate dataControllo){
+        calcolaAlimentazione(idBagno, dataControllo);
+
+        //trovare data StoricoGeneraleTempoLast ricercando l'ultimo storico escludendo gli storici
+        //appena creati che devono uscire da calcolaAmilentazione
+
+        rispostaTempoBuilder(dataControllo, )
+    }*/
 
     public void calcolaAlimentazione(Long idBagno, LocalDate dataControllo) {
         calcolaAlimentazioneControlliApprovati(idBagno);
@@ -255,11 +264,11 @@ public class AlimentazioneATempoService {
                 .dataControlloPrecedente(storicoGeneraleTempoLast)
                 .dataControlloTempo(dataControllo)
                 .rispostaCalcoloFront(messaggio)
-                .numeroDiAggiunteCalcolate(idStoricoGeneraleList.size() + 1)
+                .numeroDiAggiunteCalcolate(idStoricoGeneraleList.size())
                 .idStoricoGeneraleList(idStoricoGeneraleList)
                 .build();
 
-        List<RispostaTempoDettaglio> rispostaDettaglioList = new ArrayList<>();
+        List<RispostaDettaglio> rispostaDettaglioList = new ArrayList<>();
         List<Long> idStoricoDettaglioList = new ArrayList<>();
         Map<Prodotto, Integer> mappa = new HashMap<>();
         for (Long id : idStoricoGeneraleList) {
@@ -271,19 +280,13 @@ public class AlimentazioneATempoService {
             for (StoricoDettaglio dettaglio : storicoDettaglioList) {
                 idStoricoDettaglioList.add(dettaglio.getIdStoricoDettaglio());
                 Prodotto key = dettaglio.getProdotto();
-                if (mappa.containsKey(key)) {
-                    mappa.put(key, mappa.get(key) + dettaglio.getQuantita());
-                }
-                if (!mappa.containsKey(key)) {
-                    mappa.put(key,
-                            mappa.getOrDefault(key, 0) + dettaglio.getQuantita());
-                }
+                mappa.put(key, mappa.getOrDefault(key, 0) + dettaglio.getQuantita());
             }
             for (Map.Entry<Prodotto, Integer> entry : mappa.entrySet()) {
                 if (entry.getValue() == null) {
                     continue;
                 }
-                UnitaDiMisura unita = convertiUnitaMisuraPerDto(entry.getValue(),
+                UnitaDiMisura unitaDto = convertiUnitaMisuraPerDto(entry.getValue(),
                         entry.getKey().getSonoVolume());
                 UnitaDiMisura unitaDb = UnitaDiMisura.MG;
                 if (entry.getKey().getSonoVolume()) {
@@ -292,13 +295,13 @@ public class AlimentazioneATempoService {
                 Double quantita = convertiQuantitaGenerico(
                         entry.getValue(),
                         unitaDb,
-                        unita);
-                RispostaTempoDettaglio rtd = RispostaTempoDettaglio.builder()
-                        .quantitaProdottoTotale(quantita)
-                        .unitaDiMisura(unita)
+                        unitaDto);
+                RispostaDettaglio rispostaDettaglio = RispostaDettaglio.builder()
+                        .quantitaProdotto(quantita)
+                        .unitaDiMisura(unitaDto)
                         .nomeProdotto(entry.getKey().getNome())
                         .build();
-                rispostaDettaglioList.add(rtd);
+                rispostaDettaglioList.add(rispostaDettaglio);
             }
         }
         risposta.setDettaglioList(rispostaDettaglioList);

@@ -2,8 +2,8 @@ package org.galvanica.service.operazioniBagno;
 
 import org.galvanica.dto.StoricoTotaleGroupDto;
 import org.galvanica.dto.StoricoTotaleSingoloDto;
-import org.galvanica.dto.rispostaScatti.RispostaScattiDettaglio;
-import org.galvanica.dto.rispostaScatti.RispostaScattiGenerale;
+import org.galvanica.dto.risposta.RispostaDettaglio;
+import org.galvanica.dto.risposta.scatti.RispostaScattiGenerale;
 import org.galvanica.math.MetodiArrotondamenti;
 import org.galvanica.math.RisultatoOperazioniAScatti;
 import org.galvanica.math.TipologiaAggiunta;
@@ -67,7 +67,7 @@ public class AlimentazioneAScattiService {
             StoricoGenerale storicoGenerale, String rispostaCalcoloFront,
             Integer restoscattiPrecedenti,
             List<StoricoDettaglio> storicoDettaglioList) {
-        List<RispostaScattiDettaglio> dettaglioList = new ArrayList<>();
+        List<RispostaDettaglio> dettaglioList = new ArrayList<>();
         RispostaScattiGenerale risposta = RispostaScattiGenerale.builder()
                 .nomeBagno(storicoGenerale.getBagno().getNome())
                 .idStoricoGenerale(storicoGenerale.getIdStorico())
@@ -90,7 +90,7 @@ public class AlimentazioneAScattiService {
                         dettaglio.getQuantita(),
                         dettaglio.getUnitaDiMisura(),
                         unita);
-                RispostaScattiDettaglio rsd = RispostaScattiDettaglio.builder()
+                RispostaDettaglio rsd = RispostaDettaglio.builder()
                         .quantitaProdotto(quantita)
                         .unitaDiMisura(unita)
                         .nomeProdotto(dettaglio.getProdotto().getNome())
