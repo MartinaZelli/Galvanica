@@ -40,11 +40,11 @@ public class AlimentazioneATempoService {
 
         this.bagnoService = bagnoService;
 
-        //todo: creata rispostaTempoBuilder da implementare sui vari metodi per tirare fuori roba in frontend
     }
 
-    public void calcolaAlimentazioneList(List<Long> idBagnoList,
-                                         LocalDate dataControllo) {
+    public List<RispostaTempoGenerale> calcolaRispostaList(List<Long> idBagnoList,
+                                                           LocalDate dataControllo) {
+        List<RispostaTempoGenerale> rispostaTempoGeneraleList = new ArrayList<>();
         for (Long id : idBagnoList) {
             Bagno bagno = bagnoService.modelRicercaId(id);
             if (bagno.getAlimentazioneList().stream().noneMatch(
@@ -52,20 +52,24 @@ public class AlimentazioneATempoService {
                             alimentazione.getTempo().isEmpty())) {
                 continue;
             }
-            calcolaAlimentazione(id, dataControllo);
+            rispostaTempoGeneraleList.add(creaRisposta(id, dataControllo));
         }
+        return rispostaTempoGeneraleList;
     }
 
-  /*  public RispostaTempoGenerale calcola (Long idBagno, LocalDate dataControllo){
-        calcolaAlimentazione(idBagno, dataControllo);
+    public RispostaTempoGenerale creaRisposta(Long idBagno,
+                                              LocalDate dataControllo) {
+        List<Long> listId = calcolaAlimentazione(idBagno, dataControllo);
+        StoricoGenerale ultimoStorico = storicoGeneraleRepository.storicoATempoNonInLista(
+                idBagno,
+                listId);
 
-        //trovare data StoricoGeneraleTempoLast ricercando l'ultimo storico escludendo gli storici
-        //appena creati che devono uscire da calcolaAmilentazione
+        return rispostaTempoBuilder(dataControllo,
+                ultimoStorico.getDataControlloTempo(),
+                listId);
+    }
 
-        rispostaTempoBuilder(dataControllo, )
-    }*/
-
-    public void calcolaAlimentazione(Long idBagno, LocalDate dataControllo) {
+    public List<Long> calcolaAlimentazione(Long idBagno, LocalDate dataControllo) {
         calcolaAlimentazioneControlliApprovati(idBagno);
         LocalDate dataUltimoStorico = dataControllo;
         StoricoGenerale
@@ -82,7 +86,7 @@ public class AlimentazioneATempoService {
                     "riprendere da dopo la data " +
                     dataUltimoStorico);
         }
-
+        List<Long> idList = new ArrayList<>();
         Stream<LocalDate>
                 date =
                 Stream.iterate(dataUltimoStorico, data -> data.plusDays(1))
@@ -98,8 +102,10 @@ public class AlimentazioneATempoService {
             }
             for (Alimentazione alimentazione : alimentazioneList) {
                 Long id = creaStorico(alimentazione, data);
+                idList.add(id);
             }
         });
+        return idList;
     }
 
     private Long creaStorico(Alimentazione alimentazione, LocalDate dataControllo) {
@@ -253,8 +259,7 @@ public class AlimentazioneATempoService {
 
     private RispostaTempoGenerale rispostaTempoBuilder(LocalDate dataControllo,
                                                        LocalDate storicoGeneraleTempoLast,
-                                                       List<Long> idStoricoGeneraleList,
-                                                       String messaggio) {
+                                                       List<Long> idStoricoGeneraleList) {
         Bagno bagno = storicoGeneraleRepository.findById(idStoricoGeneraleList.getFirst())
                 .orElseThrow()
                 .getBagno();
@@ -263,7 +268,7 @@ public class AlimentazioneATempoService {
                 .idBagno(bagno.getIdBagno())
                 .dataControlloPrecedente(storicoGeneraleTempoLast)
                 .dataControlloTempo(dataControllo)
-                .rispostaCalcoloFront(messaggio)
+                .rispostaCalcoloFront("alimentazione calcolata in data: " + LocalDate.now())
                 .numeroDiAggiunteCalcolate(idStoricoGeneraleList.size())
                 .idStoricoGeneraleList(idStoricoGeneraleList)
                 .build();
