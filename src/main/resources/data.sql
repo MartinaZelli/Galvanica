@@ -782,3 +782,41 @@ VALUES (2101);
 /*!40014 SET FOREIGN_KEY_CHECKS = IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT = @OLD_CHARACTER_SET_CLIENT */;
 /*!40111 SET SQL_NOTES = IFNULL(@OLD_SQL_NOTES, 1) */;
+
+
+ALTER TABLE `alimentazione`
+    AUTO_INCREMENT = 5000;
+ALTER TABLE `alimentazione_seq`
+    AUTO_INCREMENT = 5000;
+ALTER TABLE `bagno`
+    AUTO_INCREMENT = 5000;
+ALTER TABLE `bagno_seq`
+    AUTO_INCREMENT = 5000;
+ALTER TABLE `caratteristica_bagno`
+    AUTO_INCREMENT = 5000;
+ALTER TABLE `caratteristica_bagno_seq`
+    AUTO_INCREMENT = 5000;
+ALTER TABLE `dettaglio_alimentazione`
+    AUTO_INCREMENT = 5000;
+ALTER TABLE `dettaglio_alimentazione_seq`
+    AUTO_INCREMENT = 5000;
+ALTER TABLE `magazzino`
+    AUTO_INCREMENT = 5000;
+ALTER TABLE `magazzino_seq`
+    AUTO_INCREMENT = 5000;
+ALTER TABLE `prodotto`
+    AUTO_INCREMENT = 5000;
+ALTER TABLE `prodotto_seq`
+    AUTO_INCREMENT = 5000;
+ALTER TABLE `relazione_bagno_prodotto`
+    AUTO_INCREMENT = 5000;
+ALTER TABLE `relazione_bagno_prodotto_seq`
+    AUTO_INCREMENT = 5000;
+ALTER TABLE `storico_dettaglio`
+    AUTO_INCREMENT = 5000;
+ALTER TABLE `storico_dettaglio_seq`
+    AUTO_INCREMENT = 5000;
+ALTER TABLE `storico_generale`
+    AUTO_INCREMENT = 5000;
+ALTER TABLE `storico_generale_seq`
+    AUTO_INCREMENT = 5000;
