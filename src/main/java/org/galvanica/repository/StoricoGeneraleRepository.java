@@ -12,7 +12,8 @@ public interface StoricoGeneraleRepository extends CrudRepository<StoricoGeneral
     @Query(value = "SELECT * FROM storico_generale " +
             "WHERE concluso = ?1 AND bagno_id_bagno = ?2 AND tipologia_aggiunta like ?3 " +
             "ORDER BY data_creazione DESC", nativeQuery = true)
-    List<StoricoGenerale> storicoGeneraleDescList(boolean concluso, Long idBagno, TipologiaAggiunta tipologiaAggiunta);
+    List<StoricoGenerale> storicoGeneraleDescList(boolean concluso, Long idBagno,
+                                                  TipologiaAggiunta tipologiaAggiunta);
 
     @Query(value = "SELECT * FROM storico_generale " +
             "WHERE bagno_id_bagno = ?1 AND tipologia_aggiunta like 'TEMPO' " +
@@ -53,7 +54,10 @@ public interface StoricoGeneraleRepository extends CrudRepository<StoricoGeneral
                 and tipologia_aggiunta = 'TEMPO'
                 and not annullato_generale
                 and id_storico not in (:idStoricoList)
+            ORDER BY
+                data_creazione DESC
+            LIMIT 1
             """, nativeQuery = true)
-    List<StoricoGenerale> storiciATempoNonInLista(Long idBagno, List<Long> idStoricoList);
+    StoricoGenerale storicoATempoNonInLista(Long idBagno, List<Long> idStoricoList);
 
 }
