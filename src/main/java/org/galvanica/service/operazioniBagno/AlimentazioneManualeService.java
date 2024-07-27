@@ -36,6 +36,7 @@ public class AlimentazioneManualeService {
     }
 
     public void creaAggiuntaManuale(AlimentazioneManualeGeneraleDto generale) {
+        controlliDto(generale);
         StoricoGenerale storicoGenerale = creaAggiuntaGenerale(generale);
         List<AlimentazioneManualeDettaglioDto> dettaglioList = generale.getDettaglioList();
         if (dettaglioList == null || dettaglioList.isEmpty()) {
@@ -82,6 +83,22 @@ public class AlimentazioneManualeService {
 
     }
 
+    public void controlliDto(AlimentazioneManualeGeneraleDto generale) {
+        bagnoService.modelRicercaId(generale.getIdBagno());
+        if (generale.getScattiTotaliBagno() == null) {
+            throw new RuntimeException(
+                    "non sono stati inseriti gli scatti Totali del bagno");
+        }
+        if (generale.getRestoScattiBagno() == null) {
+            throw new RuntimeException(
+                    "non sono stati inseriti gli scatti di resto del bagno");
+        }
+        if (generale.getScattiInseriti() == null) {
+            generale.setScattiInseriti(0);
+        }
+
+    }
+
     public void verificaProdottoInserimentoManuale(Long idBagno, Long idProdotto) {
         List<ProdottoDto> prodottoDtoList = prodottoService.ricercaProdottiByBagno(
                 idBagno);
@@ -103,5 +120,4 @@ public class AlimentazioneManualeService {
                     "l'unita di misura deve essere valorizzata se è inserita una quantità");
         }
     }
-    //todo: controllare che unità di misura per i prodotti siano corrette e validare tutti i campi da inserire!
 }
