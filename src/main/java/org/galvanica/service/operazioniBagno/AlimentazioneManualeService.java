@@ -2,7 +2,9 @@ package org.galvanica.service.operazioniBagno;
 
 import org.galvanica.dto.AlimentazioneManualeDettaglioDto;
 import org.galvanica.dto.AlimentazioneManualeGeneraleDto;
+import org.galvanica.dto.dtoConModel.BagnoDto;
 import org.galvanica.dto.dtoConModel.ProdottoDto;
+import org.galvanica.dto.risposta.InformazioniScattiPerBagno;
 import org.galvanica.math.ConvertitoreUnitaMisura;
 import org.galvanica.math.TipologiaAggiunta;
 import org.galvanica.math.UnitaDiMisura;
@@ -16,6 +18,7 @@ import org.galvanica.service.CRUD.BagnoService;
 import org.galvanica.service.CRUD.ProdottoService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,6 +39,7 @@ public class AlimentazioneManualeService {
     }
 
     public void creaAggiuntaManuale(AlimentazioneManualeGeneraleDto generale) {
+        controlliDto(generale);
         StoricoGenerale storicoGenerale = creaAggiuntaGenerale(generale);
         List<AlimentazioneManualeDettaglioDto> dettaglioList = generale.getDettaglioList();
         if (dettaglioList == null || dettaglioList.isEmpty()) {
@@ -50,7 +54,7 @@ public class AlimentazioneManualeService {
         }
     }
 
-    public StoricoGenerale creaAggiuntaGenerale(
+    private StoricoGenerale creaAggiuntaGenerale(
             AlimentazioneManualeGeneraleDto generale) {
         Bagno bagno = bagnoService.modelRicercaId(generale.getIdBagno());
         return storicoGeneraleRepository.save((StoricoGenerale.builder()
@@ -63,8 +67,8 @@ public class AlimentazioneManualeService {
                 .build()));
     }
 
-    public void creaAggiuntaDettaglio(AlimentazioneManualeDettaglioDto dettaglio,
-                                      StoricoGenerale generale) {
+    private void creaAggiuntaDettaglio(AlimentazioneManualeDettaglioDto dettaglio,
+                                       StoricoGenerale generale) {
         Prodotto prodotto = prodottoService.modelRicercaId(dettaglio.getIdProdotto());
         UnitaDiMisura unitaDiMisura = UnitaDiMisura.MG;
         if (dettaglio.getUnitaDiMisura().isSonoVolume()) {
@@ -82,7 +86,23 @@ public class AlimentazioneManualeService {
 
     }
 
-    public void verificaProdottoInserimentoManuale(Long idBagno, Long idProdotto) {
+    private void controlliDto(AlimentazioneManualeGeneraleDto generale) {
+        bagnoService.modelRicercaId(generale.getIdBagno());
+        if (generale.getScattiTotaliBagno() == null) {
+            throw new RuntimeException(
+                    "non sono stati inseriti gli scatti Totali del bagno");
+        }
+        if (generale.getRestoScattiBagno() == null) {
+            throw new RuntimeException(
+                    "non sono stati inseriti gli scatti di resto del bagno");
+        }
+        if (generale.getScattiInseriti() == null) {
+            generale.setScattiInseriti(0);
+        }
+
+    }
+
+    private void verificaProdottoInserimentoManuale(Long idBagno, Long idProdotto) {
         List<ProdottoDto> prodottoDtoList = prodottoService.ricercaProdottiByBagno(
                 idBagno);
         boolean prodottoValido = prodottoDtoList.stream().anyMatch(
@@ -93,8 +113,8 @@ public class AlimentazioneManualeService {
         }
     }
 
-    public void verificaPresenzaUnitaMisura(double quantita,
-                                            UnitaDiMisura unitaDiMisura) {
+    private void verificaPresenzaUnitaMisura(double quantita,
+                                             UnitaDiMisura unitaDiMisura) {
         if (quantita == 0D) {
             throw new RuntimeException("la quantità inserita non può essere 0");
         }
@@ -103,5 +123,35 @@ public class AlimentazioneManualeService {
                     "l'unita di misura deve essere valorizzata se è inserita una quantità");
         }
     }
-    //todo: controllare che unità di misura per i prodotti siano corrette e validare tutti i campi da inserire!
+
+    public List<BagnoDto> selezionaBagno() {
+        return bagnoService.findAllBagno();
+    }
+
+    public InformazioniScattiPerBagno informazioniScattiPerBagno(Long idBagno) {
+        StoricoGenerale storicoGenerale = storicoGeneraleRepository.ultimoStoricoGeneraleScatti(
+                idBagno);
+        return InformazioniScattiPerBagno.builder()
+                .idBagno(idBagno)
+                .restoScattiBagno(storicoGenerale.getRestoScattiBagno())
+                .scattiTotaliBagno(storicoGenerale.getScattiTotaliBagno())
+                .build();
+    }
+
+    public List<ProdottoDto> ricercaProdottiByBagno(Long id) {
+        return prodottoService.ricercaProdottiByBagno(id);
+    }
+
+    public List<UnitaDiMisura> selezionaUnitaDiMisura(Long idProdotto) {
+        Prodotto prodotto = prodottoService.modelRicercaId(idProdotto);
+        List<UnitaDiMisura> unitaDiMisuraList = new ArrayList<>();
+        for (UnitaDiMisura unita : UnitaDiMisura.values()) {
+            if (unita.isSonoVolume() == prodotto.getSonoVolume()) {
+                unitaDiMisuraList.add(unita);
+            }
+        }
+        return unitaDiMisuraList;
+    }
+
+
 }
