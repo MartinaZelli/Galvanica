@@ -1,6 +1,5 @@
-package org.galvanica.controller;
+package org.galvanica.controller.alimentazione;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.galvanica.dto.risposta.scatti.RispostaScattiGenerale;
 import org.galvanica.service.CRUD.AlimentazioneService;
@@ -37,37 +36,15 @@ public class OperazioniDiAlimentazione {
 
     @GetMapping("/scatti")
     public String scatti(Model model) {
-        model.addAttribute("bagnoList",
-                bagnoService.findAllBagnoIfAlimentazioneScattiNotNull());
+        model.addAttribute("bagnoList", bagnoService.findAllBagnoIfAlimentazioneScattiNotNull());
         return "operazioniDiAlimentazione/scatti";
     }
 
-    @GetMapping("/scatti/preconto/{id}")
-    @ResponseBody
-    public String preconto(@PathVariable Long id, HttpServletRequest request) {
-        String scattiValue = request.getParameter(String.valueOf(id));
-        if (scattiValue == null || scattiValue.isEmpty()) {
-            return String.format("%.2f", 0d);
-        }
-        double scatti = Double.parseDouble(scattiValue);
-
-        Integer scattiAlimentazione = alimentazioneService
-                .ricercaAlimentazioneByBagno(id)
-                .stream()
-                .filter(alimentazione -> alimentazione.getScatti() != null)
-                .findFirst()
-                .orElseThrow()
-                .getScatti();
-        Double moltiplicatore = (scatti / (double) scattiAlimentazione);
-        return String.format("%.2f", moltiplicatore);
-    }
-
     @PostMapping("/scatti")
-    public String calcoloAlimentazione(Model model,
-                                       @RequestBody Map<Long, Integer> mappaBagnoScatti) {
+    public String calcoloAlimentazione(Model model, @RequestBody Map<Long, Integer> mappaBagnoScatti) {
 
-        List<RispostaScattiGenerale> rispostaScattiGeneraleList =
-                alimentazioneAScattiService.calcolaRispostaList(mappaBagnoScatti);
+        List<RispostaScattiGenerale> rispostaScattiGeneraleList = alimentazioneAScattiService.calcolaRispostaList(
+                mappaBagnoScatti);
         model.addAttribute("rispostaScattiGeneraleList", rispostaScattiGeneraleList);
         return "operazioniDiAlimentazione/rispostaScatti";
     }

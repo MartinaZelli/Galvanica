@@ -1,5 +1,6 @@
 package org.galvanica.repository;
 
+import org.galvanica.math.TipologiaAggiunta;
 import org.galvanica.model.Alimentazione;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -12,7 +13,6 @@ public interface AlimentazioneRepository extends CrudRepository<Alimentazione, L
             nativeQuery = true)
     List<Alimentazione> findByTempo(Long id, String dayOfWeek);
 
-    @Query(value = "SELECT * FROM alimentazione WHERE bagno_id_bagno = :id ORDER BY scatti", nativeQuery = true)
-    List<Alimentazione> findByIdBagnoOrderScatti(Long id);
+    List<Alimentazione> findByBagnoIdBagnoAndTipologiaAggiunta(Long bagno_idBagno, TipologiaAggiunta tipologiaAggiunta);
 
 }

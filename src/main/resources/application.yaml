@@ -1,8 +1,8 @@
 spring:
   jpa:
+    show-sql: true
     hibernate:
       ddl-auto: update
-    show-sql: true
 
   datasource:
     username: ${MYSQL_USER:root}
