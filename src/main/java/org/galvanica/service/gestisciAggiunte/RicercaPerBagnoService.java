@@ -9,7 +9,6 @@ import org.galvanica.model.Bagno;
 import org.galvanica.model.StoricoDettaglio;
 import org.galvanica.model.StoricoGenerale;
 import org.galvanica.repository.StoricoDettaglioRepository;
-import org.galvanica.repository.StoricoGeneraleRepository;
 import org.galvanica.service.CRUD.BagnoService;
 import org.galvanica.service.operazioniBagno.StoriciAnnullaOConcludiService;
 import org.springframework.stereotype.Service;
@@ -26,16 +25,13 @@ import static org.galvanica.math.ConvertitoreUnitaMisura.convertiUnitaMisuraPerD
 public class RicercaPerBagnoService {
 
     private final BagnoService bagnoService;
-    private final StoricoGeneraleRepository storicoGeneraleRepository;
     private final StoricoDettaglioRepository storicoDettaglioRepository;
     private final StoriciAnnullaOConcludiService storiciAnnullaOConcludiService;
 
     public RicercaPerBagnoService(BagnoService bagnoService,
-                                  StoricoGeneraleRepository storicoGeneraleRepository,
                                   StoricoDettaglioRepository storicoDettaglioRepository,
                                   StoriciAnnullaOConcludiService storiciAnnullaOConcludiService) {
         this.bagnoService = bagnoService;
-        this.storicoGeneraleRepository = storicoGeneraleRepository;
         this.storicoDettaglioRepository = storicoDettaglioRepository;
         this.storiciAnnullaOConcludiService = storiciAnnullaOConcludiService;
     }
