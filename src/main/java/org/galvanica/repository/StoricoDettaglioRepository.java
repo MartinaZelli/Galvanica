@@ -77,7 +77,7 @@ public interface StoricoDettaglioRepository extends CrudRepository<StoricoDettag
               AND NOT sd.annullato_dettaglio
               AND NOT sd.eseguito_dettaglio
             ORDER BY sg.data_creazione DESC""", nativeQuery = true)
-    List<StoricoDettaglio> listaStoriciDettagliDaEseguireByBagno(Long idBagno);
+    List<StoricoDettaglio> listaStoriciDettagliDaGestireByBagno(Long idBagno);
 
     List<StoricoDettaglio> findByStoricoGeneraleIdStorico(Long idStoricoGenerale);
 }

@@ -1,5 +1,6 @@
 package org.galvanica.service.gestisciAggiunte;
 
+import org.galvanica.dto.StoricoTotaleGroupDto;
 import org.galvanica.dto.StoricoTotaleSingoloDto;
 import org.galvanica.dto.dtoConModel.BagnoDto;
 import org.galvanica.math.UnitaDiMisura;
@@ -10,6 +11,7 @@ import org.galvanica.model.StoricoGenerale;
 import org.galvanica.repository.StoricoDettaglioRepository;
 import org.galvanica.repository.StoricoGeneraleRepository;
 import org.galvanica.service.CRUD.BagnoService;
+import org.galvanica.service.operazioniBagno.StoriciAnnullaOConcludiService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,13 +26,16 @@ public class RicercaPerBagnoService {
     private final BagnoService bagnoService;
     private final StoricoGeneraleRepository storicoGeneraleRepository;
     private final StoricoDettaglioRepository storicoDettaglioRepository;
+    private final StoriciAnnullaOConcludiService storiciAnnullaOConcludiService;
 
     public RicercaPerBagnoService(BagnoService bagnoService,
                                   StoricoGeneraleRepository storicoGeneraleRepository,
-                                  StoricoDettaglioRepository storicoDettaglioRepository) {
+                                  StoricoDettaglioRepository storicoDettaglioRepository,
+                                  StoriciAnnullaOConcludiService storiciAnnullaOConcludiService) {
         this.bagnoService = bagnoService;
         this.storicoGeneraleRepository = storicoGeneraleRepository;
         this.storicoDettaglioRepository = storicoDettaglioRepository;
+        this.storiciAnnullaOConcludiService = storiciAnnullaOConcludiService;
     }
 
     public List<BagnoDto> selezionaBagno() {
@@ -40,7 +45,7 @@ public class RicercaPerBagnoService {
     public List<StoricoTotaleSingoloDto> mostraAggiunteDaGestireByBagno(
             Long idBagno) {
         List<StoricoDettaglio> storicoDettaglioList =
-                storicoDettaglioRepository.listaStoriciDettagliDaEseguireByBagno(
+                storicoDettaglioRepository.listaStoriciDettagliDaGestireByBagno(
                         idBagno);
         if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
             return new ArrayList<>();
@@ -52,10 +57,47 @@ public class RicercaPerBagnoService {
         return lista;
     }
 
-    public void confermaSingolaAggiunta(Long idDettaglio) {
-
+    public List<StoricoTotaleGroupDto> mostraAggiunteDaGestireGroupByBagno() {
+        return null;
     }
 
+    public void eseguiListaAggiunte(List<Long> idDettaglioList) {
+        for (Long id : idDettaglioList) {
+            storiciAnnullaOConcludiService.eseguiSingolaAggiunta(id);
+        }
+    }
+
+    public void eseguiTutteAggiunteByBagno(Long idBagno) {
+        List<StoricoDettaglio> storicoDettaglioList =
+                storicoDettaglioRepository.listaStoriciDettagliDaGestireByBagno(
+                        idBagno);
+        if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
+            return;
+        }
+        for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
+            storiciAnnullaOConcludiService
+                    .eseguiSingolaAggiunta(storicoDettaglio.getIdStoricoDettaglio());
+        }
+    }
+
+    public void annullaListaAggiunte(List<Long> idDettaglioList) {
+        for (Long id : idDettaglioList) {
+            storiciAnnullaOConcludiService.escludiSingolaAggiunta(id);
+        }
+    }
+
+    public void annullaTutteAggiunteByBagno(Long idBagno) {
+        List<StoricoDettaglio> storicoDettaglioList =
+                storicoDettaglioRepository.listaStoriciDettagliDaGestireByBagno(
+                        idBagno);
+        if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
+            return;
+        }
+        for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
+            storiciAnnullaOConcludiService
+                    .escludiSingolaAggiunta(storicoDettaglio.getIdStoricoDettaglio());
+        }
+    }
 
     private StoricoTotaleSingoloDto storicoTotaleSingoloDtoBuilder(
             StoricoDettaglio dettaglio) {
@@ -106,7 +148,9 @@ public class RicercaPerBagnoService {
     //A questo punto verranno visualizzate tutte le aggiunte non ancora gestite per ordine:
     //prodotto, quantità, unità di misura, annulla, conferma, note, data
 
-    //In alto vi sarà un bottone con un flag per “group by prodotto” che sommerà tutte le aggiunte dello stesso prodotto (esempio: 200 ml di A + 300 ml di B + 200 ml di A diventano: 400 ml di A + 300 ml di B)  tale pulsante elimina il campo note e data.
+    //In alto vi sarà un bottone con un flag per “group by prodotto”
+    // che sommerà tutte le aggiunte dello stesso prodotto (esempio: 200 ml di A + 300 ml di B + 200 ml di A diventano: 400 ml di A + 300 ml di B)  tale pulsante elimina il campo note e data.
+
     //sulla tabella, in alto, si potrà flaggare in la colonna annulla o conferma per selezionare su tutte le aggiunte “annulla” o “conferma”.
     //accanto ad ogni aggiunta vi sarà un flag per annullare o confermare le aggiunte singolarmente
     //a fondo pagina un pulsante grande “Salva”.
