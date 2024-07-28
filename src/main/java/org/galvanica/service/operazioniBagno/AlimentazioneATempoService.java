@@ -63,9 +63,13 @@ public class AlimentazioneATempoService {
         StoricoGenerale ultimoStorico = storicoGeneraleRepository.storicoATempoNonInLista(
                 idBagno,
                 listId);
+        LocalDate dataUltimoStorico = LocalDate.of(0, 1, 1);
+        if (ultimoStorico != null) {
+            dataUltimoStorico = ultimoStorico.getDataControlloTempo();
+        }
 
         return rispostaTempoBuilder(dataControllo,
-                ultimoStorico.getDataControlloTempo(),
+                dataUltimoStorico,
                 listId);
     }
 
