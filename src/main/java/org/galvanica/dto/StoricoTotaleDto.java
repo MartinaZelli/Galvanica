@@ -5,28 +5,30 @@ import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.galvanica.math.TipologiaAggiunta;
 import org.galvanica.math.UnitaDiMisura;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@SuperBuilder
 public abstract class StoricoTotaleDto {
-	// todo: verificare crud
-	private Long idBagno;
-	private String nomeBagno;
+    // todo: verificare crud
+    private Long idBagno;
+    private String nomeBagno;
 
-	private Double quantitaProdotto;
-	@Enumerated(EnumType.STRING)
-	private UnitaDiMisura unitaDiMisura;
-	private Long idProdotto;
-	private String nomeProdotto;
+    private Double quantitaProdotto;
+    @Enumerated(EnumType.STRING)
+    private UnitaDiMisura unitaDiMisura;
+    private Long idProdotto;
+    private String nomeProdotto;
 
-	private Long idAlimentazione;
+    private Long idAlimentazione;
 
-	@Enumerated(EnumType.STRING)
-	private TipologiaAggiunta tipologiaAggiunta;
+    @Enumerated(EnumType.STRING)
+    private TipologiaAggiunta tipologiaAggiunta;
 
-	private String rispostaCalcoloFront;
+    private String rispostaCalcoloFront;
 
 }

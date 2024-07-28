@@ -9,48 +9,75 @@ import java.util.List;
 
 public interface StoricoDettaglioRepository extends CrudRepository<StoricoDettaglio, Long> {
 
-	@Query(value = "SELECT * FROM storico_dettaglio " +
-		"WHERE storico_generale_id_storico = ?1 AND escluso = ?2 AND eseguito = ?3 ",
-		nativeQuery = true)
-	List<StoricoDettaglio> storicoDettaglioList(Long idStoricoGenerale, boolean escluso,
-		boolean eseguito);
+    @Query(value = """
+            SELECT
+                *
+            FROM storico_dettaglio
+            WHERE storico_generale_id_storico = ?1
+              AND annullato_dettaglio = ?2
+              AND eseguito_dettaglio = ?3""",
+            nativeQuery = true)
+    List<StoricoDettaglio> storicoDettaglioList(Long idStoricoGenerale,
+                                                boolean annullato,
+                                                boolean eseguito);
 
-	@Query(value = "SELECT *\n" +
-		"FROM storico_generale\n" +
-		"INNER JOIN storico_dettaglio\n" +
-		"ON storico_generale.id_storico = storico_dettaglio.storico_generale_id_storico\n" +
-		"WHERE bagno_id_bagno = ?1\n" +
-		"ORDER BY storico_generale.concluso,storico_generale.data_creazione DESC\n" +
-		"LIMIT ?2", nativeQuery = true)
-	List<StoricoDettaglio> findByIdBagno(Long idBagno, long limit);
+    @Query(value = """
+            SELECT
+                *
+                  FROM storico_generale
+                  INNER JOIN storico_dettaglio
+                  ON storico_generale.id_storico = storico_dettaglio.storico_generale_id_storico
+                  WHERE bagno_id_bagno = ?1
+                  ORDER BY storico_generale.eseguito_generale,
+                           storico_generale.data_creazione DESC
+                  LIMIT ?2""",
+            nativeQuery = true)
+    List<StoricoDettaglio> findByIdBagno(Long idBagno, long limit);
 
-	@Query(value = "SELECT sd.id_storico_dettaglio\n" +
-		"FROM storico_dettaglio sd\n" +
-		"JOIN storico_generale sg\n" +
-		"    ON sd.storico_generale_id_storico = sg.id_storico\n" +
-		"WHERE sd.id_storico_dettaglio IN (?1)\n" +
-		"ORDER BY sg.bagno_id_bagno, sg.data_creazione ASC ", nativeQuery = true)
-	List<Long> orderAscIdList(List<Long> idDettaglio);
+    @Query(value = """
+            SELECT
+                sd.id_storico_dettaglio
+            FROM storico_dettaglio sd
+            JOIN storico_generale sg
+            ON sd.storico_generale_id_storico = sg.id_storico
+            WHERE sd.id_storico_dettaglio IN (?1)
+            ORDER BY sg.bagno_id_bagno, sg.data_creazione""", nativeQuery = true)
+    List<Long> orderAscIdList(List<Long> idDettaglio);
 
-	@Query(value = "select sg.id_storico as idStoricoGenerale,\n" +
-		"       sd.id_storico_dettaglio as idStoricoDettaglio,\n" +
-		"       sg.bagno_id_bagno as idBagno,\n" +
-		"       b.nome as nomeBagno,\n" +
-		"       sd.prodotto_id_prodotto as idProdotto,\n" +
-		"       p.nome as nomeProdotto,\n" +
-		"       sd.quantita as quantita,\n" +
-		"       sd.unita_di_misura as unitaDiMisura,\n" +
-		"       sd.eseguito as eseguito,\n" +
-		"       sd.escluso as escluso,\n" +
-		"       sg.data_creazione as dataCreazione,\n" +
-		"       sg.data_fine as dataFine,\n" +
-		"       sg.tipologia_aggiunta as tipologiaAggiunta\n" +
-		"FROM galvanica.storico_dettaglio sd\n" +
-		"left JOIN storico_generale sg on sg.id_storico = sd.storico_generale_id_storico\n" +
-		"left join bagno b on sg.bagno_id_bagno = b.id_bagno\n" +
-		"left join prodotto p on sd.prodotto_id_prodotto = p.id_prodotto\n" +
-		"limit ?1", nativeQuery = true)
-	List<StoricoTotaleDto> listaStoricoSemplificato(int limite);
+    @Query(value = """
+            select sg.id_storico as idStoricoGenerale,
+                   sd.id_storico_dettaglio as idStoricoDettaglio,
+                   sg.bagno_id_bagno as idBagno,
+                   b.nome as nomeBagno,
+                   sd.prodotto_id_prodotto as idProdotto,
+                   p.nome as nomeProdotto,
+                   sd.quantita as quantita,
+                   sd.unita_di_misura as unitaDiMisura,
+                   sd.eseguito_dettaglio as eseguito,
+                   sd.annullato_dettaglio as escluso,
+                   sg.data_creazione as dataCreazione,
+                   sg.data_esecuzione as dataFine,
+                   sg.tipologia_aggiunta as tipologiaAggiunta
+            FROM galvanica.storico_dettaglio sd
+                left JOIN storico_generale sg on sg.id_storico = sd.storico_generale_id_storico
+                left join bagno b on sg.bagno_id_bagno = b.id_bagno
+                left join prodotto p on sd.prodotto_id_prodotto = p.id_prodotto
+            limit ?1""",
+            nativeQuery = true)
+    List<StoricoTotaleDto> listaStoricoSemplificato(int limite);
+
+    @Query(value = """
+            SELECT
+                *
+            FROM
+                storico_dettaglio sd
+            JOIN galvanica.storico_generale sg on sg.id_storico = sd.storico_generale_id_storico
+            WHERE
+                sg.bagno_id_bagno = :idBagno
+              AND NOT sd.annullato_dettaglio
+              AND NOT sd.eseguito_dettaglio
+            ORDER BY sg.data_creazione DESC""", nativeQuery = true)
+    List<StoricoDettaglio> listaStoriciDettagliDaEseguireByBagno(Long idBagno);
 
     List<StoricoDettaglio> findByStoricoGeneraleIdStorico(Long idStoricoGenerale);
 }
