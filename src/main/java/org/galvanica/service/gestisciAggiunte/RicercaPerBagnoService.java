@@ -15,7 +15,9 @@ import org.galvanica.service.operazioniBagno.StoriciAnnullaOConcludiService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.galvanica.math.ConvertitoreUnitaMisura.convertiQuantitaGenerico;
 import static org.galvanica.math.ConvertitoreUnitaMisura.convertiUnitaMisuraPerDto;
@@ -57,8 +59,47 @@ public class RicercaPerBagnoService {
         return lista;
     }
 
-    public List<StoricoTotaleGroupDto> mostraAggiunteDaGestireGroupByBagno() {
-        return null;
+    public List<StoricoTotaleGroupDto> mostraAggiunteDaGestireGroupByBagno(
+            Long idBagno) {
+        List<StoricoDettaglio> storicoDettaglioList =
+                storicoDettaglioRepository.listaStoriciDettagliDaGestireByBagno(
+                        idBagno);
+        if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
+            return new ArrayList<>();
+        }
+        Map<Long, StoricoTotaleGroupDto> mappa = new HashMap<>();
+        for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
+            Long key = storicoDettaglio.getProdotto().getIdProdotto();
+            if (mappa.containsKey(key)) {
+                Double quantitaProdotto = mappa.get(key).getQuantitaProdotto()
+                        + storicoDettaglio.getQuantita();
+                mappa.get(key).setQuantitaProdotto(quantitaProdotto);
+
+                mappa.get(key)
+                        .getIdStoricoDettaglioList()
+                        .add(storicoDettaglio.getIdStoricoDettaglio());
+            }
+            if (!mappa.containsKey(key)) {
+                mappa.put(storicoDettaglio.getProdotto()
+                                .getIdProdotto(),
+                        storicoTotaleGroupDtoBuilder(storicoDettaglio));
+            }
+        }
+        for (StoricoTotaleGroupDto storico : mappa.values()) {
+
+            UnitaDiMisura unitaDiMisura = convertiUnitaMisuraPerDto(
+                    (int) Math.round(storico.getQuantitaProdotto()),
+                    storico.getUnitaDiMisura().isSonoVolume());
+            Double quantita = convertiQuantitaGenerico(
+                    storico.getQuantitaProdotto(),
+                    storico.getUnitaDiMisura(),
+                    unitaDiMisura);
+            mappa.get(storico.getIdProdotto()).setQuantitaProdotto(quantita);
+            mappa.get(storico.getIdProdotto()).setUnitaDiMisura(unitaDiMisura);
+
+        }
+
+        return new ArrayList<>(mappa.values());
     }
 
     public void eseguiListaAggiunte(List<Long> idDettaglioList) {
@@ -140,6 +181,26 @@ public class RicercaPerBagnoService {
                 .annullatoDettaglio(dettaglio.getAnnullatoDettaglio())
                 .noteStoricoGenerale(generale.getNote())
                 .dataCreazione(generale.getDataCreazione())
+                .build();
+    }
+
+    private StoricoTotaleGroupDto storicoTotaleGroupDtoBuilder(
+            StoricoDettaglio dettaglio) {
+        List<Long> idStoricoDettaglioList = new ArrayList<>();
+        idStoricoDettaglioList.add(dettaglio.getIdStoricoDettaglio());
+
+        return StoricoTotaleGroupDto.builder()
+                .idBagno(dettaglio.getStoricoGenerale().getBagno().getIdBagno())
+                .nomeBagno(dettaglio.getStoricoGenerale().getBagno().getNome())
+                .idAlimentazione(dettaglio.getStoricoGenerale().getAlimentazione()
+                        .getIdAlimentazione())
+                .tipologiaAggiunta(dettaglio.getStoricoGenerale()
+                        .getTipologiaAggiunta())
+                .idProdotto(dettaglio.getProdotto().getIdProdotto())
+                .nomeProdotto(dettaglio.getProdotto().getNome())
+                .quantitaProdotto((double) dettaglio.getQuantita())
+                .unitaDiMisura(dettaglio.getUnitaDiMisura())
+                .idStoricoDettaglioList(idStoricoDettaglioList)
                 .build();
     }
 

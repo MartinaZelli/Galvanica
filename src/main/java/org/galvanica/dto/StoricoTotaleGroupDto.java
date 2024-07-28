@@ -12,5 +12,4 @@ import java.util.List;
 public class StoricoTotaleGroupDto extends StoricoTotaleDto {
 
     private List<Long> idStoricoDettaglioList;
-
 }
