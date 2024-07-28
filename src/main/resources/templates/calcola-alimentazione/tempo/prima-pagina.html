@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="it"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main_layout}">
+
+<head>
+    <title>Aggiunta a scatti</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">Seleziona la data di controllo</div>
+        <div class="card-body">
+            <form hx-post="/calcola-alimentazione/tempo" hx-target="#data" hx-swap="innerHTML" hx-ext="json-enc">
+                <div class="form-row">
+                    <div class="form-group col-md-10">
+                        <label for="dataControllo">Data controllo</label>
+                        <input class="form-control"
+                               type="date"
+                               name="dataControllo"
+                               id="dataControllo"
+                               placeholder="Data controllo"/>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <button type="submit" class="btn btn-primary">Calcola</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="card shadow">
+        <div class="card-header py-3">Risultato</div>
+        <div class="card-body" id="data">
+
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
