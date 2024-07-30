@@ -12,19 +12,38 @@
      th:each="risposta: ${rispostaATempoList}">
     <div class="card-header py-3" th:text="${risposta.getNomeBagno()}"></div>
     <div class="card-body">
-        <div>idBagno <span th:text="${risposta.getIdBagno()}"></span></div>
-        <div>rispostaCalcoloFront <span
-                th:text="${risposta.getRispostaCalcoloFront()}"></span></div>
-        <div>dataControlloTempo <span
-                th:text="${risposta.getDataControlloTempo()}"></span></div>
-        <div>dataControlloPrecedente <span
-                th:text="${risposta.getDataControlloPrecedente()}"></span></div>
-        <div>numeroDiAggiunteCalcolate <span
-                th:text="${risposta.getNumeroDiAggiunteCalcolate()}"></span></div>
-        <div>idStoricoGeneraleList <span
-                th:text="${risposta.getIdStoricoGeneraleList()}"></span></div>
-        <div>idStoricoDettaglioList <span
-                th:text="${risposta.getIdStoricoDettaglioList()}"></span></div>
+
+
+        <div class="row">
+            <div class="col-sm">
+                <div th:text="${risposta.getRispostaCalcoloFront()}"></div>
+                <div>Data Controllo: <span
+                        th:text="${risposta.getDataControlloTempo()}"></span></div>
+                <div>Data Ultimo Controllo: <span
+                        th:text="${risposta.getDataControlloPrecedente()}"></span></div>
+                <div>Numero di Aggiunte: <span
+                        th:text="${risposta.getNumeroDiAggiunteCalcolate()}"></span></div>
+            </div>
+            <div class="col-sm">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Prodotto</th>
+                        <th>Quantità</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="dettaglio: ${risposta.getDettaglioList()}">
+                        <td th:text="${dettaglio.getNomeProdotto()}"></td>
+                        <td>
+                            <span th:text="${dettaglio.getQuantita()}"></span>
+                            <span th:text="${dettaglio.getUnitaDiMisura()}"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 </body>
