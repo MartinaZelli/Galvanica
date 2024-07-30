@@ -7,18 +7,24 @@
 </head>
 
 <body>
-<div th:fragment="bagnoCard">
-    <div th:each="risposta: ${rispostaATempoList}">
 
-
-        <div>nomeBagno <span th:text="${risposta.getNomeBagno()}"></span></div>
+<div class="card shadow mb-4" th:fragment="bagnoCard"
+     th:each="risposta: ${rispostaATempoList}">
+    <div class="card-header py-3" th:text="${risposta.getNomeBagno()}"></div>
+    <div class="card-body">
         <div>idBagno <span th:text="${risposta.getIdBagno()}"></span></div>
-        <div>rispostaCalcoloFront <span th:text="${risposta.getRispostaCalcoloFront()}"></span></div>
-        <div>dataControlloTempo <span th:text="${risposta.getDataControlloTempo()}"></span></div>
-        <div>dataControlloPrecedente <span th:text="${risposta.getDataControlloPrecedente()}"></span></div>
-        <div>numeroDiAggiunteCalcolate <span th:text="${risposta.getNumeroDiAggiunteCalcolate()}"></span></div>
-        <div>idStoricoGeneraleList <span th:text="${risposta.getIdStoricoGeneraleList()}"></span></div>
-        <div>idStoricoDettaglioList <span th:text="${risposta.getIdStoricoDettaglioList()}"></span></div>
+        <div>rispostaCalcoloFront <span
+                th:text="${risposta.getRispostaCalcoloFront()}"></span></div>
+        <div>dataControlloTempo <span
+                th:text="${risposta.getDataControlloTempo()}"></span></div>
+        <div>dataControlloPrecedente <span
+                th:text="${risposta.getDataControlloPrecedente()}"></span></div>
+        <div>numeroDiAggiunteCalcolate <span
+                th:text="${risposta.getNumeroDiAggiunteCalcolate()}"></span></div>
+        <div>idStoricoGeneraleList <span
+                th:text="${risposta.getIdStoricoGeneraleList()}"></span></div>
+        <div>idStoricoDettaglioList <span
+                th:text="${risposta.getIdStoricoDettaglioList()}"></span></div>
     </div>
 </div>
 </body>
