@@ -95,13 +95,15 @@ public class AlimentazioneATempoService {
     public List<Long> calcolaAlimentazione(Long idBagno, LocalDate dataControllo) {
         calcolaAlimentazioneControlliApprovati(idBagno);
         LocalDate dataUltimoStorico = dataControllo;
-        StoricoGenerale storicoGeneraleTempoLast =
+        StoricoGenerale ultimoStorico =
                 storicoGeneraleRepository.ultimoStoricoGeneraleATempo(idBagno);
 
-        if (storicoGeneraleTempoLast != null) {
-            if (storicoGeneraleTempoLast.getDataControlloTempo()
+        if (ultimoStorico != null) {
+            //controllo per evitare la creazione di millemila storici in caso
+            // la data dell'ultimo storico sia molto precedente alla data controllo
+            if (ultimoStorico.getDataControlloTempo()
                     .isAfter(dataControllo.minusDays(8))) {
-                dataUltimoStorico = storicoGeneraleTempoLast.getDataControlloTempo();
+                dataUltimoStorico = ultimoStorico.getDataControlloTempo();
             }
         }
         if (dataControllo.plusDays(1).isBefore(dataUltimoStorico)) {
