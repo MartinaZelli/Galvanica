@@ -35,7 +35,7 @@ public interface StoricoGeneraleRepository extends CrudRepository<StoricoGeneral
             ORDER BY data_creazione DESC
             LIMIT 1
             """, nativeQuery = true)
-    StoricoGenerale storicoGeneraleTempoLast(Long idBagno);
+    StoricoGenerale ultimoStoricoGeneraleATempo(Long idBagno);
 
     @Query(value = """
             SELECT
