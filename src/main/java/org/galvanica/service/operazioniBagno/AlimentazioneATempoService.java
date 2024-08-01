@@ -1,7 +1,5 @@
 package org.galvanica.service.operazioniBagno;
 
-import org.galvanica.dto.StoricoTotaleGroupDto;
-import org.galvanica.dto.StoricoTotaleSingoloDto;
 import org.galvanica.dto.risposta.RispostaDettaglio;
 import org.galvanica.dto.risposta.tempo.RispostaTempoGenerale;
 import org.galvanica.math.TipologiaAggiunta;
@@ -15,7 +13,11 @@ import org.galvanica.service.CRUD.BagnoService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.galvanica.math.ConvertitoreUnitaMisura.convertiQuantitaGenerico;
@@ -46,23 +48,6 @@ public class AlimentazioneATempoService {
         this.bagnoRepository = bagnoRepository;
     }
 
-    public List<RispostaTempoGenerale> calcolaRispostaList(List<Long> idBagnoList,
-                                                           LocalDate dataControllo) {
-        List<RispostaTempoGenerale> rispostaTempoGeneraleList = new ArrayList<>();
-        for (Long id : idBagnoList) {
-            Bagno bagno = bagnoService.modelRicercaId(id);
-            if (bagno
-                    .getAlimentazioneList()
-                    .stream()
-                    .noneMatch(alimentazione -> alimentazione.getTempo() == null ||
-                            alimentazione.getTempo().isEmpty())) {
-                continue;
-            }
-            rispostaTempoGeneraleList.add(creaRisposta(id, dataControllo));
-        }
-        return rispostaTempoGeneraleList;
-    }
-
     public List<RispostaTempoGenerale> calcolaRispostaList(LocalDate dataControllo) {
         List<RispostaTempoGenerale> rispostaTempoGeneraleList = new ArrayList<>();
         List<Bagno> bagnoList = bagnoRepository.findAllBagnoConAlimentazioneATempo();
@@ -78,9 +63,11 @@ public class AlimentazioneATempoService {
 
     public RispostaTempoGenerale creaRisposta(Long idBagno,
                                               LocalDate dataControllo) {
-        List<Long> listId = calcolaAlimentazione(idBagno, dataControllo);
+        List<Long> idStoricoGeneraleList = calcolaAlimentazione(idBagno,
+                dataControllo);
         StoricoGenerale ultimoStorico =
-                storicoGeneraleRepository.storicoATempoNonInLista(idBagno, listId);
+                storicoGeneraleRepository.storicoATempoNonInLista(idBagno,
+                        idStoricoGeneraleList);
         LocalDate dataUltimoStorico = LocalDate.of(2000, 1, 1);
         if (ultimoStorico != null) {
             dataUltimoStorico = ultimoStorico.getDataControlloTempo();
@@ -88,40 +75,40 @@ public class AlimentazioneATempoService {
 
         return rispostaTempoBuilder(dataControllo,
                 dataUltimoStorico,
-                listId,
+                idStoricoGeneraleList,
                 idBagno);
     }
 
     public List<Long> calcolaAlimentazione(Long idBagno, LocalDate dataControllo) {
         calcolaAlimentazioneControlliApprovati(idBagno);
-        LocalDate dataUltimoStorico = dataControllo;
+
         StoricoGenerale ultimoStorico =
                 storicoGeneraleRepository.ultimoStoricoGeneraleATempo(idBagno);
+        LocalDate dataInizioControllo =
+                ultimoStorico.getDataControlloTempo().plusDays(1);
 
-        if (ultimoStorico != null) {
-            //controllo per evitare la creazione di millemila storici in caso
-            // la data dell'ultimo storico sia molto precedente alla data controllo
-            if (ultimoStorico.getDataControlloTempo()
-                    .isAfter(dataControllo.minusDays(8))) {
-                dataUltimoStorico = ultimoStorico.getDataControlloTempo();
-            }
-        }
-        if (dataControllo.plusDays(1).isBefore(dataUltimoStorico)) {
+        if (dataInizioControllo.isAfter(dataControllo)) {
             throw new RuntimeException("le alimentazioni fino alla data " +
                     dataControllo +
                     " sono già state eseguite." +
-                    "riprendere da dopo la data " +
-                    dataUltimoStorico);
+                    "riprendere dalla la data " +
+                    dataInizioControllo);
         }
 
         List<Long> idList = new ArrayList<>();
+        //creazione di uno stream tipo ciclo for per date.
+
+        long daysBetween = ChronoUnit.DAYS.between(dataInizioControllo,
+                dataControllo);
         Stream<LocalDate> date = Stream
-                .iterate(dataUltimoStorico, data -> data.plusDays(1))
-                .limit(dataControllo.plusDays(1).compareTo(dataUltimoStorico));
+                .iterate(dataInizioControllo, data -> data.plusDays(1))
+                .limit(daysBetween);
+
         date.forEach(data -> {
+            String dayOfWeek = (data.getDayOfWeek().name());
             List<Alimentazione> alimentazioneList =
                     alimentazioneRepository.findByTempo(idBagno,
-                            data.getDayOfWeek().name());
+                            (dayOfWeek));
             if (alimentazioneList == null || alimentazioneList.isEmpty()) {
                 return;
             }
@@ -154,121 +141,6 @@ public class AlimentazioneATempoService {
                     .build());
         }
         return storicoGenerale.getIdStorico();
-    }
-
-    public List<StoricoTotaleSingoloDto> calcolaAggiunteStoricoPerIdBagnoDaDataAData(
-            Long idBagno,
-            LocalDate dataFrom,
-            LocalDate dataTo) {
-        calcolaAlimentazioneControlliApprovati(idBagno);
-
-        List<StoricoGenerale> storicoGeneraleListDaEseguire =
-                storicoGeneraleRepository.storicoGeneraleDescList(false,
-                        idBagno,
-                        TipologiaAggiunta.TEMPO);
-
-        List<StoricoDettaglio> storicoDettaglioList = storicoGeneraleListDaEseguire
-                .stream()
-                .filter(storicoGenerale -> storicoGenerale.getStoricoDettaglioList() != null &&
-                        !storicoGenerale.getStoricoDettaglioList().isEmpty())
-                .filter(s -> s.getDataControlloTempo()
-                        .isAfter(dataFrom.minusDays(1)) &&
-                        s.getDataControlloTempo().isBefore(dataTo.plusDays(1)))
-                .map(StoricoGenerale::getStoricoDettaglioList)
-                .flatMap(Collection::parallelStream)
-                .filter(storicoDettaglio -> !storicoDettaglio.getEseguitoDettaglio() &&
-                        !storicoDettaglio.getAnnullatoDettaglio())
-                .toList();
-        List<StoricoTotaleSingoloDto> storicoTotaleSingoloDtoList = new ArrayList<>();
-        for (StoricoDettaglio dettaglio : storicoDettaglioList) {
-            storicoTotaleSingoloDtoList.add(buildPerSingolo(dettaglio));
-        }
-        return storicoTotaleSingoloDtoList;
-    }
-
-    private StoricoTotaleSingoloDto buildPerSingolo(StoricoDettaglio dettaglio) {
-        UnitaDiMisura unitaDiMisura = convertiUnitaMisuraPerDto(dettaglio.getQuantita(),
-                dettaglio.getUnitaDiMisura().isSonoVolume());
-        Double quantita = convertiQuantitaGenerico(Double.valueOf(dettaglio.getQuantita()),
-                dettaglio.getUnitaDiMisura(),
-                unitaDiMisura);
-        return StoricoTotaleSingoloDto
-                .builder()
-                .idStoricoDettaglio(dettaglio.getIdStoricoDettaglio())
-                .idStoricoGenerale(dettaglio.getStoricoGenerale().getIdStorico())
-                .idBagno(dettaglio.getStoricoGenerale().getBagno().getIdBagno())
-                .nomeBagno(dettaglio.getStoricoGenerale().getBagno().getNome())
-                .quantitaProdotto(quantita)
-                .unitaDiMisura(unitaDiMisura)
-                .idProdotto(dettaglio.getProdotto().getIdProdotto())
-                .nomeProdotto(dettaglio.getProdotto().getNome())
-                .idAlimentazione(dettaglio.getStoricoGenerale()
-                        .getAlimentazione()
-                        .getIdAlimentazione())
-                .dataControlloTempo(dettaglio.getStoricoGenerale()
-                        .getDataControlloTempo())
-                .tipologiaAggiunta(dettaglio.getStoricoGenerale()
-                        .getTipologiaAggiunta())
-                .noteStoricoGenerale(dettaglio.getStoricoGenerale().getNote())
-                .dataCreazione(dettaglio.getStoricoGenerale().getDataCreazione())
-                .build();
-    }
-
-    public List<StoricoTotaleGroupDto> calcolaAggiunteStoricoPerIdBagno(
-            Long idBagno) {
-        calcolaAlimentazioneControlliApprovati(idBagno);
-
-        Map<Long, StoricoTotaleGroupDto> mappa = new HashMap<>();
-        List<StoricoGenerale> storicoGeneraleListDaEseguire =
-                storicoGeneraleRepository.storicoGeneraleDescList(false,
-                        idBagno,
-                        TipologiaAggiunta.TEMPO);
-
-        List<StoricoDettaglio> storicoDettaglioList = storicoGeneraleListDaEseguire
-                .stream()
-                .filter(storicoGenerale -> storicoGenerale.getStoricoDettaglioList() != null &&
-                        !storicoGenerale.getStoricoDettaglioList().isEmpty())
-                .map(StoricoGenerale::getStoricoDettaglioList)
-                .flatMap(Collection::parallelStream)
-                .filter(storicoDettaglio -> !storicoDettaglio.getEseguitoDettaglio() &&
-                        !storicoDettaglio.getAnnullatoDettaglio())
-                .toList();
-
-        for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
-            if (mappa.containsKey(storicoDettaglio.getProdotto().getIdProdotto())) {
-                Long key = storicoDettaglio.getProdotto().getIdProdotto();
-                Double quantitaProdotto =
-                        mappa.get(key)
-                                .getQuantitaProdotto() + storicoDettaglio.getQuantita();
-
-                mappa.get(key).setQuantitaProdotto(quantitaProdotto);
-
-                mappa
-                        .get(key)
-                        .getIdStoricoDettaglioList()
-                        .add(storicoDettaglio.getIdStoricoDettaglio());
-            }
-            if (!mappa.containsKey(storicoDettaglio.getProdotto().getIdProdotto())) {
-                mappa.put(storicoDettaglio.getProdotto().getIdProdotto(),
-                        buildPerGroup(storicoDettaglio));
-            }
-        }
-        for (StoricoTotaleGroupDto storico : mappa.values()) {
-
-            UnitaDiMisura unitaDiMisura =
-                    convertiUnitaMisuraPerDto((int) Math.round(storico.getQuantitaProdotto()),
-                            storico.getUnitaDiMisura().isSonoVolume());
-            Double quantita = convertiQuantitaGenerico(storico.getQuantitaProdotto(),
-                    storico.getUnitaDiMisura(),
-                    unitaDiMisura);
-            mappa.get(storico.getIdProdotto()).setQuantitaProdotto(quantita);
-            mappa.get(storico.getIdProdotto()).setUnitaDiMisura(unitaDiMisura);
-
-            String messaggio = "Queste sono tutte le aggiunte non ancora effettuate per il bagno.";
-            mappa.get(storico.getIdProdotto()).setRispostaCalcoloFront(messaggio);
-        }
-
-        return new ArrayList<>(mappa.values());
     }
 
     private RispostaTempoGenerale rispostaTempoBuilder(LocalDate dataControllo,
@@ -339,8 +211,21 @@ public class AlimentazioneATempoService {
 
         return risposta;
 
-
     }
+
+    private void calcolaAlimentazioneControlliApprovati(Long idBagno) {
+        // todo:impostare i controlli a monte di tutti i metodi
+        Bagno bagno = bagnoService.modelRicercaId(idBagno);
+        if (bagno
+                .getAlimentazioneList()
+                .stream()
+                .noneMatch(alimentazione -> alimentazione.getTempo() == null ||
+                        alimentazione.getTempo().isEmpty())) {
+            throw new RuntimeException(
+                    "Alimentazione a scatti non trovata per bagno " + idBagno);
+        }
+    }
+    /*
 
     private StoricoTotaleGroupDto buildPerGroup(StoricoDettaglio dettaglio) {
         List<Long> idStoricoDettaglioList = new ArrayList<>();
@@ -363,17 +248,139 @@ public class AlimentazioneATempoService {
                 .build();
     }
 
-    private void calcolaAlimentazioneControlliApprovati(Long idBagno) {
-        // todo:impostare i controlli a monte di tutti i metodi
-        Bagno bagno = bagnoService.modelRicercaId(idBagno);
-        if (bagno
-                .getAlimentazioneList()
-                .stream()
-                .noneMatch(alimentazione -> alimentazione.getTempo() == null ||
-                        alimentazione.getTempo().isEmpty())) {
-            throw new RuntimeException(
-                    "Alimentazione a scatti non trovata per bagno " + idBagno);
-        }
+
+
+    private StoricoTotaleSingoloDto buildPerSingolo(StoricoDettaglio dettaglio) {
+        UnitaDiMisura unitaDiMisura = convertiUnitaMisuraPerDto(dettaglio.getQuantita(),
+                dettaglio.getUnitaDiMisura().isSonoVolume());
+        Double quantita = convertiQuantitaGenerico(Double.valueOf(dettaglio.getQuantita()),
+                dettaglio.getUnitaDiMisura(),
+                unitaDiMisura);
+        return StoricoTotaleSingoloDto
+                .builder()
+                .idStoricoDettaglio(dettaglio.getIdStoricoDettaglio())
+                .idStoricoGenerale(dettaglio.getStoricoGenerale().getIdStorico())
+                .idBagno(dettaglio.getStoricoGenerale().getBagno().getIdBagno())
+                .nomeBagno(dettaglio.getStoricoGenerale().getBagno().getNome())
+                .quantitaProdotto(quantita)
+                .unitaDiMisura(unitaDiMisura)
+                .idProdotto(dettaglio.getProdotto().getIdProdotto())
+                .nomeProdotto(dettaglio.getProdotto().getNome())
+                .idAlimentazione(dettaglio.getStoricoGenerale()
+                        .getAlimentazione()
+                        .getIdAlimentazione())
+                .dataControlloTempo(dettaglio.getStoricoGenerale()
+                        .getDataControlloTempo())
+                .tipologiaAggiunta(dettaglio.getStoricoGenerale()
+                        .getTipologiaAggiunta())
+                .noteStoricoGenerale(dettaglio.getStoricoGenerale().getNote())
+                .dataCreazione(dettaglio.getStoricoGenerale().getDataCreazione())
+                .build();
     }
+
+    public List<StoricoTotaleSingoloDto> calcolaAggiunteStoricoPerIdBagnoDaDataAData(
+            Long idBagno,
+            LocalDate dataFrom,
+            LocalDate dataTo) {
+        calcolaAlimentazioneControlliApprovati(idBagno);
+
+        List<StoricoGenerale> storicoGeneraleListDaEseguire =
+                storicoGeneraleRepository.storicoGeneraleDescList(false,
+                        idBagno,
+                        TipologiaAggiunta.TEMPO);
+
+        List<StoricoDettaglio> storicoDettaglioList = storicoGeneraleListDaEseguire
+                .stream()
+                .filter(storicoGenerale -> storicoGenerale.getStoricoDettaglioList() != null &&
+                        !storicoGenerale.getStoricoDettaglioList().isEmpty())
+                .filter(s -> s.getDataControlloTempo()
+                        .isAfter(dataFrom.minusDays(1)) &&
+                        s.getDataControlloTempo().isBefore(dataTo.plusDays(1)))
+                .map(StoricoGenerale::getStoricoDettaglioList)
+                .flatMap(Collection::parallelStream)
+                .filter(storicoDettaglio -> !storicoDettaglio.getEseguitoDettaglio() &&
+                        !storicoDettaglio.getAnnullatoDettaglio())
+                .toList();
+        List<StoricoTotaleSingoloDto> storicoTotaleSingoloDtoList = new ArrayList<>();
+        for (StoricoDettaglio dettaglio : storicoDettaglioList) {
+            storicoTotaleSingoloDtoList.add(buildPerSingolo(dettaglio));
+        }
+        return storicoTotaleSingoloDtoList;
+    }
+
+    public List<StoricoTotaleGroupDto> calcolaAggiunteStoricoPerIdBagno(
+            Long idBagno) {
+        calcolaAlimentazioneControlliApprovati(idBagno);
+
+        Map<Long, StoricoTotaleGroupDto> mappa = new HashMap<>();
+        List<StoricoGenerale> storicoGeneraleListDaEseguire =
+                storicoGeneraleRepository.storicoGeneraleDescList(false,
+                        idBagno,
+                        TipologiaAggiunta.TEMPO);
+
+        List<StoricoDettaglio> storicoDettaglioList = storicoGeneraleListDaEseguire
+                .stream()
+                .filter(storicoGenerale -> storicoGenerale.getStoricoDettaglioList() != null &&
+                        !storicoGenerale.getStoricoDettaglioList().isEmpty())
+                .map(StoricoGenerale::getStoricoDettaglioList)
+                .flatMap(Collection::parallelStream)
+                .filter(storicoDettaglio -> !storicoDettaglio.getEseguitoDettaglio() &&
+                        !storicoDettaglio.getAnnullatoDettaglio())
+                .toList();
+
+        for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
+            if (mappa.containsKey(storicoDettaglio.getProdotto().getIdProdotto())) {
+                Long key = storicoDettaglio.getProdotto().getIdProdotto();
+                Double quantitaProdotto =
+                        mappa.get(key)
+                                .getQuantitaProdotto() + storicoDettaglio.getQuantita();
+
+                mappa.get(key).setQuantitaProdotto(quantitaProdotto);
+
+                mappa
+                        .get(key)
+                        .getIdStoricoDettaglioList()
+                        .add(storicoDettaglio.getIdStoricoDettaglio());
+            }
+            if (!mappa.containsKey(storicoDettaglio.getProdotto().getIdProdotto())) {
+                mappa.put(storicoDettaglio.getProdotto().getIdProdotto(),
+                        buildPerGroup(storicoDettaglio));
+            }
+        }
+        for (StoricoTotaleGroupDto storico : mappa.values()) {
+
+            UnitaDiMisura unitaDiMisura =
+                    convertiUnitaMisuraPerDto((int) Math.round(storico.getQuantitaProdotto()),
+                            storico.getUnitaDiMisura().isSonoVolume());
+            Double quantita = convertiQuantitaGenerico(storico.getQuantitaProdotto(),
+                    storico.getUnitaDiMisura(),
+                    unitaDiMisura);
+            mappa.get(storico.getIdProdotto()).setQuantitaProdotto(quantita);
+            mappa.get(storico.getIdProdotto()).setUnitaDiMisura(unitaDiMisura);
+
+            String messaggio = "Queste sono tutte le aggiunte non ancora effettuate per il bagno.";
+            mappa.get(storico.getIdProdotto()).setRispostaCalcoloFront(messaggio);
+        }
+
+        return new ArrayList<>(mappa.values());
+    }
+
+    public List<RispostaTempoGenerale> calcolaRispostaList(List<Long> idBagnoList,
+                                                           LocalDate dataControllo) {
+        List<RispostaTempoGenerale> rispostaTempoGeneraleList = new ArrayList<>();
+        for (Long id : idBagnoList) {
+            Bagno bagno = bagnoService.modelRicercaId(id);
+            if (bagno
+                    .getAlimentazioneList()
+                    .stream()
+                    .noneMatch(alimentazione -> alimentazione.getTempo() == null ||
+                            alimentazione.getTempo().isEmpty())) {
+                continue;
+            }
+            rispostaTempoGeneraleList.add(creaRisposta(id, dataControllo));
+        }
+        return rispostaTempoGeneraleList;
+    }
+     */
 
 }
