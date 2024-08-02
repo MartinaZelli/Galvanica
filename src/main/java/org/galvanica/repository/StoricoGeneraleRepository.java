@@ -30,8 +30,9 @@ public interface StoricoGeneraleRepository extends CrudRepository<StoricoGeneral
             FROM storico_generale
             WHERE
                 bagno_id_bagno = ?1
-              AND tipologia_aggiunta like 'TEMPO'
-              AND not annullato_generale
+                    AND tipologia_aggiunta = 'TEMPO'
+                    AND  (not annullato_generale OR
+                annullato_generale IS NULL)
             ORDER BY data_creazione DESC
             LIMIT 1
             """, nativeQuery = true)

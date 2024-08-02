@@ -13,12 +13,10 @@ import org.galvanica.service.CRUD.BagnoService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import static org.galvanica.math.ConvertitoreUnitaMisura.convertiQuantitaGenerico;
 import static org.galvanica.math.ConvertitoreUnitaMisura.convertiUnitaMisuraPerDto;
@@ -85,9 +83,10 @@ public class AlimentazioneATempoService {
         StoricoGenerale ultimoStorico =
                 storicoGeneraleRepository.ultimoStoricoGeneraleATempo(idBagno);
         LocalDate dataInizioControllo =
-                ultimoStorico.getDataControlloTempo().plusDays(1);
+                ultimoStorico.getDataControlloTempo();
 
-        if (dataInizioControllo.isAfter(dataControllo)) {
+        if (dataInizioControllo.isAfter(dataControllo) || dataInizioControllo.isEqual(
+                dataControllo)) {
             throw new RuntimeException("le alimentazioni fino alla data " +
                     dataControllo +
                     " sono già state eseguite." +
@@ -98,25 +97,20 @@ public class AlimentazioneATempoService {
         List<Long> idList = new ArrayList<>();
         //creazione di uno stream tipo ciclo for per date.
 
-        long daysBetween = ChronoUnit.DAYS.between(dataInizioControllo,
-                dataControllo);
-        Stream<LocalDate> date = Stream
-                .iterate(dataInizioControllo, data -> data.plusDays(1))
-                .limit(daysBetween);
-
-        date.forEach(data -> {
-            String dayOfWeek = (data.getDayOfWeek().name());
+        for (LocalDate day = dataInizioControllo.plusDays(1);
+             day.isBefore(dataControllo) || day.isEqual(dataControllo);
+             day = day.plusDays(1)) {
+            String dayOfWeek = (day.getDayOfWeek().name());
             List<Alimentazione> alimentazioneList =
-                    alimentazioneRepository.findByTempo(idBagno,
-                            (dayOfWeek));
+                    alimentazioneRepository.findByTempo(idBagno, (dayOfWeek));
             if (alimentazioneList == null || alimentazioneList.isEmpty()) {
-                return;
+                continue;
             }
             for (Alimentazione alimentazione : alimentazioneList) {
-                Long id = creaStorico(alimentazione, data);
+                Long id = creaStorico(alimentazione, day);
                 idList.add(id);
             }
-        });
+        }
         return idList;
     }
 
