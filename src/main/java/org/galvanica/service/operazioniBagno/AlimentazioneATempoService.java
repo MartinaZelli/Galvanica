@@ -66,10 +66,7 @@ public class AlimentazioneATempoService {
         StoricoGenerale ultimoStorico =
                 storicoGeneraleRepository.storicoATempoNonInLista(idBagno,
                         idStoricoGeneraleList);
-        LocalDate dataUltimoStorico = LocalDate.of(2000, 1, 1);
-        if (ultimoStorico != null) {
-            dataUltimoStorico = ultimoStorico.getDataControlloTempo();
-        }
+        LocalDate dataUltimoStorico = ultimoStorico.getDataControlloTempo();
 
         return rispostaTempoBuilder(dataControllo,
                 dataUltimoStorico,
@@ -175,30 +172,30 @@ public class AlimentazioneATempoService {
             for (StoricoDettaglio dettaglio : storicoDettaglioList) {
                 idStoricoDettaglioList.add(dettaglio.getIdStoricoDettaglio());
                 Prodotto key = dettaglio.getProdotto();
-                mappa.put(key, mappa.getOrDefault(key, 0) + dettaglio.getQuantita());
+                mappa.merge(key, dettaglio.getQuantita(), Integer::sum);
             }
-            for (Map.Entry<Prodotto, Integer> entry : mappa.entrySet()) {
-                if (entry.getValue() == null) {
-                    continue;
-                }
-                UnitaDiMisura unitaDto =
-                        convertiUnitaMisuraPerDto(entry.getValue(),
-                                entry.getKey().getSonoVolume());
-                UnitaDiMisura unitaDb = UnitaDiMisura.MG;
-                if (entry.getKey().getSonoVolume()) {
-                    unitaDb = UnitaDiMisura.ML;
-                }
-                Double quantita = convertiQuantitaGenerico(entry.getValue(),
-                        unitaDb,
-                        unitaDto);
-                RispostaDettaglio rispostaDettaglio = RispostaDettaglio
-                        .builder()
-                        .quantitaProdotto(quantita)
-                        .unitaDiMisura(unitaDto)
-                        .nomeProdotto(entry.getKey().getNome())
-                        .build();
-                rispostaDettaglioList.add(rispostaDettaglio);
+        }
+        for (Map.Entry<Prodotto, Integer> entry : mappa.entrySet()) {
+            if (entry.getValue() == null) {
+                continue;
             }
+            UnitaDiMisura unitaDto =
+                    convertiUnitaMisuraPerDto(entry.getValue(),
+                            entry.getKey().getSonoVolume());
+            UnitaDiMisura unitaDb = UnitaDiMisura.MG;
+            if (entry.getKey().getSonoVolume()) {
+                unitaDb = UnitaDiMisura.ML;
+            }
+            Double quantita = convertiQuantitaGenerico(entry.getValue(),
+                    unitaDb,
+                    unitaDto);
+            RispostaDettaglio rispostaDettaglio = RispostaDettaglio
+                    .builder()
+                    .quantitaProdotto(quantita)
+                    .unitaDiMisura(unitaDto)
+                    .nomeProdotto(entry.getKey().getNome())
+                    .build();
+            rispostaDettaglioList.add(rispostaDettaglio);
         }
         risposta.setDettaglioList(rispostaDettaglioList);
         risposta.setIdStoricoDettaglioList(idStoricoDettaglioList);

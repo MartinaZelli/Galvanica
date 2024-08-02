@@ -70,7 +70,8 @@ public interface StoricoGeneraleRepository extends CrudRepository<StoricoGeneral
             where
                 bagno_id_bagno = :idBagno
                 and tipologia_aggiunta = 'TEMPO'
-                and not annullato_generale
+                and (not annullato_generale OR
+                annullato_generale IS NULL)
                 and id_storico not in (:idStoricoList)
             ORDER BY
                 data_creazione DESC

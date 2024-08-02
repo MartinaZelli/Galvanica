@@ -10,6 +10,7 @@ import org.springframework.lang.NonNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@EqualsAndHashCode
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"nome"})})
 public class Prodotto {
     @Id
