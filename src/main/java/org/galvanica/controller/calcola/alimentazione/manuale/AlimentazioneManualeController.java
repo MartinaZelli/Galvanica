@@ -28,7 +28,7 @@ public class AlimentazioneManualeController {
 
 	@GetMapping("/bagno")
 	public String selezionaBagno(Model model, @RequestParam int bagnoId) {
-		//model.addAttribute("bagnoList", bagnoService.findAllBagno());
+		model.addAttribute("bagno", bagnoService.modelRicercaId(bagnoId));
 		System.out.println(bagnoId);
 		return "calcola-alimentazione/manuale/fragments :: bagnoSelect";
 	}

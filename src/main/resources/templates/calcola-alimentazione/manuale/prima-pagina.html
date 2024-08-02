@@ -9,23 +9,22 @@
 
 <body>
 <div layout:fragment="content">
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">Seleziona la data di controllo</div>
+    <div class="card shadow mb-4" id="mainCard">
+        <div class="card-header py-3">Alimentazione Manuale</div>
         <div class="card-body">
-            <div>
-                <label for="bagnoId">Bagno</label>
-                <select class="form-control"
-                        name="bagnoId"
-                        id="bagnoId"
-                        hx-trigger="change"
-                        hx-target="closest div"
-                        hx-get="/calcola-alimentazione/manuale/bagno">
-                    <option value="">Selezione un bagno</option>
-                    <option th:each="bagno : ${bagnoList}"
-                            th:value="${bagno.getIdBagno()}"
-                            th:text="${bagno.getNome()}"></option>
-                </select>
-            </div>
+            <label for="bagnoId">Bagno</label>
+            <select class="form-control"
+                    name="bagnoId"
+                    id="bagnoId"
+                    hx-trigger="change"
+                    hx-target="#mainCard"
+                    hx-swap="outerHTML"
+                    hx-get="/calcola-alimentazione/manuale/bagno">
+                <option value="">Selezione un bagno</option>
+                <option th:each="bagno : ${bagnoList}"
+                        th:value="${bagno.getIdBagno()}"
+                        th:text="${bagno.getNome()}"></option>
+            </select>
         </div>
     </div>
 </div>
