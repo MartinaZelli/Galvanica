@@ -51,7 +51,7 @@ VALUES (4, 'Tempo', NULL, 'FRIDAY', 2, b'0', 'TEMPO'),
        (202, 'Scatti', 1500, NULL, 52, b'1', 'SCATTI'),
        (203, 'Scatti', 500, NULL, 2, b'1', 'SCATTI');
 
--- Dump dei dati della tabella galvanica.alimentazione_seq: ~24 rows (circa)
+-- Dump dei dati della tabella galvanica.alimentazione_seq: ~28 rows (circa)
 REPLACE INTO `alimentazione_seq` (`next_val`)
 VALUES (301),
        (301),
@@ -83,34 +83,33 @@ VALUES (301),
        (301);
 
 -- Dump dei dati della tabella galvanica.bagno: ~24 rows (circa)
-REPLACE INTO `bagno` (`id_bagno`, `data_fine`, `data_inizio`, `litri`, `nome`,
-                      `resto_scatti`, `scatti_totali`)
-VALUES (1, NULL, '2024-05-02', 980, 'RAME ALCALINO 220 1', 4, 4),
-       (2, NULL, '2024-05-02', 980, 'RAME ALCALINO 220 2', 8, 8),
-       (3, NULL, '2024-05-02', 1380, 'RAME ACIDO 250 1', 109, 8109),
-       (4, NULL, '2024-05-02', 1380, 'RAME ACIDO 250 2', 16, 16),
-       (5, NULL, '2024-05-02', 1380, '3000', 21, 2021),
-       (6, NULL, '2024-05-02', 520, 'NICHELINOX', 24, 24),
-       (7, NULL, '2024-05-02', 520, 'PHOSBENT', 28, 28),
-       (8, NULL, '2024-05-02', 210, 'NICHEL WOOD', 0, 0),
-       (9, NULL, '2024-05-02', 520, 'BRINOX HT', 1716, 1716),
-       (10, NULL, '2024-05-02', 520, 'WHITEBRONZE HS 1', 30, 30),
-       (11, NULL, '2024-05-02', 520, 'WHITEBRONZE 2', 533, 533),
-       (12, NULL, '2024-05-02', 520, 'BRONZINOX 3', 36, 2536),
-       (13, NULL, '2024-05-02', 210, 'DORATURA MC0', 39, 39),
-       (14, NULL, '2024-05-02', 210, '720 PDFE', 42, 42),
-       (15, NULL, '2024-05-02', 210, '1811 PDNI', 45, 45),
-       (16, NULL, '2024-05-02', 210, '8698', 48, 48),
-       (17, NULL, '2024-05-02', 210, '8614', 51, 51),
-       (18, NULL, '2024-05-02', 210, '8693', 54, 54),
-       (19, NULL, '2024-05-02', 210, '8651', 57, 57),
-       (20, NULL, '2024-05-02', 210, '8670', 60, 60),
-       (21, NULL, '2024-05-02', 210, '223 CH', 63, 63),
-       (22, NULL, '2024-05-02', 210, '8618 NF', 66, 66),
-       (23, NULL, '2024-05-02', 210, 'GG0820', 69, 69),
-       (52, NULL, '2024-05-02', 210, 'BLACKCLAD', 156, 156);
+REPLACE INTO `bagno` (`id_bagno`, `data_fine`, `data_inizio`, `litri`, `nome`)
+VALUES (1, NULL, '2024-05-02', 980, 'RAME ALCALINO 220 1'),
+       (2, NULL, '2024-05-02', 980, 'RAME ALCALINO 220 2'),
+       (3, NULL, '2024-05-02', 1380, 'RAME ACIDO 250 1'),
+       (4, NULL, '2024-05-02', 1380, 'RAME ACIDO 250 2'),
+       (5, NULL, '2024-05-02', 1380, '3000'),
+       (6, NULL, '2024-05-02', 520, 'NICHELINOX'),
+       (7, NULL, '2024-05-02', 520, 'PHOSBENT'),
+       (8, NULL, '2024-05-02', 210, 'NICHEL WOOD'),
+       (9, NULL, '2024-05-02', 520, 'BRINOX HT'),
+       (10, NULL, '2024-05-02', 520, 'WHITEBRONZE HS 1'),
+       (11, NULL, '2024-05-02', 520, 'WHITEBRONZE 2'),
+       (12, NULL, '2024-05-02', 520, 'BRONZINOX 3'),
+       (13, NULL, '2024-05-02', 210, 'DORATURA MC0'),
+       (14, NULL, '2024-05-02', 210, '720 PDFE'),
+       (15, NULL, '2024-05-02', 210, '1811 PDNI'),
+       (16, NULL, '2024-05-02', 210, '8698'),
+       (17, NULL, '2024-05-02', 210, '8614'),
+       (18, NULL, '2024-05-02', 210, '8693'),
+       (19, NULL, '2024-05-02', 210, '8651'),
+       (20, NULL, '2024-05-02', 210, '8670'),
+       (21, NULL, '2024-05-02', 210, '223 CH'),
+       (22, NULL, '2024-05-02', 210, '8618 NF'),
+       (23, NULL, '2024-05-02', 210, 'GG0820'),
+       (52, NULL, '2024-05-02', 210, 'BLACKCLAD');
 
--- Dump dei dati della tabella galvanica.bagno_seq: ~24 rows (circa)
+-- Dump dei dati della tabella galvanica.bagno_seq: ~28 rows (circa)
 REPLACE INTO `bagno_seq` (`next_val`)
 VALUES (151),
        (151),
@@ -141,9 +140,9 @@ VALUES (151),
        (151),
        (151);
 
--- Dump dei dati della tabella galvanica.caratteristica_bagno: ~1 rows (circa)
+-- Dump dei dati della tabella galvanica.caratteristica_bagno: ~0 rows (circa)
 
--- Dump dei dati della tabella galvanica.caratteristica_bagno_seq: ~24 rows (circa)
+-- Dump dei dati della tabella galvanica.caratteristica_bagno_seq: ~28 rows (circa)
 REPLACE INTO `caratteristica_bagno_seq` (`next_val`)
 VALUES (1),
        (1),
@@ -252,7 +251,7 @@ VALUES (202, '', 'ML', 5, 7, 100),
        (570, '', 'ML', 203, 2, 700),
        (571, '', 'ML', 203, 3, 150);
 
--- Dump dei dati della tabella galvanica.dettaglio_alimentazione_seq: ~24 rows (circa)
+-- Dump dei dati della tabella galvanica.dettaglio_alimentazione_seq: ~28 rows (circa)
 REPLACE INTO `dettaglio_alimentazione_seq` (`next_val`)
 VALUES (651),
        (651),
@@ -290,7 +289,7 @@ VALUES (1, 'Magazzino Acidi'),
        (52, 'Cassaforte'),
        (53, 'Senza Magazzino');
 
--- Dump dei dati della tabella galvanica.magazzino_seq: ~24 rows (circa)
+-- Dump dei dati della tabella galvanica.magazzino_seq: ~28 rows (circa)
 REPLACE INTO `magazzino_seq` (`next_val`)
 VALUES (201),
        (201),
@@ -434,7 +433,7 @@ VALUES (1, '220 BRI', 'Brillantante 220', NULL, 2, b'1'),
        (140, 'PH30', '', NULL, 1, b'1'),
        (141, 'PH20', '', NULL, 1, b'1');
 
--- Dump dei dati della tabella galvanica.prodotto_seq: ~24 rows (circa)
+-- Dump dei dati della tabella galvanica.prodotto_seq: ~28 rows (circa)
 REPLACE INTO `prodotto_seq` (`next_val`)
 VALUES (201),
        (201),
@@ -465,7 +464,7 @@ VALUES (201),
        (201),
        (201);
 
--- Dump dei dati della tabella galvanica.relazione_bagno_prodotto: ~138 rows (circa)
+-- Dump dei dati della tabella galvanica.relazione_bagno_prodotto: ~151 rows (circa)
 REPLACE INTO `relazione_bagno_prodotto` (`note`, `prodotto_id_prodotto`,
                                          `bagno_id_bagno`, `id_relazione`)
 VALUES ('', 1, 1, 1),
@@ -620,7 +619,7 @@ VALUES ('', 1, 1, 1),
        ('', 139, 52, 142),
        ('', 140, 52, 141);
 
--- Dump dei dati della tabella galvanica.relazione_bagno_prodotto_seq: ~24 rows (circa)
+-- Dump dei dati della tabella galvanica.relazione_bagno_prodotto_seq: ~28 rows (circa)
 REPLACE INTO `relazione_bagno_prodotto_seq` (`next_val`)
 VALUES (351),
        (351),
@@ -651,97 +650,168 @@ VALUES (351),
        (351),
        (351);
 
--- Dump dei dati della tabella galvanica.storico_dettaglio: ~65 rows (circa)
+-- Dump dei dati della tabella galvanica.storico_dettaglio: ~0 rows (circa)
 
--- Dump dei dati della tabella galvanica.storico_dettaglio_seq: ~0 rows (circa)
+-- Dump dei dati della tabella galvanica.storico_dettaglio_seq: ~1 rows (circa)
 REPLACE INTO `storico_dettaglio_seq` (`next_val`)
-VALUES (2601);
+VALUES (3051);
 
--- Dump dei dati della tabella galvanica.storico_generale: ~57 rows (circa)
+-- Dump dei dati della tabella galvanica.storico_generale: ~48 rows (circa)
 REPLACE INTO `storico_generale` (`id_storico`, `data_creazione`,
                                  `moltiplicatore_alimentazione`,
                                  `alimentazione_id_alimentazione`, `bagno_id_bagno`,
-                                 `sono_scatti`, `data_controllo_tempo`, `note`,
-                                 `scatti_inseriti`, `tipologia_aggiunta`,
-                                 `annullato_generale`, `data_esecuzione`,
-                                 `eseguito_generale`, `resto_scatti_bagno`,
-                                 `scatti_totali_bagno`)
-VALUES (1, '2024-06-04 20:50:42.000000', NULL, NULL, 1, NULL, NULL,
+                                 `data_controllo_tempo`, `note`, `scatti_inseriti`,
+                                 `tipologia_aggiunta`, `annullato_generale`,
+                                 `data_esecuzione`, `eseguito_generale`,
+                                 `resto_scatti_bagno`, `scatti_totali_bagno`)
+VALUES (1, '2024-06-04 20:50:42.000000', NULL, NULL, 1, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (2, '2024-06-04 20:50:42.000000', NULL, NULL, 2, NULL, NULL,
+       (2, '2024-06-04 20:50:42.000000', NULL, NULL, 2, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (3, '2024-06-04 20:50:42.000000', NULL, NULL, 3, NULL, NULL,
+       (3, '2024-06-04 20:50:42.000000', NULL, NULL, 3, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (4, '2024-06-04 20:50:42.000000', NULL, NULL, 4, NULL, NULL,
+       (4, '2024-06-04 20:50:42.000000', NULL, NULL, 4, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (5, '2024-06-04 20:50:42.000000', NULL, NULL, 5, NULL, NULL,
+       (5, '2024-06-04 20:50:42.000000', NULL, NULL, 5, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (6, '2024-06-04 20:50:42.000000', NULL, NULL, 6, NULL, NULL,
+       (6, '2024-06-04 20:50:42.000000', NULL, NULL, 6, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (7, '2024-06-04 20:50:42.000000', NULL, NULL, 7, NULL, NULL,
+       (7, '2024-06-04 20:50:42.000000', NULL, NULL, 7, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (8, '2024-06-04 20:50:42.000000', NULL, NULL, 8, NULL, NULL,
+       (8, '2024-06-04 20:50:42.000000', NULL, NULL, 8, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (9, '2024-06-04 20:50:42.000000', NULL, NULL, 9, NULL, NULL,
+       (9, '2024-06-04 20:50:42.000000', NULL, NULL, 9, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (10, '2024-06-04 20:50:42.000000', NULL, NULL, 10, NULL, NULL,
+       (10, '2024-06-04 20:50:42.000000', NULL, NULL, 10, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (11, '2024-06-04 20:50:42.000000', NULL, NULL, 11, NULL, NULL,
+       (11, '2024-06-04 20:50:42.000000', NULL, NULL, 11, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (12, '2024-06-04 20:50:42.000000', NULL, NULL, 12, NULL, NULL,
+       (12, '2024-06-04 20:50:42.000000', NULL, NULL, 12, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (13, '2024-06-04 20:50:42.000000', NULL, NULL, 13, NULL, NULL,
+       (13, '2024-06-04 20:50:42.000000', NULL, NULL, 13, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (14, '2024-06-04 20:50:42.000000', NULL, NULL, 14, NULL, NULL,
+       (14, '2024-06-04 20:50:42.000000', NULL, NULL, 14, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (15, '2024-06-04 20:50:42.000000', NULL, NULL, 15, NULL, NULL,
+       (15, '2024-06-04 20:50:42.000000', NULL, NULL, 15, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (16, '2024-06-04 20:50:42.000000', NULL, NULL, 16, NULL, NULL,
+       (16, '2024-06-04 20:50:42.000000', NULL, NULL, 16, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (17, '2024-06-04 20:50:42.000000', NULL, NULL, 17, NULL, NULL,
+       (17, '2024-06-04 20:50:42.000000', NULL, NULL, 17, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (18, '2024-06-04 20:50:42.000000', NULL, NULL, 18, NULL, NULL,
+       (18, '2024-06-04 20:50:42.000000', NULL, NULL, 18, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (19, '2024-06-04 20:50:42.000000', NULL, NULL, 19, NULL, NULL,
+       (19, '2024-06-04 20:50:42.000000', NULL, NULL, 19, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (20, '2024-06-04 20:50:42.000000', NULL, NULL, 20, NULL, NULL,
+       (20, '2024-06-04 20:50:42.000000', NULL, NULL, 20, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (21, '2024-06-04 20:50:42.000000', NULL, NULL, 21, NULL, NULL,
+       (21, '2024-06-04 20:50:42.000000', NULL, NULL, 21, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (22, '2024-06-04 20:50:42.000000', NULL, NULL, 22, NULL, NULL,
+       (22, '2024-06-04 20:50:42.000000', NULL, NULL, 22, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (23, '2024-06-04 20:50:42.000000', NULL, NULL, 23, NULL, NULL,
+       (23, '2024-06-04 20:50:42.000000', NULL, NULL, 23, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
         b'1', 0, 0),
-       (52, '2024-06-04 20:50:42.000000', NULL, NULL, 52, NULL, NULL,
+       (52, '2024-06-04 20:50:42.000000', NULL, NULL, 52, NULL,
         'valori bagno iniziali', NULL, 'SCATTI', NULL, '2024-06-04 20:51:42.000000',
-        b'1', 0, 0);
+        b'1', 0, 0),
+       (53, '2024-06-04 20:50:42.000000', NULL, NULL, 1, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (54, '2024-06-04 20:50:42.000000', NULL, NULL, 2, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (55, '2024-06-04 20:50:42.000000', NULL, NULL, 3, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (56, '2024-06-04 20:50:42.000000', NULL, NULL, 4, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (57, '2024-06-04 20:50:42.000000', NULL, NULL, 5, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (58, '2024-06-04 20:50:42.000000', NULL, NULL, 6, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (59, '2024-06-04 20:50:42.000000', NULL, NULL, 7, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (60, '2024-06-04 20:50:42.000000', NULL, NULL, 8, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (61, '2024-06-04 20:50:42.000000', NULL, NULL, 9, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (62, '2024-06-04 20:50:42.000000', NULL, NULL, 10, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (63, '2024-06-04 20:50:42.000000', NULL, NULL, 11, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (64, '2024-06-04 20:50:42.000000', NULL, NULL, 12, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (65, '2024-06-04 20:50:42.000000', NULL, NULL, 13, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (66, '2024-06-04 20:50:42.000000', NULL, NULL, 14, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (67, '2024-06-04 20:50:42.000000', NULL, NULL, 15, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (68, '2024-06-04 20:50:42.000000', NULL, NULL, 16, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (69, '2024-06-04 20:50:42.000000', NULL, NULL, 17, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (70, '2024-06-04 20:50:42.000000', NULL, NULL, 18, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (71, '2024-06-04 20:50:42.000000', NULL, NULL, 19, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (72, '2024-06-04 20:50:42.000000', NULL, NULL, 20, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (73, '2024-06-04 20:50:42.000000', NULL, NULL, 21, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (74, '2024-06-04 20:50:42.000000', NULL, NULL, 22, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (75, '2024-06-04 20:50:42.000000', NULL, NULL, 23, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL),
+       (76, '2024-06-04 20:50:42.000000', NULL, NULL, 52, '2024-07-30',
+        'valori bagno iniziali', NULL, 'TEMPO', NULL, '2024-06-04 20:51:42.000000',
+        b'1', NULL, NULL);
 
--- Dump dei dati della tabella galvanica.storico_generale_seq: ~0 rows (circa)
+-- Dump dei dati della tabella galvanica.storico_generale_seq: ~1 rows (circa)
 REPLACE INTO `storico_generale_seq` (`next_val`)
-VALUES (2551);
+VALUES (3001);
 
 /*!40103 SET TIME_ZONE = IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE = IFNULL(@OLD_SQL_MODE, '') */;
