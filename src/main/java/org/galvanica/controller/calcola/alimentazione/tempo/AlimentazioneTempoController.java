@@ -3,7 +3,6 @@ package org.galvanica.controller.calcola.alimentazione.tempo;
 import lombok.extern.slf4j.Slf4j;
 import org.galvanica.dto.alimentazione.tempo.DataControlloRequestDto;
 import org.galvanica.dto.risposta.tempo.RispostaTempoGenerale;
-import org.galvanica.service.CRUD.BagnoService;
 import org.galvanica.service.operazioniBagno.AlimentazioneATempoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,33 +19,28 @@ import java.util.List;
 public class AlimentazioneTempoController {
 
 
-	private final BagnoService bagnoService;
 	private final AlimentazioneATempoService alimentazioneATempoServiceService;
 
 
 
-	public AlimentazioneTempoController(BagnoService bagnoService,
-		AlimentazioneATempoService alimentazioneATempoServiceService) {
-		this.bagnoService = bagnoService;
+	public AlimentazioneTempoController(AlimentazioneATempoService alimentazioneATempoServiceService) {
 		this.alimentazioneATempoServiceService = alimentazioneATempoServiceService;
 	}
 
 	@GetMapping
-	public String primaPagina(Model model) {
-		model.addAttribute("bagnoList", bagnoService.findAllBagnoIfAlimentazioneScattiNotNull());
+	public String primaPagina() {
 		return "calcola-alimentazione/tempo/prima-pagina";
 	}
 
 	@PostMapping
-	public String calcolaAlimentazioni(Model model,
-		@RequestBody DataControlloRequestDto dataControlloRequestDto) {
+	public String calcolaAlimentazioni(Model model, @RequestBody DataControlloRequestDto dataControlloRequestDto) {
 
 
 		List<RispostaTempoGenerale> rispostaATempoList =
 			alimentazioneATempoServiceService.calcolaRispostaList(dataControlloRequestDto.getDataControllo());
 
 		model.addAttribute("rispostaATempoList", rispostaATempoList);
-		
+
 		return "calcola-alimentazione/tempo/fragments :: bagnoCard";
 	}
 
