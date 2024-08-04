@@ -10,40 +10,60 @@ import org.galvanica.model.StoricoDettaglio;
 import org.galvanica.model.StoricoGenerale;
 import org.galvanica.repository.StoricoDettaglioRepository;
 import org.galvanica.service.CRUD.BagnoService;
-import org.galvanica.service.operazioniBagno.StoriciAnnullaOConcludiService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
 
 import static org.galvanica.math.ConvertitoreUnitaMisura.convertiQuantitaGenerico;
 import static org.galvanica.math.ConvertitoreUnitaMisura.convertiUnitaMisuraPerDto;
 
 @Service
-public class RicercaPerBagnoService {
+public class RicercaPerDataService {
 
-    private final BagnoService bagnoService;
+    /*viene richiesta una specifica data o un range di date.
+viene quindi visualizzato, diviso per card di ogni bagno, le aggiunte ancora da gestire.
+possono essere gestite come per ricerca del bagno gestendo le aggiunte:
+complessivamente, per bagno oppure per singola aggiunta.
+anche qui grande pulsante salva e avviso prima di reindirizzamento e/o salvataggio.
+*/
+
     private final StoricoDettaglioRepository storicoDettaglioRepository;
-    private final StoriciAnnullaOConcludiService storiciAnnullaOConcludiService;
+    private final BagnoService bagnoService;
 
-    public RicercaPerBagnoService(BagnoService bagnoService,
-                                  StoricoDettaglioRepository storicoDettaglioRepository,
-                                  StoriciAnnullaOConcludiService storiciAnnullaOConcludiService) {
-        this.bagnoService = bagnoService;
+    public RicercaPerDataService(
+            StoricoDettaglioRepository storicoDettaglioRepository,
+            BagnoService bagnoService) {
         this.storicoDettaglioRepository = storicoDettaglioRepository;
-        this.storiciAnnullaOConcludiService = storiciAnnullaOConcludiService;
+        this.bagnoService = bagnoService;
+    }
+
+    public List<StoricoTotaleSingoloDto> mostraAggiunteDaGestireByDate(
+            LocalDate dataInizio, LocalDate dataFine) {
+        List<StoricoDettaglio> storicoDettaglioList =
+                storicoDettaglioRepository.listaStoriciDettagliDaGestireByDate(
+                        dataInizio,
+                        dataFine);
+        if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<StoricoTotaleSingoloDto> lista = new ArrayList<>();
+        for (StoricoDettaglio dettaglio : storicoDettaglioList) {
+            lista.add(storicoTotaleSingoloDtoBuilder(dettaglio));
+        }
+        return lista;
     }
 
     public List<BagnoDto> selezionaBagno() {
         return bagnoService.findAllBagno();
     }
 
-    public List<StoricoTotaleSingoloDto> mostraAggiunteDaGestireByBagno(
-            Long idBagno) {
+    public List<StoricoTotaleSingoloDto> mostraAggiunteDaGestireByDateEBagno(
+            LocalDate dataInizio, LocalDate dataFine, Long idBagno) {
         List<StoricoDettaglio> storicoDettaglioList =
-                storicoDettaglioRepository.listaStoriciDettagliDaGestireByBagno(
+                storicoDettaglioRepository.listaStoriciDettagliDaGestireByDateEBagno(
+                        dataInizio,
+                        dataFine,
                         idBagno);
         if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
             return new ArrayList<>();
@@ -55,32 +75,62 @@ public class RicercaPerBagnoService {
         return lista;
     }
 
-    public List<StoricoTotaleGroupDto> mostraAggiunteDaGestireGroupByBagno(
-            Long idBagno) {
+    private Map<Long, List<StoricoDettaglio>> gestioneMappePerMostraAggiunteGroupBagnoSingolo(
+            List<StoricoDettaglio> storicoDettaglioList) {
+        Map<Long, List<StoricoDettaglio>> mappa = new HashMap<>();
+        for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
+            Long key = storicoDettaglio.getProdotto().getIdProdotto();
+            if (mappa.containsKey(key)) {
+                mappa.get(key).add(storicoDettaglio);
+            }
+            if (!mappa.containsKey(key)) {
+                mappa.put(storicoDettaglio.getProdotto().getIdProdotto(),
+                        new ArrayList<>(
+                                Arrays.asList(storicoDettaglio)));
+            }
+        }
+        return mappa;
+    }
+
+    public List<StoricoTotaleGroupDto> mostraAggiunteDaGestireGroupByDateeBagno(
+            LocalDate dataInizio, LocalDate dataFine, Long idBagno) {
         List<StoricoDettaglio> storicoDettaglioList =
-                storicoDettaglioRepository.listaStoriciDettagliDaGestireByBagno(
+                storicoDettaglioRepository.listaStoriciDettagliDaGestireByDateEBagno(
+                        dataInizio,
+                        dataFine,
                         idBagno);
         if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
             return new ArrayList<>();
         }
-        Map<Long, StoricoTotaleGroupDto> mappa = new HashMap<>();
+        Map<Long, List<StoricoDettaglio>> mappaProdottoEListaId =
+                gestioneMappePerMostraAggiunteGroupBagnoSingolo(storicoDettaglioList);
+        Map<Long, StoricoTotaleGroupDto> mappaRisposta = new HashMap<>();
+
+        for (Map.Entry<Long, List<StoricoDettaglio>> entry : mappaProdottoEListaId.entrySet()) {
+            if (entry.getValue() == null) {
+                continue;
+            }
+
+        }
+
         for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
             Long key = storicoDettaglio.getProdotto().getIdProdotto();
-            if (mappa.containsKey(key)) {
-                Double quantitaProdotto = mappa.get(key).getQuantitaProdotto()
+            if (mappaRisposta.containsKey(key)) {
+                Double quantitaProdotto = mappaRisposta.get(key)
+                        .getQuantitaProdotto()
                         + storicoDettaglio.getQuantita();
-                mappa.get(key).setQuantitaProdotto(quantitaProdotto);
+                mappaRisposta.get(key).setQuantitaProdotto(quantitaProdotto);
 
-                mappa.get(key)
+                mappaRisposta.get(key)
                         .getIdStoricoDettaglioList()
                         .add(storicoDettaglio.getIdStoricoDettaglio());
             }
-            if (!mappa.containsKey(key)) {
-                mappa.put(storicoDettaglio.getProdotto().getIdProdotto(),
+            if (!mappaRisposta.containsKey(key)) {
+                mappaRisposta.put(storicoDettaglio.getProdotto().getIdProdotto(),
                         storicoTotaleGroupDtoBuilder(storicoDettaglio));
             }
         }
-        for (StoricoTotaleGroupDto storico : mappa.values()) {
+        for (StoricoTotaleGroupDto storico : mappaRisposta.values()) {
 
             UnitaDiMisura unitaDiMisura = convertiUnitaMisuraPerDto(
                     (int) Math.round(storico.getQuantitaProdotto()),
@@ -89,69 +139,15 @@ public class RicercaPerBagnoService {
                     storico.getQuantitaProdotto(),
                     storico.getUnitaDiMisura(),
                     unitaDiMisura);
-            mappa.get(storico.getIdProdotto()).setQuantitaProdotto(quantita);
-            mappa.get(storico.getIdProdotto()).setUnitaDiMisura(unitaDiMisura);
+            mappaRisposta.get(storico.getIdProdotto()).setQuantitaProdotto(quantita);
+            mappaRisposta.get(storico.getIdProdotto())
+                    .setUnitaDiMisura(unitaDiMisura);
 
         }
 
-        return new ArrayList<>(mappa.values());
+        return new ArrayList<>(mappaRisposta.values());
     }
 
-    public void eseguiListaAggiunte(List<Long> idDettaglioList) {
-        for (Long id : idDettaglioList) {
-            storiciAnnullaOConcludiService.eseguiSingolaAggiunta(id);
-        }
-    }
-
-    public void eseguiTutteAggiunteByBagno(Long idBagno) {
-        List<StoricoDettaglio> storicoDettaglioList =
-                storicoDettaglioRepository.listaStoriciDettagliDaGestireByBagno(
-                        idBagno);
-        if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
-            return;
-        }
-        for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
-            storiciAnnullaOConcludiService
-                    .eseguiSingolaAggiunta(storicoDettaglio.getIdStoricoDettaglio());
-        }
-    }
-
-    public void annullaListaAggiunte(List<Long> idDettaglioList) {
-        for (Long id : idDettaglioList) {
-            storiciAnnullaOConcludiService.escludiSingolaAggiunta(id);
-        }
-    }
-
-    public void annullaTutteAggiunteByBagno(Long idBagno) {
-        List<StoricoDettaglio> storicoDettaglioList =
-                storicoDettaglioRepository.listaStoriciDettagliDaGestireByBagno(
-                        idBagno);
-        if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
-            return;
-        }
-        for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
-            storiciAnnullaOConcludiService
-                    .escludiSingolaAggiunta(storicoDettaglio.getIdStoricoDettaglio());
-        }
-    }
-
-    public void eseguiListaAggiunteGroup(List<List<Long>> idDettaglioListList) {
-        List<Long> idDettaglioList = idDettaglioListList.stream()
-                .flatMap(List::stream)
-                .toList();
-        for (Long id : idDettaglioList) {
-            storiciAnnullaOConcludiService.eseguiSingolaAggiunta(id);
-        }
-    }
-
-    public void annullaListaAggiunteGroup(List<List<Long>> idDettaglioListList) {
-        List<Long> idDettaglioList = idDettaglioListList.stream()
-                .flatMap(List::stream)
-                .toList();
-        for (Long id : idDettaglioList) {
-            storiciAnnullaOConcludiService.escludiSingolaAggiunta(id);
-        }
-    }
 
     private StoricoTotaleSingoloDto storicoTotaleSingoloDtoBuilder(
             StoricoDettaglio dettaglio) {
@@ -229,4 +225,6 @@ public class RicercaPerBagnoService {
     //accanto ad ogni aggiunta vi sarà un flag per annullare o confermare le aggiunte singolarmente
     //a fondo pagina un pulsante grande “Salva”.
     //prima del salvataggio (o di un reindirizzamento della pagina) sarebbe bene far apparire un messaggio di avviso.
+
+
 }

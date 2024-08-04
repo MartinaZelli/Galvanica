@@ -5,6 +5,7 @@ import org.galvanica.model.StoricoDettaglio;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface StoricoDettaglioRepository extends CrudRepository<StoricoDettaglio, Long> {
@@ -74,10 +75,39 @@ public interface StoricoDettaglioRepository extends CrudRepository<StoricoDettag
             JOIN galvanica.storico_generale sg on sg.id_storico = sd.storico_generale_id_storico
             WHERE
                 sg.bagno_id_bagno = :idBagno
-              AND NOT sd.annullato_dettaglio
-              AND NOT sd.eseguito_dettaglio
+              AND (NOT sd.annullato_dettaglio OR sd.annullato_dettaglio is null)
+              AND (NOT sd.eseguito_dettaglio OR sd.eseguito_dettaglio is null)
             ORDER BY sg.data_creazione DESC""", nativeQuery = true)
     List<StoricoDettaglio> listaStoriciDettagliDaGestireByBagno(Long idBagno);
+
+    @Query(value = """
+            SELECT
+                *
+            FROM
+                storico_dettaglio sd
+            JOIN galvanica.storico_generale sg on sg.id_storico = sd.storico_generale_id_storico
+            WHERE
+                sg.data_creazione BETWEEN :dataInizio AND :dataFine
+              AND (NOT sd.annullato_dettaglio OR sd.annullato_dettaglio is null)
+              AND (NOT sd.eseguito_dettaglio OR sd.eseguito_dettaglio is null)
+            ORDER BY sg.data_creazione DESC""", nativeQuery = true)
+    List<StoricoDettaglio> listaStoriciDettagliDaGestireByDate(LocalDate dataInizio,
+                                                               LocalDate dataFine);
+
+    @Query(value = """
+            SELECT
+                *
+            FROM
+                storico_dettaglio sd
+            JOIN galvanica.storico_generale sg on sg.id_storico = sd.storico_generale_id_storico
+            WHERE
+                sg.bagno_id_bagno = :idBagno
+              AND sg.data_creazione BETWEEN :dataInizio AND :dataFine
+              AND (NOT sd.annullato_dettaglio OR sd.annullato_dettaglio is null)
+              AND (NOT sd.eseguito_dettaglio OR sd.eseguito_dettaglio is null)
+            ORDER BY sg.data_creazione DESC""", nativeQuery = true)
+    List<StoricoDettaglio> listaStoriciDettagliDaGestireByDateEBagno(
+            LocalDate dataInizio, LocalDate dataFine, Long idBagno);
 
     List<StoricoDettaglio> findByStoricoGeneraleIdStorico(Long idStoricoGenerale);
 }
