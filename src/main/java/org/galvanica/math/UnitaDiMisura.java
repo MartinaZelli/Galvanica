@@ -5,12 +5,19 @@ import lombok.Getter;
 @Getter
 public enum UnitaDiMisura {
 
-	ML(true), L(true), MG(false), G(false), KG(false);
+    ML(true, "Millilitri"),
+    L(true, "Litri"),
+    MG(false, "Milligrammi"),
+    G(false, "Grammi"),
+    KG(false, "Chilogrammi");
 
-	private final boolean sonoVolume;
+    private final boolean sonoVolume;
+    
+    private final String descrizione;
 
-	UnitaDiMisura(boolean sonoVolume) {
-		this.sonoVolume = sonoVolume;
-	}
+    UnitaDiMisura(boolean sonoVolume, String descrizione) {
+        this.sonoVolume = sonoVolume;
+        this.descrizione = descrizione;
+    }
 
 }

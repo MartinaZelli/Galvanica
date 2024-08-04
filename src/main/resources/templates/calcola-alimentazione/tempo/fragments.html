@@ -7,7 +7,7 @@
 </head>
 
 <body>
-
+<!--/*@thymesVar id="rispostaATempoList" type="java.util.List<org.galvanica.dto.risposta.tempo.RispostaTempoGenerale>"*/-->
 <div class="card shadow mb-4" th:fragment="bagnoCard"
      th:each="risposta: ${rispostaATempoList}">
     <div class="card-header py-3" th:text="${risposta.getNomeBagno()}"></div>
@@ -20,9 +20,11 @@
                 <div>Data Controllo: <span
                         th:text="${risposta.getDataControlloTempo()}"></span></div>
                 <div>Data Ultimo Controllo: <span
-                        th:text="${risposta.getDataControlloPrecedente()}"></span></div>
+                        th:text="${risposta.getDataControlloPrecedente()}"></span>
+                </div>
                 <div>Numero di Aggiunte: <span
-                        th:text="${risposta.getNumeroDiAggiunteCalcolate()}"></span></div>
+                        th:text="${risposta.getNumeroDiAggiunteCalcolate()}"></span>
+                </div>
             </div>
             <div class="col-sm">
                 <table class="table table-striped">

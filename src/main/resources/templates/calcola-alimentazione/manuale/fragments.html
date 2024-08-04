@@ -9,9 +9,97 @@
 <body>
 
 <div class="card shadow mb-4" th:fragment="bagnoSelect">
+    <!--/*@thymesVar id="bagno" type="org.galvanica.model.Bagno"*/-->
     <div class="card-header py-3" th:text="${bagno.getNome()}"></div>
-    <div class="card-body"></div>
+    <div class="card-body">
+        <input type="hidden" name="bagnoId" id="bagnoId"
+               th:value="${bagno.getIdBagno()}"/>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Prodotto</th>
+                <th scope="col">Quantità</th>
+                <th scope="col">Unità di misura</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="4">
+                    <button class="btn btn-info btn-circle btn-sm"
+                            hx-get="/calcola-alimentazione/manuale/prodotto"
+                            hx-include="#bagnoId"
+                            hx-target="closest tbody"
+                            hx-swap="beforeend">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
+
+
+<tr th:fragment="prodottoSelect">
+    <!--/*@thymesVar id="prodottoList" type="java.util.List<org.galvanica.model.Prodotto>"*/-->
+    <td>
+        <select class="form-control"
+                name="prodottoId"
+                id="prodottoId"
+                hx-trigger="change"
+                hx-target="next .unitaMisura"
+                hx-get="/calcola-alimentazione/manuale/prodotto/unita-misura">
+            <option value="">Seleziona un prodotto</option>
+            <option th:each="prodotto : ${prodottoList}"
+                    th:value="${prodotto.getIdProdotto()}"
+                    th:text="${prodotto.getNome()}"></option>
+        </select>
+    </td>
+    <td>
+        <input class="form-control" type="number" name="quantita"/>
+    </td>
+    <td class="unitaMisura"></td>
+    <td>
+        <button class="btn btn-success btn-circle"
+                hx-post="/calcola-alimentazione/manuale/riga"
+                hx-target="closest tr"
+                hx-swap="outerHTML"
+                hx-include="closest tr">
+            <i class="fas fa-check"></i>
+        </button>
+    </td>
+</tr>
+
+
+<!--/*@thymesVar id="unitaMisuraList" type="java.util.List<org.galvanica.math.UnitaDiMisura>"*/-->
+<select class="form-control"
+        name="unitaMisura"
+        id="unitaMisura"
+        th:fragment="unitaMisura">
+    <option value="">Seleziona un unità di misura</option>
+    <option th:each="unitaMisura : ${unitaMisuraList}"
+            th:value="${unitaMisura.name()}"
+            th:text="${unitaMisura.getDescrizione() + ' (' + unitaMisura.name() + ')'}"></option>
+</select>
+
+
+<!--/*@thymesVar id="prodottoId" type="java.lang.Integer"*/-->
+<!--/*@thymesVar id="quantita" type="java.lang.Double"*/-->
+<!--/*@thymesVar id="unitaMisura" type="org.galvanica.math.UnitaDiMisura"*/-->
+<tr th:fragment="prodottoDone">
+    <td th:text="${prodottoId}"></td>
+    <td th:text="${quantita}"></td>
+    <td th:text="${unitaMisura.name()}"></td>
+    <td>
+        <button class="btn btn-danger btn-circle" hx-confirm="Sei sicuro?"
+                hx-target="closest tr"
+                hx-swap="outerHTML swap:1s"
+                hx-delete="/calcola-alimentazione/manuale/riga">
+            <i class="fas fa-trash"></i>
+        </button>
+    </td>
+</tr>
 
 </body>
 
