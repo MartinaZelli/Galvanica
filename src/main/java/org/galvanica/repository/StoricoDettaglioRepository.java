@@ -6,7 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public interface StoricoDettaglioRepository extends CrudRepository<StoricoDettaglio, Long> {
 
@@ -110,4 +112,39 @@ public interface StoricoDettaglioRepository extends CrudRepository<StoricoDettag
             LocalDate dataInizio, LocalDate dataFine, Long idBagno);
 
     List<StoricoDettaglio> findByStoricoGeneraleIdStorico(Long idStoricoGenerale);
+
+    @Query(value = """
+            SELECT
+                b.id_bagno As idBagno,
+                b.nome AS nomeBagno,
+                sd.quantita AS quantitaProdotto,
+                sd.unita_di_misura as unitaDiMisura,
+                p.id_prodotto as idProdotto,
+                sg.alimentazione_id_alimentazione as idAlimentazione,
+                GROUP_CONCAT(sd.id_storico_dettaglio SEPARATOR ',') AS idStoricoDettaglioList
+            FROM
+                storico_dettaglio sd
+                    JOIN galvanica.storico_generale sg ON sg.id_storico = sd.storico_generale_id_storico
+                    JOIN galvanica.bagno b ON sg.bagno_id_bagno = b.id_bagno
+                    JOIN galvanica.prodotto p ON sd.prodotto_id_prodotto = p.id_prodotto
+            WHERE
+                (sg.data_creazione >= :dataInizio AND sg.data_creazione <= :dataFine)
+              AND (NOT sd.annullato_dettaglio OR sd.annullato_dettaglio IS NULL)
+              AND (NOT sd.eseguito_dettaglio OR sd.eseguito_dettaglio IS NULL)
+
+            GROUP BY
+                b.id_bagno,
+                b.nome,
+                sd.quantita,
+                sd.unita_di_misura,
+                p.id_prodotto,
+                sg.alimentazione_id_alimentazione
+            """, nativeQuery = true)
+    List<Map<String, Object>> listaGroup(LocalDateTime dataInizio,
+                                         LocalDateTime dataFine);
+
+    //stringa : nome del campo (tipo idBagno)
+    //object : valore del campo (tipo 12)
+
+
 }
