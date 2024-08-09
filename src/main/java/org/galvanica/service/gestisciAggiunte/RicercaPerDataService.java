@@ -93,7 +93,7 @@ anche qui grande pulsante salva e avviso prima di reindirizzamento e/o salvatagg
             LocalDateTime dataInizio, LocalDateTime dataFine) {
         List<Map<String, Object>> listaQuery = storicoDettaglioRepository
                 .listaStoriciDaGestireGroupByDate(dataInizio, dataFine);
-        return GetisciAggiunteMetodiComuni.queryTransformerByDate(listaQuery);
+        return GetisciAggiunteMetodiComuni.queryTransformerPerGroup(listaQuery);
     }
 
     public void eseguiListaAggiunte(List<Long> idDettaglioList) {

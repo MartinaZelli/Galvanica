@@ -129,7 +129,7 @@ public class GetisciAggiunteMetodiComuni {
                 .build();
     }
 
-    public static List<StoricoTotaleGroupDto> queryTransformerByDate(
+    public static List<StoricoTotaleGroupDto> queryTransformerPerGroup(
             List<Map<String, Object>> listaQuery) {
         List<StoricoTotaleGroupDto> storicoTotaleGroupDtoList = new ArrayList<>();
         for (Map<String, Object> query : listaQuery) {
@@ -166,9 +166,20 @@ public class GetisciAggiunteMetodiComuni {
                 storicoTotaleGroupDto.setIdStoricoDettaglioList(
                         idStoricoDettaglioList);
             }
+            if (storicoTotaleGroupDto.getUnitaDiMisura() != null && storicoTotaleGroupDto.getQuantitaProdotto() != null) {
+                UnitaDiMisura unitaDiMisura = convertiUnitaMisuraPerDto(
+                        (int) Math.round(storicoTotaleGroupDto.getQuantitaProdotto()),
+                        storicoTotaleGroupDto.getUnitaDiMisura().isSonoVolume());
+                Double quantita = convertiQuantitaGenerico(
+                        storicoTotaleGroupDto.getQuantitaProdotto(),
+                        storicoTotaleGroupDto.getUnitaDiMisura(),
+                        unitaDiMisura);
+                storicoTotaleGroupDto.setQuantitaProdotto(quantita);
+                storicoTotaleGroupDto.setUnitaDiMisura(unitaDiMisura);
+            }
             storicoTotaleGroupDtoList.add(storicoTotaleGroupDto);
         }
-
         return storicoTotaleGroupDtoList;
     }
+
 }
