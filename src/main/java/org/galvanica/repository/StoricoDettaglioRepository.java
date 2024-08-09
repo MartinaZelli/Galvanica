@@ -5,7 +5,6 @@ import org.galvanica.model.StoricoDettaglio;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -93,8 +92,9 @@ public interface StoricoDettaglioRepository extends CrudRepository<StoricoDettag
               AND (NOT sd.annullato_dettaglio OR sd.annullato_dettaglio is null)
               AND (NOT sd.eseguito_dettaglio OR sd.eseguito_dettaglio is null)
             ORDER BY sg.data_creazione DESC""", nativeQuery = true)
-    List<StoricoDettaglio> listaStoriciDettagliDaGestireByDate(LocalDate dataInizio,
-                                                               LocalDate dataFine);
+    List<StoricoDettaglio> listaStoriciDettagliDaGestireByDate(
+            LocalDateTime dataInizio,
+            LocalDateTime dataFine);
 
     @Query(value = """
             SELECT
@@ -109,7 +109,7 @@ public interface StoricoDettaglioRepository extends CrudRepository<StoricoDettag
               AND (NOT sd.eseguito_dettaglio OR sd.eseguito_dettaglio is null)
             ORDER BY sg.data_creazione DESC""", nativeQuery = true)
     List<StoricoDettaglio> listaStoriciDettagliDaGestireByDateEBagno(
-            LocalDate dataInizio, LocalDate dataFine, Long idBagno);
+            LocalDateTime dataInizio, LocalDateTime dataFine, Long idBagno);
 
     List<StoricoDettaglio> findByStoricoGeneraleIdStorico(Long idStoricoGenerale);
 
@@ -140,8 +140,9 @@ public interface StoricoDettaglioRepository extends CrudRepository<StoricoDettag
                 p.id_prodotto,
                 sg.alimentazione_id_alimentazione
             """, nativeQuery = true)
-    List<Map<String, Object>> listaGroup(LocalDateTime dataInizio,
-                                         LocalDateTime dataFine);
+    List<Map<String, Object>> listaStoriciDaGestireGroupByDate(
+            LocalDateTime dataInizio,
+            LocalDateTime dataFine);
 
     //stringa : nome del campo (tipo idBagno)
     //object : valore del campo (tipo 12)
