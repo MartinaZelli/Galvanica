@@ -15,62 +15,58 @@ import java.util.Map;
 @Service
 public class RicercaPerProdottoService {
 
-    private final BagnoService bagnoService;
-    private final StoricoDettaglioRepository storicoDettaglioRepository;
-    private final ProdottoService prodottoService;
-    private GestisciAggiunteFromFrontToDB gestisciAggiunteFromFrontToDB;
+	private final BagnoService bagnoService;
+	private final StoricoDettaglioRepository storicoDettaglioRepository;
+	private final ProdottoService prodottoService;
+	private GestisciAggiunteFromFrontToDB gestisciAggiunteFromFrontToDB;
 
-    public RicercaPerProdottoService(BagnoService bagnoService,
-                                     StoricoDettaglioRepository storicoDettaglioRepository,
-                                     ProdottoService prodottoService) {
-        this.bagnoService = bagnoService;
-        this.storicoDettaglioRepository = storicoDettaglioRepository;
-        this.prodottoService = prodottoService;
-    }
+	public RicercaPerProdottoService(BagnoService bagnoService,
+		StoricoDettaglioRepository storicoDettaglioRepository,
+		ProdottoService prodottoService) {
+		this.bagnoService = bagnoService;
+		this.storicoDettaglioRepository = storicoDettaglioRepository;
+		this.prodottoService = prodottoService;
+	}
 
-    public List<ProdottoDto> selezionaProdotto() {
-        return prodottoService.findAllProdotto();
-    }
+	public List<ProdottoDto> selezionaProdotto() {
+		return prodottoService.findAllProdotto();
+	}
 
-    public List<StoricoTotaleSingoloDto> mostraAggiunteDaGestireByProdotto(
-            Long idProdotto) {
-        List<StoricoDettaglio> storicoDettaglioList =
-                storicoDettaglioRepository.listaStoriciDettagliDaGestireByProdotto(
-                        idProdotto);
-        return GetisciAggiunteMetodiComuni
-                .getStoricoTotaleSingoloDtoList(storicoDettaglioList);
-    }
+	public List<StoricoTotaleSingoloDto> mostraAggiunteDaGestireByProdotto(Long idProdotto) {
+		List<StoricoDettaglio> storicoDettaglioList =
+			storicoDettaglioRepository.listaStoriciDettagliDaGestireByProdotto(idProdotto);
+		return GestisciAggiunteMetodiComuni.getStoricoTotaleSingoloDtoList(storicoDettaglioList);
+	}
 
-    public List<StoricoTotaleGroupDto> mostraAggiunteDaGestireByProdottoGroupBagno(
-            Long idProdotto) {
-        List<Map<String, Object>> listaQuery = storicoDettaglioRepository
-                .listaStoriciDaGestireGroupByProdotto(idProdotto);
-        return GetisciAggiunteMetodiComuni.queryTransformerPerGroup(listaQuery);
-    }
+	public List<StoricoTotaleGroupDto> mostraAggiunteDaGestireByProdottoGroupBagno(Long idProdotto) {
+		List<Map<String, Object>> listaQuery =
+			storicoDettaglioRepository.listaStoriciDaGestireGroupByProdotto(idProdotto);
+		return GestisciAggiunteMetodiComuni.queryTransformerPerGroup(listaQuery);
+	}
 
-    public void eseguiListaAggiunte(List<Long> idDettaglioList) {
-        gestisciAggiunteFromFrontToDB.eseguiListaAggiunte(idDettaglioList);
-    }
+	public void eseguiListaAggiunte(List<Long> idDettaglioList) {
+		gestisciAggiunteFromFrontToDB.eseguiListaAggiunte(idDettaglioList);
+	}
 
-    public void eseguiTutteAggiunteByProdotto(Long idProdotto) {
-        gestisciAggiunteFromFrontToDB.eseguiTutteAggiunteByProdotto(idProdotto);
-    }
+	public void eseguiTutteAggiunteByProdotto(Long idProdotto) {
+		gestisciAggiunteFromFrontToDB.eseguiTutteAggiunteByProdotto(idProdotto);
+	}
 
-    public void annullaListaAggiunte(List<Long> idDettaglioList) {
-        gestisciAggiunteFromFrontToDB.annullaListaAggiunte(idDettaglioList);
-    }
+	public void annullaListaAggiunte(List<Long> idDettaglioList) {
+		gestisciAggiunteFromFrontToDB.annullaListaAggiunte(idDettaglioList);
+	}
 
-    public void annullaTutteAggiunteByProdotto(Long idProdotto) {
-        gestisciAggiunteFromFrontToDB.annullaTutteAggiunteByProdotto(idProdotto);
-    }
+	public void annullaTutteAggiunteByProdotto(Long idProdotto) {
+		gestisciAggiunteFromFrontToDB.annullaTutteAggiunteByProdotto(idProdotto);
+	}
 
-    public void eseguiListaAggiunteGroup(List<List<Long>> idDettaglioListList) {
-        gestisciAggiunteFromFrontToDB.eseguiListaAggiunteGroup(idDettaglioListList);
-    }
+	public void eseguiListaAggiunteGroup(List<List<Long>> idDettaglioListList) {
+		gestisciAggiunteFromFrontToDB.eseguiListaAggiunteGroup(idDettaglioListList);
+	}
 
-    public void annullaListaAggiunteGroup(List<List<Long>> idDettaglioListList) {
-        gestisciAggiunteFromFrontToDB.annullaListaAggiunteGroup(idDettaglioListList);
-    }
+	public void annullaListaAggiunteGroup(List<List<Long>> idDettaglioListList) {
+		gestisciAggiunteFromFrontToDB.annullaListaAggiunteGroup(idDettaglioListList);
+	}
 
 /*
     Ricerca per prodotto

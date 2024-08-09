@@ -14,64 +14,58 @@ import java.util.List;
 @Service
 public class RicercaPerBagnoService {
 
-    private final BagnoService bagnoService;
-    private final StoricoDettaglioRepository storicoDettaglioRepository;
-    private GestisciAggiunteFromFrontToDB gestisciAggiunteFromFrontToDB;
+	private final BagnoService bagnoService;
+	private final StoricoDettaglioRepository storicoDettaglioRepository;
+	private GestisciAggiunteFromFrontToDB gestisciAggiunteFromFrontToDB;
 
-    public RicercaPerBagnoService(BagnoService bagnoService,
-                                  StoricoDettaglioRepository storicoDettaglioRepository) {
-        this.bagnoService = bagnoService;
-        this.storicoDettaglioRepository = storicoDettaglioRepository;
-    }
+	public RicercaPerBagnoService(BagnoService bagnoService, StoricoDettaglioRepository storicoDettaglioRepository) {
+		this.bagnoService = bagnoService;
+		this.storicoDettaglioRepository = storicoDettaglioRepository;
+	}
 
-    public List<BagnoDto> selezionaBagno() {
-        return bagnoService.findAllBagno();
-    }
+	public List<BagnoDto> selezionaBagno() {
+		return bagnoService.findAllBagno();
+	}
 
-    public List<StoricoTotaleSingoloDto> mostraAggiunteDaGestireByBagno(
-            Long idBagno) {
-        List<StoricoDettaglio> storicoDettaglioList =
-                storicoDettaglioRepository.listaStoriciDettagliDaGestireByBagno(
-                        idBagno);
-        return GetisciAggiunteMetodiComuni
-                .getStoricoTotaleSingoloDtoList(storicoDettaglioList);
-    }
 
-    public List<StoricoTotaleGroupDto> mostraAggiunteDaGestireGroupByBagno(
-            Long idBagno) {
-        List<StoricoDettaglio> storicoDettaglioList =
-                storicoDettaglioRepository.listaStoriciDettagliDaGestireByBagno(
-                        idBagno);
-        if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
-            return new ArrayList<>();
-        }
-        return GetisciAggiunteMetodiComuni
-                .getStoricoTotaleGroupDtoList(storicoDettaglioList);
-    }
+	public List<StoricoTotaleSingoloDto> mostraAggiunteDaGestireByBagno(Long idBagno) {
+		List<StoricoDettaglio> storicoDettaglioList =
+			storicoDettaglioRepository.listaStoriciDettagliDaGestireByBagno(idBagno);
+		return GestisciAggiunteMetodiComuni.getStoricoTotaleSingoloDtoList(storicoDettaglioList);
+	}
 
-    public void eseguiListaAggiunte(List<Long> idDettaglioList) {
-        gestisciAggiunteFromFrontToDB.eseguiListaAggiunte(idDettaglioList);
-    }
+	public List<StoricoTotaleGroupDto> mostraAggiunteDaGestireGroupByBagno(Long idBagno) {
+		List<StoricoDettaglio> storicoDettaglioList =
+			storicoDettaglioRepository.listaStoriciDettagliDaGestireByBagno(idBagno);
+		if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
+			return new ArrayList<>();
+		}
+		return GestisciAggiunteMetodiComuni.getStoricoTotaleGroupDtoList(storicoDettaglioList);
+	}
 
-    public void eseguiTutteAggiunteByBagno(Long idBagno) {
-        gestisciAggiunteFromFrontToDB.eseguiTutteAggiunteByBagno(idBagno);
-    }
+	public void eseguiListaAggiunte(List<Long> idDettaglioList) {
+		gestisciAggiunteFromFrontToDB.eseguiListaAggiunte(idDettaglioList);
+	}
 
-    public void annullaListaAggiunte(List<Long> idDettaglioList) {
-        gestisciAggiunteFromFrontToDB.annullaListaAggiunte(idDettaglioList);
-    }
+	public void eseguiTutteAggiunteByBagno(Long idBagno) {
+		gestisciAggiunteFromFrontToDB.eseguiTutteAggiunteByBagno(idBagno);
+	}
 
-    public void annullaTutteAggiunteByBagno(Long idBagno) {
-        gestisciAggiunteFromFrontToDB.annullaTutteAggiunteByBagno(idBagno);
-    }
+	public void annullaListaAggiunte(List<Long> idDettaglioList) {
+		gestisciAggiunteFromFrontToDB.annullaListaAggiunte(idDettaglioList);
+	}
 
-    public void eseguiListaAggiunteGroup(List<List<Long>> idDettaglioListList) {
-        gestisciAggiunteFromFrontToDB.eseguiListaAggiunteGroup(idDettaglioListList);
-    }
+	public void annullaTutteAggiunteByBagno(Long idBagno) {
+		gestisciAggiunteFromFrontToDB.annullaTutteAggiunteByBagno(idBagno);
+	}
 
-    public void annullaListaAggiunteGroup(List<List<Long>> idDettaglioListList) {
-        gestisciAggiunteFromFrontToDB.annullaListaAggiunteGroup(idDettaglioListList);
-    }
+	public void eseguiListaAggiunteGroup(List<List<Long>> idDettaglioListList) {
+		gestisciAggiunteFromFrontToDB.eseguiListaAggiunteGroup(idDettaglioListList);
+	}
+
+	public void annullaListaAggiunteGroup(List<List<Long>> idDettaglioListList) {
+		gestisciAggiunteFromFrontToDB.annullaListaAggiunteGroup(idDettaglioListList);
+	}
 
 /*
     //Viene richiesto di selezionare un bagno specifico.

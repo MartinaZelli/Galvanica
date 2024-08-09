@@ -24,123 +24,95 @@ complessivamente, per bagno oppure per singola aggiunta.
 anche qui grande pulsante salva e avviso prima di reindirizzamento e/o salvataggio.
 */
 
-    private final StoricoDettaglioRepository storicoDettaglioRepository;
-    private final BagnoService bagnoService;
-    private GestisciAggiunteFromFrontToDB gestisciAggiunteFromFrontToDB;
+	private final StoricoDettaglioRepository storicoDettaglioRepository;
+	private final BagnoService bagnoService;
+	private GestisciAggiunteFromFrontToDB gestisciAggiunteFromFrontToDB;
 
-    public RicercaPerDataService(
-            StoricoDettaglioRepository storicoDettaglioRepository,
-            BagnoService bagnoService) {
-        this.storicoDettaglioRepository = storicoDettaglioRepository;
-        this.bagnoService = bagnoService;
-    }
+	public RicercaPerDataService(StoricoDettaglioRepository storicoDettaglioRepository, BagnoService bagnoService) {
+		this.storicoDettaglioRepository = storicoDettaglioRepository;
+		this.bagnoService = bagnoService;
+	}
 
-    public List<StoricoTotaleSingoloDto> mostraAggiunteDaGestireByDate(
-            LocalDateTime dataInizio, LocalDateTime dataFine) {
-        List<StoricoDettaglio> storicoDettaglioList =
-                storicoDettaglioRepository.listaStoriciDettagliDaGestireByDate(
-                        dataInizio,
-                        dataFine);
-        return GetisciAggiunteMetodiComuni
-                .getStoricoTotaleSingoloDtoList(storicoDettaglioList);
-    }
+	public List<StoricoTotaleSingoloDto> mostraAggiunteDaGestireByDate(LocalDateTime dataInizio,
+		LocalDateTime dataFine) {
+		List<StoricoDettaglio> storicoDettaglioList =
+			storicoDettaglioRepository.listaStoriciDettagliDaGestireByDate(dataInizio, dataFine);
+		return GestisciAggiunteMetodiComuni.getStoricoTotaleSingoloDtoList(storicoDettaglioList);
+	}
 
-    public List<BagnoDto> selezionaBagno() {
-        return bagnoService.findAllBagno();
-    }
+	public List<BagnoDto> selezionaBagno() {
+		return bagnoService.findAllBagno();
+	}
 
-    public List<StoricoTotaleSingoloDto> mostraAggiunteDaGestireByDateEBagno(
-            LocalDateTime dataInizio, LocalDateTime dataFine, Long idBagno) {
-        List<StoricoDettaglio> storicoDettaglioList =
-                storicoDettaglioRepository.listaStoriciDettagliDaGestireByDateEBagno(
-                        dataInizio,
-                        dataFine,
-                        idBagno);
-        return GetisciAggiunteMetodiComuni
-                .getStoricoTotaleSingoloDtoList(storicoDettaglioList);
-    }
+	public List<StoricoTotaleSingoloDto> mostraAggiunteDaGestireByDateEBagno(LocalDateTime dataInizio,
+		LocalDateTime dataFine,
+		Long idBagno) {
+		List<StoricoDettaglio> storicoDettaglioList =
+			storicoDettaglioRepository.listaStoriciDettagliDaGestireByDateEBagno(dataInizio, dataFine, idBagno);
+		return GestisciAggiunteMetodiComuni.getStoricoTotaleSingoloDtoList(storicoDettaglioList);
+	}
 
-    public Map<Long, List<StoricoTotaleSingoloDto>> mostraAggiunteDaGestireByDateTotali(
-            LocalDateTime dataInizio, LocalDateTime dataFine) {
-        List<BagnoDto> bagnoDtoList = selezionaBagno();
-        Map<Long, List<StoricoTotaleSingoloDto>> risposta = new HashMap<>();
-        for (BagnoDto b : bagnoDtoList) {
-            List<StoricoTotaleSingoloDto> storicoTotaleSingoloDtoList =
-                    (mostraAggiunteDaGestireByDateEBagno(
-                            dataInizio,
-                            dataFine,
-                            b.getIdBagno()));
-            risposta.put(b.getIdBagno(), storicoTotaleSingoloDtoList);
-        }
-        return risposta;
-    }
+	public Map<Long, List<StoricoTotaleSingoloDto>> mostraAggiunteDaGestireByDateTotali(LocalDateTime dataInizio,
+		LocalDateTime dataFine) {
+		List<BagnoDto> bagnoDtoList = selezionaBagno();
+		Map<Long, List<StoricoTotaleSingoloDto>> risposta = new HashMap<>();
+		for (BagnoDto b : bagnoDtoList) {
+			List<StoricoTotaleSingoloDto> storicoTotaleSingoloDtoList =
+				(mostraAggiunteDaGestireByDateEBagno(dataInizio, dataFine, b.getIdBagno()));
+			risposta.put(b.getIdBagno(), storicoTotaleSingoloDtoList);
+		}
+		return risposta;
+	}
 
-    public List<StoricoTotaleGroupDto> mostraAggiunteDaGestireGroupByDateEBagno(
-            LocalDateTime dataInizio, LocalDateTime dataFine, Long idBagno) {
-        List<StoricoDettaglio> storicoDettaglioList =
-                storicoDettaglioRepository.listaStoriciDettagliDaGestireByDateEBagno(
-                        dataInizio,
-                        dataFine,
-                        idBagno);
-        if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
-            return new ArrayList<>();
-        }
-        return GetisciAggiunteMetodiComuni
-                .getStoricoTotaleGroupDtoList(storicoDettaglioList);
-    }
+	public List<StoricoTotaleGroupDto> mostraAggiunteDaGestireGroupByDateEBagno(LocalDateTime dataInizio,
+		LocalDateTime dataFine,
+		Long idBagno) {
+		List<StoricoDettaglio> storicoDettaglioList =
+			storicoDettaglioRepository.listaStoriciDettagliDaGestireByDateEBagno(dataInizio, dataFine, idBagno);
+		if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
+			return new ArrayList<>();
+		}
+		return GestisciAggiunteMetodiComuni.getStoricoTotaleGroupDtoList(storicoDettaglioList);
+	}
 
-    public List<StoricoTotaleGroupDto> mostraAggiunteDaGestireGroupByDate(
-            LocalDateTime dataInizio, LocalDateTime dataFine) {
-        List<Map<String, Object>> listaQuery = storicoDettaglioRepository
-                .listaStoriciDaGestireGroupByDate(dataInizio, dataFine);
-        return GetisciAggiunteMetodiComuni.queryTransformerPerGroup(listaQuery);
-    }
+	public List<StoricoTotaleGroupDto> mostraAggiunteDaGestireGroupByDate(LocalDateTime dataInizio,
+		LocalDateTime dataFine) {
+		List<Map<String, Object>> listaQuery =
+			storicoDettaglioRepository.listaStoriciDaGestireGroupByDate(dataInizio, dataFine);
+		return GestisciAggiunteMetodiComuni.queryTransformerPerGroup(listaQuery);
+	}
 
-    public void eseguiListaAggiunte(List<Long> idDettaglioList) {
-        gestisciAggiunteFromFrontToDB.eseguiListaAggiunte(idDettaglioList);
-    }
+	public void eseguiListaAggiunte(List<Long> idDettaglioList) {
+		gestisciAggiunteFromFrontToDB.eseguiListaAggiunte(idDettaglioList);
+	}
 
-    public void eseguiTutteAggiunteByDate(LocalDateTime dataInizio,
-                                          LocalDateTime dataFine) {
-        gestisciAggiunteFromFrontToDB.eseguiTutteAggiunteByDate(dataInizio,
-                dataFine);
-    }
+	public void eseguiTutteAggiunteByDate(LocalDateTime dataInizio, LocalDateTime dataFine) {
+		gestisciAggiunteFromFrontToDB.eseguiTutteAggiunteByDate(dataInizio, dataFine);
+	}
 
-    public void eseguiTutteAggiunteByDateEBagno(LocalDateTime dataInizio,
-                                                LocalDateTime dataFine,
-                                                Long idBagno) {
-        gestisciAggiunteFromFrontToDB.eseguiTutteAggiunteByDateEBagno(dataInizio,
-                dataFine,
-                idBagno);
-    }
+	public void eseguiTutteAggiunteByDateEBagno(LocalDateTime dataInizio, LocalDateTime dataFine, Long idBagno) {
+		gestisciAggiunteFromFrontToDB.eseguiTutteAggiunteByDateEBagno(dataInizio, dataFine, idBagno);
+	}
 
-    public void annullaListaAggiunte(List<Long> idDettaglioList) {
-        gestisciAggiunteFromFrontToDB.annullaListaAggiunte(idDettaglioList);
-    }
+	public void annullaListaAggiunte(List<Long> idDettaglioList) {
+		gestisciAggiunteFromFrontToDB.annullaListaAggiunte(idDettaglioList);
+	}
 
-    public void eseguiListaAggiunteGroup(List<List<Long>> idDettaglioListList) {
-        gestisciAggiunteFromFrontToDB.eseguiListaAggiunteGroup(idDettaglioListList);
-    }
+	public void eseguiListaAggiunteGroup(List<List<Long>> idDettaglioListList) {
+		gestisciAggiunteFromFrontToDB.eseguiListaAggiunteGroup(idDettaglioListList);
+	}
 
-    public void annullaListaAggiunteGroup(List<List<Long>> idDettaglioListList) {
-        gestisciAggiunteFromFrontToDB.annullaListaAggiunteGroup(idDettaglioListList);
-    }
+	public void annullaListaAggiunteGroup(List<List<Long>> idDettaglioListList) {
+		gestisciAggiunteFromFrontToDB.annullaListaAggiunteGroup(idDettaglioListList);
+	}
 
-    public void annullaTutteAggiunteByDate(LocalDateTime dataInizio,
-                                           LocalDateTime dataFine) {
-        gestisciAggiunteFromFrontToDB.annullaTutteAggiunteByDate(
-                dataInizio,
-                dataFine);
-    }
+	public void annullaTutteAggiunteByDate(LocalDateTime dataInizio, LocalDateTime dataFine) {
+		gestisciAggiunteFromFrontToDB.annullaTutteAggiunteByDate(dataInizio, dataFine);
+	}
 
-    public void annullaTutteAggiunteByDateEBagno(LocalDateTime dataInizio,
-                                                 LocalDateTime dataFine,
-                                                 Long idBagno) {
-        gestisciAggiunteFromFrontToDB.annullaTutteAggiunteByDateEBagno(
-                dataInizio,
-                dataFine,
-                idBagno);
-    }
+	public void annullaTutteAggiunteByDateEBagno(LocalDateTime dataInizio, LocalDateTime dataFine, Long idBagno) {
+		gestisciAggiunteFromFrontToDB.annullaTutteAggiunteByDateEBagno(dataInizio, dataFine, idBagno);
+	}
 
     /*
     Ricerca per data inserimento

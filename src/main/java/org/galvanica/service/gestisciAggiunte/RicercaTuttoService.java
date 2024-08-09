@@ -13,55 +13,50 @@ import java.util.List;
 public class RicercaTuttoService {
 
 
-    private final StoricoDettaglioRepository storicoDettaglioRepository;
-    private GestisciAggiunteFromFrontToDB gestisciAggiunteFromFrontToDB;
+	private final StoricoDettaglioRepository storicoDettaglioRepository;
+	private GestisciAggiunteFromFrontToDB gestisciAggiunteFromFrontToDB;
 
-    public RicercaTuttoService(
-            StoricoDettaglioRepository storicoDettaglioRepository) {
-        this.storicoDettaglioRepository = storicoDettaglioRepository;
-    }
+	public RicercaTuttoService(StoricoDettaglioRepository storicoDettaglioRepository) {
+		this.storicoDettaglioRepository = storicoDettaglioRepository;
+	}
 
-    public List<StoricoTotaleSingoloDto> mostraAggiunteDaGestireTotali() {
-        List<StoricoDettaglio> storicoDettaglioList =
-                storicoDettaglioRepository.listaStoriciDettagliDaGestireTotali();
-        return GetisciAggiunteMetodiComuni
-                .getStoricoTotaleSingoloDtoList(storicoDettaglioList);
-    }
+	public List<StoricoTotaleSingoloDto> mostraAggiunteDaGestireTotali() {
+		List<StoricoDettaglio> storicoDettaglioList = storicoDettaglioRepository.listaStoriciDettagliDaGestireTotali();
+		return GestisciAggiunteMetodiComuni.getStoricoTotaleSingoloDtoList(storicoDettaglioList);
+	}
 
-    public List<StoricoTotaleGroupDto> mostraAggiunteDaGestireGroupTotali() {
-        List<StoricoDettaglio> storicoDettaglioList =
-                storicoDettaglioRepository.listaStoriciDettagliDaGestireTotali();
-        if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
-            return new ArrayList<>();
-        }
-        return GetisciAggiunteMetodiComuni
-                .getStoricoTotaleGroupDtoList(storicoDettaglioList);
-    }
+	public List<StoricoTotaleGroupDto> mostraAggiunteDaGestireGroupTotali() {
+		List<StoricoDettaglio> storicoDettaglioList = storicoDettaglioRepository.listaStoriciDettagliDaGestireTotali();
+		if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
+			return new ArrayList<>();
+		}
+		return GestisciAggiunteMetodiComuni.getStoricoTotaleGroupDtoList(storicoDettaglioList);
+	}
 
-    public void eseguiTutteAggiunteTotali() {
-        gestisciAggiunteFromFrontToDB.eseguiTutteAggiunteTotali();
-    }
+	public void eseguiTutteAggiunteTotali() {
+		gestisciAggiunteFromFrontToDB.eseguiTutteAggiunteTotali();
+	}
 
-    public void eseguiListaAggiunte(List<Long> idDettaglioList) {
-        gestisciAggiunteFromFrontToDB.eseguiListaAggiunte(idDettaglioList);
-    }
+	public void eseguiListaAggiunte(List<Long> idDettaglioList) {
+		gestisciAggiunteFromFrontToDB.eseguiListaAggiunte(idDettaglioList);
+	}
 
-    public void annullaListaAggiunte(List<Long> idDettaglioList) {
-        gestisciAggiunteFromFrontToDB.annullaListaAggiunte(idDettaglioList);
-    }
+	public void annullaListaAggiunte(List<Long> idDettaglioList) {
+		gestisciAggiunteFromFrontToDB.annullaListaAggiunte(idDettaglioList);
+	}
 
 
-    public void eseguiListaAggiunteGroup(List<List<Long>> idDettaglioListList) {
-        gestisciAggiunteFromFrontToDB.eseguiListaAggiunteGroup(idDettaglioListList);
-    }
+	public void eseguiListaAggiunteGroup(List<List<Long>> idDettaglioListList) {
+		gestisciAggiunteFromFrontToDB.eseguiListaAggiunteGroup(idDettaglioListList);
+	}
 
-    public void annullaListaAggiunteGroup(List<List<Long>> idDettaglioListList) {
-        gestisciAggiunteFromFrontToDB.annullaListaAggiunteGroup(idDettaglioListList);
-    }
+	public void annullaListaAggiunteGroup(List<List<Long>> idDettaglioListList) {
+		gestisciAggiunteFromFrontToDB.annullaListaAggiunteGroup(idDettaglioListList);
+	}
 
-    public void annullaTutteAggiunteTotali() {
-        gestisciAggiunteFromFrontToDB.annullaTutteAggiunteTotali();
-    }
+	public void annullaTutteAggiunteTotali() {
+		gestisciAggiunteFromFrontToDB.annullaTutteAggiunteTotali();
+	}
 
 /*
     //Viene richiesto di selezionare un bagno specifico.
