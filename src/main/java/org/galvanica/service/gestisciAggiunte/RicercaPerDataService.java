@@ -100,16 +100,22 @@ anche qui grande pulsante salva e avviso prima di reindirizzamento e/o salvatagg
         gestisciAggiunteFromFrontToDB.eseguiListaAggiunte(idDettaglioList);
     }
 
-    public void eseguiTutteAggiunteByBagno(Long idBagno) {
-        gestisciAggiunteFromFrontToDB.eseguiTutteAggiunteByBagno(idBagno);
+    public void eseguiTutteAggiunteByDate(LocalDateTime dataInizio,
+                                          LocalDateTime dataFine) {
+        gestisciAggiunteFromFrontToDB.eseguiTutteAggiunteByDate(dataInizio,
+                dataFine);
+    }
+
+    public void eseguiTutteAggiunteByDateEBagno(LocalDateTime dataInizio,
+                                                LocalDateTime dataFine,
+                                                Long idBagno) {
+        gestisciAggiunteFromFrontToDB.eseguiTutteAggiunteByDateEBagno(dataInizio,
+                dataFine,
+                idBagno);
     }
 
     public void annullaListaAggiunte(List<Long> idDettaglioList) {
         gestisciAggiunteFromFrontToDB.annullaListaAggiunte(idDettaglioList);
-    }
-
-    public void annullaTutteAggiunteByBagno(Long idBagno) {
-        gestisciAggiunteFromFrontToDB.annullaTutteAggiunteByBagno(idBagno);
     }
 
     public void eseguiListaAggiunteGroup(List<List<Long>> idDettaglioListList) {
@@ -118,6 +124,22 @@ anche qui grande pulsante salva e avviso prima di reindirizzamento e/o salvatagg
 
     public void annullaListaAggiunteGroup(List<List<Long>> idDettaglioListList) {
         gestisciAggiunteFromFrontToDB.annullaListaAggiunteGroup(idDettaglioListList);
+    }
+
+    public void annullaTutteAggiunteByDate(LocalDateTime dataInizio,
+                                           LocalDateTime dataFine) {
+        gestisciAggiunteFromFrontToDB.annullaTutteAggiunteByDate(
+                dataInizio,
+                dataFine);
+    }
+
+    public void annullaTutteAggiunteByDateEBagno(LocalDateTime dataInizio,
+                                                 LocalDateTime dataFine,
+                                                 Long idBagno) {
+        gestisciAggiunteFromFrontToDB.annullaTutteAggiunteByDateEBagno(
+                dataInizio,
+                dataFine,
+                idBagno);
     }
 
     /*

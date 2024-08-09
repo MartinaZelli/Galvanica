@@ -52,16 +52,16 @@ public class RicercaPerProdottoService {
         gestisciAggiunteFromFrontToDB.eseguiListaAggiunte(idDettaglioList);
     }
 
-    public void eseguiTutteAggiunteByBagno(Long idBagno) {
-        gestisciAggiunteFromFrontToDB.eseguiTutteAggiunteByBagno(idBagno);
+    public void eseguiTutteAggiunteByProdotto(Long idProdotto) {
+        gestisciAggiunteFromFrontToDB.eseguiTutteAggiunteByProdotto(idProdotto);
     }
 
     public void annullaListaAggiunte(List<Long> idDettaglioList) {
         gestisciAggiunteFromFrontToDB.annullaListaAggiunte(idDettaglioList);
     }
 
-    public void annullaTutteAggiunteByBagno(Long idBagno) {
-        gestisciAggiunteFromFrontToDB.annullaTutteAggiunteByBagno(idBagno);
+    public void annullaTutteAggiunteByProdotto(Long idProdotto) {
+        gestisciAggiunteFromFrontToDB.annullaTutteAggiunteByProdotto(idProdotto);
     }
 
     public void eseguiListaAggiunteGroup(List<List<Long>> idDettaglioListList) {

@@ -4,6 +4,7 @@ import org.galvanica.model.StoricoDettaglio;
 import org.galvanica.repository.StoricoDettaglioRepository;
 import org.galvanica.service.operazioniBagno.StoriciAnnullaOConcludiService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class GestisciAggiunteFromFrontToDB {
@@ -72,6 +73,90 @@ public class GestisciAggiunteFromFrontToDB {
                 .toList();
         for (Long id : idDettaglioList) {
             storiciAnnullaOConcludiService.escludiSingolaAggiunta(id);
+        }
+    }
+
+    public void eseguiTutteAggiunteByProdotto(Long idProdotto) {
+        List<StoricoDettaglio> storicoDettaglioList =
+                storicoDettaglioRepository.listaStoriciDettagliDaGestireByProdotto(
+                        idProdotto);
+        if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
+            return;
+        }
+        for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
+            storiciAnnullaOConcludiService
+                    .eseguiSingolaAggiunta(storicoDettaglio.getIdStoricoDettaglio());
+        }
+    }
+
+    public void eseguiTutteAggiunteByDate(LocalDateTime dataInizio,
+                                          LocalDateTime dataFine) {
+        List<StoricoDettaglio> storicoDettaglioList =
+                storicoDettaglioRepository.listaStoriciDettagliDaGestireByDate(
+                        dataInizio, dataFine);
+        if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
+            return;
+        }
+        for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
+            storiciAnnullaOConcludiService
+                    .eseguiSingolaAggiunta(storicoDettaglio.getIdStoricoDettaglio());
+        }
+    }
+
+    public void eseguiTutteAggiunteByDateEBagno(LocalDateTime dataInizio,
+                                                LocalDateTime dataFine,
+                                                Long idBagno) {
+        List<StoricoDettaglio> storicoDettaglioList =
+                storicoDettaglioRepository.listaStoriciDettagliDaGestireByDateEBagno(
+                        dataInizio, dataFine, idBagno);
+        if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
+            return;
+        }
+        for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
+            storiciAnnullaOConcludiService
+                    .eseguiSingolaAggiunta(storicoDettaglio.getIdStoricoDettaglio());
+        }
+    }
+
+    public void annullaTutteAggiunteByProdotto(Long idProdotto) {
+        List<StoricoDettaglio> storicoDettaglioList =
+                storicoDettaglioRepository.listaStoriciDettagliDaGestireByProdotto(
+                        idProdotto);
+        if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
+            return;
+        }
+        for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
+            storiciAnnullaOConcludiService
+                    .escludiSingolaAggiunta(storicoDettaglio.getIdStoricoDettaglio());
+        }
+    }
+
+    public void annullaTutteAggiunteByDate(LocalDateTime dataInizio,
+                                           LocalDateTime dataFine) {
+        List<StoricoDettaglio> storicoDettaglioList =
+                storicoDettaglioRepository.listaStoriciDettagliDaGestireByDate(
+                        dataInizio, dataFine);
+        if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
+            return;
+        }
+        for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
+            storiciAnnullaOConcludiService
+                    .escludiSingolaAggiunta(storicoDettaglio.getIdStoricoDettaglio());
+        }
+    }
+
+    public void annullaTutteAggiunteByDateEBagno(LocalDateTime dataInizio,
+                                                 LocalDateTime dataFine,
+                                                 Long idBagno) {
+        List<StoricoDettaglio> storicoDettaglioList =
+                storicoDettaglioRepository.listaStoriciDettagliDaGestireByDateEBagno(
+                        dataInizio, dataFine, idBagno);
+        if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
+            return;
+        }
+        for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
+            storiciAnnullaOConcludiService
+                    .escludiSingolaAggiunta(storicoDettaglio.getIdStoricoDettaglio());
         }
     }
 
