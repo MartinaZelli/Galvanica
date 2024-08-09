@@ -186,4 +186,48 @@ public interface StoricoDettaglioRepository extends CrudRepository<StoricoDettag
                 sg.alimentazione_id_alimentazione
             """, nativeQuery = true)
     List<Map<String, Object>> listaStoriciDaGestireGroupByProdotto(Long idProdotto);
+
+    @Query(value = """
+            SELECT
+                *
+            FROM
+                storico_dettaglio sd
+            JOIN galvanica.storico_generale sg on sg.id_storico = sd.storico_generale_id_storico
+            WHERE
+                (NOT sd.annullato_dettaglio OR sd.annullato_dettaglio is null)
+              AND (NOT sd.eseguito_dettaglio OR sd.eseguito_dettaglio is null)
+            ORDER BY sg.data_creazione DESC""", nativeQuery = true)
+    List<StoricoDettaglio> listaStoriciDettagliDaGestireTotali();
+
+    @Query(value = """
+            SELECT
+                b.id_bagno As idBagno,
+                b.nome AS nomeBagno,
+                sd.quantita AS quantitaProdotto,
+                sd.unita_di_misura as unitaDiMisura,
+                p.id_prodotto as idProdotto,
+                sg.alimentazione_id_alimentazione as idAlimentazione,
+                GROUP_CONCAT(sd.id_storico_dettaglio SEPARATOR ',') AS idStoricoDettaglioList
+            FROM
+                storico_dettaglio sd
+                    JOIN galvanica.storico_generale sg ON sg.id_storico = sd.storico_generale_id_storico
+                    JOIN galvanica.bagno b ON sg.bagno_id_bagno = b.id_bagno
+                    JOIN galvanica.prodotto p ON sd.prodotto_id_prodotto = p.id_prodotto
+            WHERE
+              (NOT sd.annullato_dettaglio OR sd.annullato_dettaglio IS NULL)
+              AND (NOT sd.eseguito_dettaglio OR sd.eseguito_dettaglio IS NULL)
+
+            GROUP BY
+                b.id_bagno,
+                b.nome,
+                sd.quantita,
+                sd.unita_di_misura,
+                p.id_prodotto,
+                sg.alimentazione_id_alimentazione
+            """, nativeQuery = true)
+    List<Map<String, Object>> listaStoriciDaGestireGroupTotali(
+            LocalDateTime dataInizio,
+            LocalDateTime dataFine);
 }
+
+

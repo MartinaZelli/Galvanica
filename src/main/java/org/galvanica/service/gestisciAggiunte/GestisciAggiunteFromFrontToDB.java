@@ -118,6 +118,18 @@ public class GestisciAggiunteFromFrontToDB {
         }
     }
 
+    public void eseguiTutteAggiunteTotali() {
+        List<StoricoDettaglio> storicoDettaglioList =
+                storicoDettaglioRepository.listaStoriciDettagliDaGestireTotali();
+        if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
+            return;
+        }
+        for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
+            storiciAnnullaOConcludiService
+                    .eseguiSingolaAggiunta(storicoDettaglio.getIdStoricoDettaglio());
+        }
+    }
+
     public void annullaTutteAggiunteByProdotto(Long idProdotto) {
         List<StoricoDettaglio> storicoDettaglioList =
                 storicoDettaglioRepository.listaStoriciDettagliDaGestireByProdotto(
@@ -151,6 +163,18 @@ public class GestisciAggiunteFromFrontToDB {
         List<StoricoDettaglio> storicoDettaglioList =
                 storicoDettaglioRepository.listaStoriciDettagliDaGestireByDateEBagno(
                         dataInizio, dataFine, idBagno);
+        if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
+            return;
+        }
+        for (StoricoDettaglio storicoDettaglio : storicoDettaglioList) {
+            storiciAnnullaOConcludiService
+                    .escludiSingolaAggiunta(storicoDettaglio.getIdStoricoDettaglio());
+        }
+    }
+
+    public void annullaTutteAggiunteTotali() {
+        List<StoricoDettaglio> storicoDettaglioList =
+                storicoDettaglioRepository.listaStoriciDettagliDaGestireTotali();
         if (storicoDettaglioList == null || storicoDettaglioList.isEmpty()) {
             return;
         }
