@@ -4,7 +4,6 @@ import org.galvanica.dto.StoricoTotaleGroupDto;
 import org.galvanica.dto.StoricoTotaleSingoloDto;
 import org.galvanica.model.StoricoDettaglio;
 import org.galvanica.repository.StoricoDettaglioRepository;
-import org.galvanica.service.CRUD.BagnoService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,13 +12,12 @@ import java.util.List;
 @Service
 public class RicercaTuttoService {
 
-    private final BagnoService bagnoService;
+
     private final StoricoDettaglioRepository storicoDettaglioRepository;
     private GestisciAggiunteFromFrontToDB gestisciAggiunteFromFrontToDB;
 
-    public RicercaTuttoService(BagnoService bagnoService,
-                               StoricoDettaglioRepository storicoDettaglioRepository) {
-        this.bagnoService = bagnoService;
+    public RicercaTuttoService(
+            StoricoDettaglioRepository storicoDettaglioRepository) {
         this.storicoDettaglioRepository = storicoDettaglioRepository;
     }
 
