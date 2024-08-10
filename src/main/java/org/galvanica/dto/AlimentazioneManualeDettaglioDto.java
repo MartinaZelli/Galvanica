@@ -1,13 +1,14 @@
 package org.galvanica.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.galvanica.math.UnitaDiMisura;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@Builder
+@ToString
+@EqualsAndHashCode
 public class AlimentazioneManualeDettaglioDto {
 
 	private Long idStoricoDettaglio;

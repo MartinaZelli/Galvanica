@@ -1,8 +1,6 @@
 package org.galvanica.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.galvanica.math.TipologiaAggiunta;
 
 import java.util.List;
@@ -10,6 +8,9 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@Builder
+@ToString
+@EqualsAndHashCode
 public class AlimentazioneManualeGeneraleDto {
 
 	private Long idStorico;

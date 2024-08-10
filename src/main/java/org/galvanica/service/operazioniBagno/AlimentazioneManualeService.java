@@ -65,8 +65,7 @@ public class AlimentazioneManualeService {
 			.build()));
 	}
 
-	private void creaAggiuntaDettaglio(AlimentazioneManualeDettaglioDto dettaglio,
-		StoricoGenerale generale) {
+	private void creaAggiuntaDettaglio(AlimentazioneManualeDettaglioDto dettaglio, StoricoGenerale generale) {
 		Prodotto prodotto = prodottoService.modelRicercaId(dettaglio.getIdProdotto());
 		UnitaDiMisura unitaDiMisura = UnitaDiMisura.MG;
 		if (dettaglio.getUnitaDiMisura().isSonoVolume()) {
@@ -87,9 +86,11 @@ public class AlimentazioneManualeService {
 	private void controlliDto(AlimentazioneManualeGeneraleDto generale) {
 		bagnoService.modelRicercaId(generale.getIdBagno());
 		if (generale.getScattiTotaliBagno() == null) {
+			//TODO MA VANNO CONTROLLATI IN CASO DI AGGIUNTA MANUALE???
 			throw new RuntimeException("non sono stati inseriti gli scatti Totali del bagno");
 		}
 		if (generale.getRestoScattiBagno() == null) {
+			//TODO MA VANNO CONTROLLATI IN CASO DI AGGIUNTA MANUALE???
 			throw new RuntimeException("non sono stati inseriti gli scatti di resto del bagno");
 		}
 		if (generale.getScattiInseriti() == null) {
@@ -100,9 +101,8 @@ public class AlimentazioneManualeService {
 
 	private void verificaProdottoInserimentoManuale(Long idBagno, Long idProdotto) {
 		List<ProdottoDto> prodottoDtoList = prodottoService.ricercaProdottiByBagno(idBagno);
-		boolean prodottoValido = prodottoDtoList
-			.stream()
-			.anyMatch(prodottoDto -> prodottoDto.getIdProdotto().equals(idProdotto));
+		boolean prodottoValido =
+			prodottoDtoList.stream().anyMatch(prodottoDto -> prodottoDto.getIdProdotto().equals(idProdotto));
 		if (!prodottoValido) {
 			throw new RuntimeException("il prodotto inserito non è legato al bagno di destinazione.");
 		}
@@ -113,8 +113,7 @@ public class AlimentazioneManualeService {
 			throw new RuntimeException("la quantità inserita non può essere 0");
 		}
 		if (unitaDiMisura == null) {
-			throw new RuntimeException(
-				"l'unita di misura deve essere valorizzata se è inserita una quantità");
+			throw new RuntimeException("l'unita di misura deve essere valorizzata se è inserita una quantità");
 		}
 	}
 
@@ -123,8 +122,7 @@ public class AlimentazioneManualeService {
 	}
 
 	public InformazioniScattiPerBagno informazioniScattiPerBagno(Long idBagno) {
-		StoricoGenerale storicoGenerale =
-			storicoGeneraleRepository.ultimoStoricoGeneraleScatti(idBagno);
+		StoricoGenerale storicoGenerale = storicoGeneraleRepository.ultimoStoricoGeneraleScatti(idBagno);
 
 		return InformazioniScattiPerBagno
 			.builder()
