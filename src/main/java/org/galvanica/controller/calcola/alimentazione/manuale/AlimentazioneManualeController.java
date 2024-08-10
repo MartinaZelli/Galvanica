@@ -105,7 +105,6 @@ public class AlimentazioneManualeController {
 			.build();
 
 		alimentazioneManualeService.creaAggiuntaManuale(alimentazioneManualeGeneraleDto);
-		System.out.println(alimentazioneManualeGeneraleDto);
 		return "";
 	}
 
